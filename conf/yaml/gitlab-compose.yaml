@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  gitlab:
+    # restart: always
+    image: gitlab/gitlab-ce
+    ports:
+    - 172.29.167.179:9443:443 
+    - 172.29.167.179:9080:80 
+    - 9022:22
+    environment:
+    - GITLAB_SHELL_SSH_PORT=9022
+    volumes:
+    - /data/gitlab/config:/etc/gitlab 
+    - /data/gitlab/logs:/var/log/gitlab
+    - /data/gitlab/data:/var/opt/gitlab
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm04]
+      replicas: 1
+

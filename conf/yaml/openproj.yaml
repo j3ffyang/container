@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  openproj:
+    image: openproject/community:7
+    networks:
+    - openproj
+    ports:
+    - "28080:80"
+    environment:
+    - SECRET_KEY_BASE="youneverknow"
+    volumes:
+    - /data/openproject/data:/var/lib/postgresql/9.4/main
+    - /data/openproject/stat:/var/db/openproject
+    - /data/openproject/logs:/var/log/supervisor
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm02]
+      replicas: 1
+
+
+networks:
+  openproj:
+
+#volumes:
+  #openprojdata:
+  #openprojstat:
+  #openprojlogs:

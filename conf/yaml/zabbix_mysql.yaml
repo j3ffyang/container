@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  mysql-server:
+    image: mysql:latest
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_bin
+    hostname: mysql
+    environment:
+    - MYSQL_DATABASE=zabbix
+    - MYSQL_USER=zabbix
+    - MYSQL_PASSWORD=zabbix_pass
+    - MYSQL_ROOT_PASSWORD=root_pass
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+  zabbix-java-gateway:
+    image: zabbix/zabbix-java-gateway:latest
+    hostname: zabbix-java-gateway
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:latest
+    hostname: zabbix-server
+    environment:
+    - DB_SERVER_HOST=mysql-server
+    - MYSQL_DATABASE=zabbix
+    - MYSQL_USER=zabbix
+    - MYSQL_PASSWORD=zabbix_pass
+    - MYSQL_ROOT_PASSWORD=root_pass
+    - ZBX_JAVAGATEWAY=zabbix-java-gateway
+    depends_on:
+    - mysql-server
+    - zabbix-java-gateway
+    ports:
+    - 10051:10051
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+  zabbix-web-nginx-mysql:
+    image: zabbix/zabbix-web-nginx-mysql:latest
+    hostname: zabbix-web-nginx-mysql
+    environment:
+    - DB_SERVER_HOST=mysql-server
+    - MYSQL_DATABASE:zabbix
+    - MYSQL_USER=zabbix
+    - MYSQL_PASSWORD=zabbix_pass
+    - MYSQL_ROOT_PASSWORD=root_pass
+    depends_on:
+    - mysql-server
+    - zabbix-server
+    ports:
+    - 8880:80
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1

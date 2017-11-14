@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  zabbix-db:
+    image: zabbix-db-pgsql
+    hostname: zabbix-db
+    ports:
+      - 5432:5432
+    volumes:
+      - zabbixdb:/var/lib/postgresql
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+  zabbix-server:
+    image: zabbix-server
+    hostname: zabbix-server
+    depends_on:
+      - zabbix-db
+    environment:
+      - PGSQL_HOST=zabbix-db
+      - ZBX_SRV_HOST=127.0.0.1,zabbix-server
+    ports:
+      - "10051:10051"
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+  zabbix-web:
+    image: zabbix-web
+    hostname: zabbix-web
+    depends_on:
+      - zabbix-db
+      - zabbix-server
+    environment:
+      - PGSQL_HOST=zabbix-db
+      - ZBX_SRV_HOST=zabbix-server
+    ports:
+      - 80:80
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+  zabbix-agent1:
+    image: zabbix-agent
+    hostname: zabbix-agent1
+    depends_on:
+      - zabbix-server
+    environment:
+      - ZBX_SRV_HOST=127.0.0.1,zabbix-server
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+
+volumes:
+  zabbixdb:

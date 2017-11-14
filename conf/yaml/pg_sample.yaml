@@ -1,0 +1,70 @@
+version: "3"
+
+networks:
+  pgnet:
+    driver: overlay
+
+services:
+  pgmaster:
+    image: 'sameersbn/postgresql:9.6-2'
+    networks:
+      - pgnet
+    ports:
+      - '5432:5432'
+    volumes:
+      - '/data/pgdata:/var/lib/postgresql'
+    environment:
+      - REPLICATION_MODE=master
+      - DB_USER=postgres
+      - DB_PASS=zaq12wsx
+      - DB_NAME=dummy
+      - REPLICATION_USER=repluser
+      - REPLICATION_PASS=repluserpass
+    deploy:
+      placement:
+        constraints: [node.labels.dockernode==4]
+      replicas: 1
+
+  pgslave1:
+    image: 'sameersbn/postgresql:9.6-2'
+    networks:
+      - pgnet
+    ports:
+      - '5433:5432'
+    depends_on:
+      - pgmaster
+    volumes:
+      - '/data/pgdata:/var/lib/postgresql'
+    environment:
+      - REPLICATION_MODE=slave
+      - REPLICATION_SSLMODE=prefer
+      - REPLICATION_HOST=pgmaster
+      - REPLICATION_USER=repluser
+      - REPLICATION_PASS=repluserpass
+      - REPLICATION_PORT=5432
+    deploy:
+      placement:
+        constraints: [node.labels.dockernode==4]
+      replicas: 1
+
+  pgslave2:
+    image: 'sameersbn/postgresql:9.6-2'
+    networks:
+      - pgnet
+    ports:
+      - '5434:5432'
+    depends_on:
+      - pgmaster
+    volumes:
+      - '/data/pgdata:/var/lib/postgresql'
+    environment:
+      - REPLICATION_MODE=slave
+      - REPLICATION_SSLMODE=prefer
+      - REPLICATION_HOST=pgmaster
+      - REPLICATION_USER=repluser
+      - REPLICATION_PASS=repluserpass
+      - REPLICATION_PORT=5432
+    deploy:
+      placement:
+        constraints: [node.labels.dockernode==4]
+      replicas: 1

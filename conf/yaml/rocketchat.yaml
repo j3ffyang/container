@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  rocketchat:
+    image: rocketchat/rocket.chat:latest
+#    restart: unless-stopped
+    volumes:
+    - rocket:/app/uploads
+    environment:
+    - PORT=3000
+    - ROOT_URL="http://localhost:3000"
+    - MONGO_URL="mongodb://mongo:27017/rochetchat"
+    - MONGO_OPLOG_URL="mongodb://mong:27017/local"
+    depends_on:
+    - mongo
+    ports:
+    - 3000:3000
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm05]
+      replicas: 1
+
+  mongo:
+    image: mongo:3.2
+#    restart: unless-stopped
+    volumes:
+    - rocketmongo:/data/db
+    command: mongod --smallfiles --oplogSize 128 --replSet rs0
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm05]
+      replicas: 1
+
+volumes:
+    rocket:
+    rocketmongo:

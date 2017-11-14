@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  portainer:
+    image: portainer/portainer
+    networks: 
+    - portainer
+    ports:
+    - "9000:9000"
+    volumes:
+    - portainer:/var/run/docker.sock
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm02]
+      replicas: 1
+
+networks:
+  portainer:
+
+volumes:
+  portainer:

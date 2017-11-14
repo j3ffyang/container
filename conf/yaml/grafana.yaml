@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana
+    hostname: grafana
+    environment:
+    - GF_SERVER_ROOT_URL=http://172.29.167.177
+    - GF_SECURITY_ADMIN_PASSWORD=secret
+    - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+    - grafana_lib:/var/lib/grafana
+    - grafana_etc:/etc/grafana
+    ports:
+    - 3000:3000
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm02]
+      replicas: 1
+
+volumes:
+  grafana_lib:
+  grafana_etc:

@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  registry:
+    image: 'registry:2'
+    ports:
+      - '5000:5000'
+    environment:
+      - restart=always
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
+    volumes:
+      - registry_data:/data
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm05]
+      replicas: 1
+
+  nginx:
+    image: nginx:1.9
+    ports:
+      - 5043:443
+    depends_on:
+      - registry
+    volumes:
+      - registry_nginx:/etc/nginx/conf.d:ro
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm05]
+      replicas: 1
+
+volumes:
+  registry_data:
+  registry_nginx:

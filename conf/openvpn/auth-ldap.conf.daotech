@@ -1,0 +1,62 @@
+<LDAP>
+        # LDAP server URL
+	# URL             ldaps://10.0.1.2:636
+        URL             ldap://ldap.daotech.io
+
+        # Bind DN (If your LDAP server doesn't support anonymous binds)
+        # BindDN                uid=Manager,ou=People,dc=example,dc=com
+        # BindDN                cn=admin,dc=daotech,dc=io
+
+        # Bind Password
+	# Password {SSHA}3OA8e5CHDWbmqXUbkwBExDtevJC2T7tR
+	# Password {MD5}pEYLzfg3gV2Ev6CxX4Welw==
+
+        # Network timeout (in seconds)
+        Timeout         15
+
+        # Enable Start TLS
+        # TLSEnable      yes
+        # TLSEnable      no
+
+        # Follow LDAP Referrals (anonymously)
+        FollowReferrals yes
+
+        # TLS CA Certificate File
+        TLSCACertFile /etc/ldap/ca_certs.pem
+
+        # TLS CA Certificate Directory
+        TLSCACertDir  /etc/ssl/certs
+
+        # Client Certificate and key
+        # If TLS client authentication is required
+        TLSCertFile   /usr/local/etc/ssl/client-cert.pem
+        TLSKeyFile    /usr/local/etc/ssl/client-key.pem
+
+        # Cipher Suite
+        # The defaults are usually fine here
+        # TLSCipherSuite        ALL:!ADH:@STRENGTH
+</LDAP>
+
+<Authorization>
+        # Base DN
+        BaseDN          "dc=daotech,dc=io"
+
+        # User Search Filter
+        # SearchFilter  "(&(uid=%u)(accountStatus=active))"
+	# SearchFilter  "(&(cn=*)(objectclass=user))"
+	SearchFilter	"(uid=%u)"
+
+        # Require Group Membership
+        RequireGroup    false
+
+        # Add non-group members to a PF table (disabled)
+        #PFTable        ips_vpn_users
+
+        #<Group>
+        #       BaseDN          "ou=Groups,dc=example,dc=com"
+        #       SearchFilter    "(|(cn=developers)(cn=artists))"
+        #       MemberAttribute uniqueMember
+        #       # Add group members to a PF table (disabled)
+        #       #PFTable        ips_vpn_eng
+        #</Group>
+</Authorization>

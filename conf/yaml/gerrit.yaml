@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  gerrit:
+    # restart: always
+    image: docker.io/fabric8/gerrit:latest
+    networks:
+    - gerrit
+    ports:
+    - 0.0.0.0:8080:8080
+    - 29418:29418
+    environment:
+    - AUTH_TYPE='LDAP'
+    - LDAP_SERVER="172.29.167.177"
+    - GIT_SERVER_IP="172.29.167.179"
+    - GIT_SERVER_PORT="9443"
+    - GIT_SERVER_USER="root"
+    - GIT_SERVER_PASSWORD="pa55w0rd"
+    volumes:
+    - /data/gerrit/gerrit:/home/gerrit
+    - /data/gerrit/ssh:/root/.ssh
+    deploy:
+      placement:
+        constraints: [node.labels.host==cm03]
+      replicas: 1
+
+networks:
+  gerrit:
