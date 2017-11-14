@@ -26,7 +26,7 @@ for i in {2..6}; do ssh root@cm0$i "apt-get update; \
 
 Install docker-composer
 
-Edit ```/etc/docker/daemon.json```
+Edit ```/etc/docker/daemon.json``` on each docker host
 
 ```
 sudo cat /etc/docker/daemon.json

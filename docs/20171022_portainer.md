@@ -43,11 +43,8 @@ docker stack deploy -c portainer.yaml portainer
 
 Then you can access __http://172.29.167.177:9000__
 
-<!--
 
 <center><img src="../imgs/20171022_portainer.png" width=650px></center>
-
--->
 
 You can see the volume was created during stack deploy, which can be listed and inspected
 
