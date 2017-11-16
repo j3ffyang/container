@@ -51,3 +51,9 @@ sudo chown -R ubuntu:ubuntu /data
 ```
 
 where ```/data``` is default location for docker
+
+Grant ```ubuntu``` user access to manage Docker
+
+```
+sudo gpasswd -a $USER docker
+```

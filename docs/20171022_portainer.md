@@ -43,7 +43,6 @@ docker stack deploy -c portainer.yaml portainer
 
 Then you can access __http://172.29.167.177:9000__
 
-
 <center><img src="../imgs/20171022_portainer.png" width=650px></center>
 
 You can see the volume was created during stack deploy, which can be listed and inspected
@@ -57,4 +56,10 @@ DRIVER              VOLUME NAME
 local               03e9fd7b817b219cca169191f69ee2504dd81a6c7b4f8682c6b86d2bf1fe5a6e
 local               portainer_portainer
 
+```
+
+After adding docker host, don't forget to modify firewall to allow ```portainer``` access docker host through ```2375/tcp```
+
+```
+sudo ufw allow 2375/tcp
 ```
