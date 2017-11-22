@@ -228,15 +228,15 @@ push "dhcp-option DNS 208.67.220.220"
 
 This should assist clients in reconfiguring their DNS settings to use the VPN tunnel for as the default gateway.
 
-__This is what is missed in DigitalOcean's doc__
+__Added by Jeff which is missed in DigitalOcean's doc__
 
 Add ```push route``` into ```/etc/openvpn/server.conf```
 
 ```
-push "route 172.29.167.128 255.255.255.128"
+push "route 172.29.167.0 255.255.255.0"
 ```
 
-where ```172.29.167.128/25``` is the network behind OpenVPN
+where ```172.29.167.0/25``` is the network behind OpenVPN
 
 Then ```sudo systemctl restart openvpn@server```
 
@@ -334,15 +334,13 @@ This file handles configuration that should be put into place before the convent
 *nat
 :POSTROUTING ACCEPT [0:0]
 # Allow traffic from OpenVPN client to wlp11s0 (change to the interface you discovered!)
--A POSTROUTING -s 10.8.0.0/24 -o ens32 -j MASQUERADE
+-A POSTROUTING -s 10.8.0.0/8 -o wlp11s0 -j MASQUERADE
 COMMIT
 # END OPENVPN RULES
 
 # Don't delete these required lines, otherwise there will be errors
 *filter
 ```
-
-> Note: in DigitalOcean's doc, it was ```10.8.0.0/8``` which gives too broad network and brings security challenge. Therefore, I recommend to narrow to ```10.8.0.0/24```
 
 Save and close the file when you are finished.
 
@@ -699,3 +697,29 @@ sudo openvpn --config client1.ovpn
 ```
 
 This should connect you to your server.
+
+## Hints
+
+- Adding the following in ```/etc/openvpn/server.conf```
+
+```
+username-as-common-name
+```
+
+to give details of ```Common Name``` in ```/etc/openvpn/openvpn-status.log```
+
+```
+jeff@cm01:~$ sudo cat /etc/openvpn/openvpn-status.log
+OpenVPN CLIENT LIST
+Updated,Wed Nov 22 09:25:07 2017
+Common Name,Real Address,Bytes Received,Bytes Sent,Connected Since
+tianqin,183.243.228.37:61928,37584,9546,Wed Nov 22 09:14:36 2017
+jeff,124.205.108.82:49627,36015,163155,Wed Nov 22 08:56:51 2017
+ROUTING TABLE
+Virtual Address,Common Name,Real Address,Last Ref
+10.8.0.10,jeff,124.205.108.82:49627,Wed Nov 22 09:24:17 2017
+10.8.0.6,tianqin,183.243.228.37:61928,Wed Nov 22 09:14:36 2017
+GLOBAL STATS
+Max bcast/mcast queue length,0
+END
+```
