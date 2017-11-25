@@ -187,8 +187,10 @@ First, find the HMAC section by looking for the ```tls-auth``` directive. Remove
 
 ```
 tls-auth ta.key 0 # This file is secret
-key-direction 0
 ```
+
+~~```key-direction 0```~~
+
 
 Next, find the section on cryptographic ciphers by looking for the commented out ```cipher``` lines. The ```AES-128-CBC``` cipher offers a good level of encryption and is well supported. Remove the ";" to uncomment the ```cipher AES-128-CBC``` line:
 
@@ -312,7 +314,7 @@ When you have the interface associated with your default route, open the ```/etc
 
 This file handles configuration that should be put into place before the conventional UFW rules are loaded. Towards the top of the file, add the highlighted lines below. This will set the default policy for the ```POSTROUTING``` chain in the ```nat``` table and masquerade any traffic coming from the VPN:
 
-> Note: Remember to replace ```wlp11s0``` in the ```-A POSTROUTING``` line below with the interface you found in the above command.
+> Note: Remember to replace __```wlp11s0```__ in the ```-A POSTROUTING``` line below with the interface you found in the above command.
 
 ```
 /etc/ufw/before.rules
@@ -507,10 +509,13 @@ cipher AES-128-CBC
 auth SHA256
 ```
 
-Next, add the ```key-direction``` directive somewhere in the file. This __must__ be set to "1" to work with the server:
+Next, add the ```key-direction``` directive somewhere in the file. ~~This __must__ be set to "1" to work with the server:~~
 
+~~```key-direction 1```~~
+
+Uncomment
 ```
-key-direction 1
+tls-auth ta.key 1
 ```
 
 Finally, add a few commented out lines. We want to include these with every config, but should only enable them for Linux clients that ship with a ```/etc/openvpn/update-resolv-conf``` file. This script uses the ```resolvconf``` utility to update DNS information for Linux clients.
