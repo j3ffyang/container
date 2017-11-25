@@ -21,10 +21,10 @@ dn: cn=admin,dc=devops,dc=org
 
 dn: cn=jeff yang,dc=devops,dc=org
 ```
-- Install ```openvpn-auth-ldap```
+- Install ```openvpn-auth-ldap``` on __OpenVPN box__
 
 ## Steps
-#### Make sure OpenLDAP ```ca_server.pem``` is on OpenVPN
+#### Make sure OpenLDAP ```ca_server.pem``` is on OpenVPN_box
 
 ```
 scp root@cm02.devops.org:/etc/ssl/certs/ca_server.pem ~/
@@ -45,7 +45,7 @@ plugin /usr/lib/openvpn/openvpn-auth-ldap.so \
 client-cert-not-required
 ```
 
-###### Sample of ```auth-ldap.conf```
+###### Sample of ```/etc/openvpn/auth/auth-ldap.conf```
 
 ```
 <LDAP>
@@ -107,8 +107,6 @@ client-cert-not-required
 		#PFTable	ips_vpn_eng
 	</Group>
 </Authorization>
-[jeff@fedora openvpn]$
-
 ```
 
 Restart ```systemctl restart openvpn@server```
@@ -118,8 +116,6 @@ Restart ```systemctl restart openvpn@server```
 ```
 ...
 ;mute 20
-
-key-direction 1
 
 auth-user-pass
 ```
