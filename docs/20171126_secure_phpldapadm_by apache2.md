@@ -1,4 +1,4 @@
-# Secure phpLDAPadmin by Apache2 Passwd Authentication
+# Secure phpLDAPadmin by Apache2 Passwd Authentication and SSL
 
 #### Document Objective
 - As subject
