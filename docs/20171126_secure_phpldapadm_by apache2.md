@@ -124,4 +124,10 @@ SSLCertificateFile /etc/apache2/ssl/apache.crt
 SSLCertificateKeyFile /etc/apache2/ssl/apache.key
 ```
 
+- Restart
+
+```
+sudo systemctl restart apache2.service
+```
+
 Then we should have http://IP/phpldapadmin redirected to https://IP/phpldapadmin with ```htpasswd``` protected
