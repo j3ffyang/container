@@ -7,7 +7,7 @@
 - Apache2 and phpLDAPadmin have been installed and configured properly. phpLDAPadmin can be accessed via web
 - htpasswd and apache2-utils have been installed
 
-Reference Doc:
+#### Reference Doc:
 - [https://www.digitalocean.com/community/tutorials/how-to-set-up-password-authentication-with-apache-on-ubuntu-14-04](https://www.digitalocean.com/community/tutorials/how-to-set-up-password-authentication-with-apache-on-ubuntu-14-04)
 - [https://fxdata.cloud/tutorials/install-and-configure-openldap-and-phpldapadmin-on-an-ubuntu-14-04-server](https://fxdata.cloud/tutorials/install-and-configure-openldap-and-phpldapadmin-on-an-ubuntu-14-04-server)
 
