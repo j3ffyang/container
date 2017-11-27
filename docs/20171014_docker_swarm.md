@@ -20,6 +20,12 @@ for i in {2..6}; do ssh root@cm0$i "curl -fsSL \
 ```
 
 ```
+for i in {2..6}; do ssh root@host0$i 'add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable"'; echo host0$i; done
+```
+
+```
 for i in {2..6}; do ssh root@cm0$i "apt-get update; \
   apt-get install docker-ce -y; exit"; done
 ```
