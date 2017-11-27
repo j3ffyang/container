@@ -29,7 +29,12 @@ for i in {2..6}; do ssh root@cm0$i "apt-get update; \
   apt-get install docker-ce -y"; done
 ```
 
-Install docker-composer
+Install ```pip``` and ```docker-compose```
+
+```
+for i in {1..8}; do ssh host0$i -t "sudo apt-get install python-pip -y"; done
+for i in {1..8}; do ssh host0$i -t "sudo pip install docker-compose"; done
+```
 
 Edit ```/etc/docker/daemon.json``` on each docker host
 
