@@ -10,13 +10,12 @@
 ```
 for i in {2..6}; do ssh root@cm0$i "apt-get install curl \
   apt-transport-https ca-certificates software-properties-common -y; \
-  echo cm0$i; exit"; done
+  echo cm0$i"; done
 ```
 
 ```
 for i in {2..6}; do ssh root@cm0$i "curl -fsSL \
-  https://download.docker.com/linux/ubuntu/gpg | apt-key add -; \
-  exit"; done
+  https://download.docker.com/linux/ubuntu/gpg | apt-key add -"; done
 ```
 
 ```
@@ -27,7 +26,7 @@ for i in {2..6}; do ssh root@host0$i 'add-apt-repository \
 
 ```
 for i in {2..6}; do ssh root@cm0$i "apt-get update; \
-  apt-get install docker-ce -y; exit"; done
+  apt-get install docker-ce -y"; done
 ```
 
 Install docker-composer
