@@ -62,6 +62,11 @@ systemctl daemon-reload
 systemctl restart docker.service
 ```
 
+Grant a non- root user to operate docker
+```
+sudo usermod -aG docker your-user
+```
+
 Chown
 
 ```
