@@ -46,21 +46,36 @@ sudo cat /etc/docker/daemon.json
 }
 ```
 
+where ```/data/docker``` holds all docker data
+
+Create ```/etc/systemd/system/docker.service.d/override.conf```
+
+```
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd
+```
+
+Restart
+```
+systemctl daemon-reload
+systemctl restart docker.service
+```
+
+Chown
+
+```
+for i in {1..8}; do ssh host0$i -t "sudo chown -R ubuntu:ubuntu /data/"; done
+for i in {1..8}; do ssh host0$i -t "sudo systemctl daemon-reload; sudo systemctl restart docker.service"; done
+```
+
 Install and configure Swarm
 
 Add label on __all__ hosts. This is an example for one host
 
 ```
-docker node update --label-add host=0 $HOST0_ID
+docker node update --label-add host=$ID $HOST_  ID
 ```
-
-You might want to
-
-```
-sudo chown -R ubuntu:ubuntu /data
-```
-
-where ```/data``` is default location for docker
 
 Grant ```ubuntu``` user access to manage Docker
 
