@@ -336,7 +336,7 @@ This file handles configuration that should be put into place before the convent
 *nat
 :POSTROUTING ACCEPT [0:0]
 # Allow traffic from OpenVPN client to wlp11s0 (change to the interface you discovered!)
--A POSTROUTING -s 10.8.0.0/8 -o wlp11s0 -j MASQUERADE
+-A POSTROUTING -s 10.8.0.0/24 -o wlp11s0 -j MASQUERADE
 COMMIT
 # END OPENVPN RULES
 
