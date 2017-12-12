@@ -242,6 +242,14 @@ where ```172.29.167.0/25``` is the network behind OpenVPN
 
 Then ```sudo systemctl restart openvpn@server```
 
+The following at client machine is equivalent to ```push "route 172.29.167.128 255.255.255.128"```
+
+```
+ip r add 172.29.167.128/25 via 10.8.0.17 dev tun0
+```
+
+where ```10.8.0.17``` is IP of ```tun0``` on client
+
 (Optional) Adjust the Port and Protocol
 
 By default, the OpenVPN server uses port 1194 and the UDP protocol to accept client connections. If you need to use a different port because of restrictive network environments that your clients might be in, you can change the ```port``` option. If you are not hosting web content your OpenVPN server, port 443 is a popular choice since this is usually allowed through firewall rules.
