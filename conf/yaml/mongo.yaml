@@ -1,0 +1,64 @@
+version: "3"
+
+networks:
+  mongonet:
+
+services:
+  mongo1:
+    image: mongo:3.4
+    networks:
+      - mongonet
+    ports:
+      - '27017:27017'
+    hostname: "mongo1"
+    volumes:
+      - mongodata:/data/db
+      - mongoconfigdb:/data/configdb
+      - mongokeyfile:/opt/keyfile
+    environment:
+      - keyFile:/opt/keyfile/mongodb-keyfile
+    command: ["mongod", "--replSet", "rs0"]
+    deploy:
+      placement:
+        constraints: [node.labels.host==6]
+      replicas: 1
+
+  mongo2:
+    image: mongo:3.4
+    networks:
+      - mongonet
+    hostname: "mongo2"
+    volumes:
+      - mongodata:/data/db
+      - mongoconfigdb:/data/configdb
+      - mongokeyfile:/opt/keyfile
+    environment:
+      - keyFile:/opt/keyfile/mongodb-keyfile
+    command: ["mongod", "--replSet", "rs0"]
+    deploy:
+      placement:
+        constraints: [node.labels.host==5]
+      replicas: 1
+
+  mongo3:
+    image: mongo:3.4
+    networks:
+      - mongonet
+    hostname: "mongo3"
+    volumes:
+      - mongodata:/data/db
+      - mongoconfigdb:/data/configdb
+      - mongokeyfile:/opt/keyfile
+    environment:
+      - keyFile:/opt/keyfile/mongodb-keyfile
+    command: ["mongod", "--replSet", "rs0"]
+    deploy:
+      placement:
+        constraints: [node.labels.host==4]
+      replicas: 1
+
+volumes:
+  mongodata:
+  mongoconfigdb:
+  mongokeyfile:
+

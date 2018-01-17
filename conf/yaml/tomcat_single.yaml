@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+
+  tomcat:
+    image: tomcat
+    restart: always
+    ports:
+      - 8888:8080
+    deploy:
+      placement:
+        constraints: [node.labels.host==03]
+      replicas: 1
+
