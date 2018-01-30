@@ -24,18 +24,18 @@ docker stack deploy -c mongo.yaml mongo
 ```
 
 ```yaml
-version: "3"
+version: "3.3"
 
-networks:
-  mongonet:
+# networks:
+#   mongonet2:
 
 services:
   mongo1:
     image: mongo:3.4
     networks:
-      - mongonet
-    ports:
-      - '27017:27017'
+      - outside
+#    ports:
+#      - '27017:27017'
     hostname: "mongo1"
     volumes:
       - mongodata:/data/db
@@ -52,7 +52,9 @@ services:
   mongo2:
     image: mongo:3.4
     networks:
-      - mongonet
+      - outside
+#    ports:
+#      - '27017:27017'
     hostname: "mongo2"
     volumes:
       - mongodata:/data/db
@@ -66,27 +68,54 @@ services:
         constraints: [node.labels.host==5]
       replicas: 1
 
-      mongo3:
-        image: mongo:3.4
-        networks:
-          - mongonet
-        hostname: "mongo3"
-        volumes:
-          - mongodata:/data/db
-          - mongoconfigdb:/data/configdb
-          - mongokeyfile:/opt/keyfile
-        environment:
-          - keyFile:/opt/keyfile/mongodb-keyfile
-        command: ["mongod", "--replSet", "rs0"]
-        deploy:
-          placement:
-            constraints: [node.labels.host==4]
-          replicas: 1
-
+  mongo3:
+    image: mongo:3.4
+    networks:
+      - outside
+#    ports:
+#      - '27017:27017'
+    hostname: "mongo3"
     volumes:
-      mongodata:
-      mongoconfigdb:
-      mongokeyfile:
+      - mongodata:/data/db
+      - mongoconfigdb:/data/configdb
+      - mongokeyfile:/opt/keyfile
+    environment:
+      - keyFile:/opt/keyfile/mongodb-keyfile
+    command: ["mongod", "--replSet", "rs0"]
+    deploy:
+      placement:
+        constraints: [node.labels.host==4]
+      replicas: 1
+
+networks:
+  outside:
+    external:
+      name: "host"
+
+volumes:
+  mongodata:
+  mongoconfigdb:
+  mongokeyfile:
+```
+
+> Note: since the network in the stack is using ```outside``` network, which is on container's host respectively, Mongo replicaSet ```rs0``` requires entries in ```/etc/hosts``` for naming resolve. Therefore ```/etc/hosts``` needs modified on __all__ container hosts, such as
+
+```
+ubuntu@host6:/data/yaml$ cat /etc/hosts
+127.0.0.1  localhost  localhost.localdomain  VM-0-2-ubuntu
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+10.0.0.2	host0	gfs00	firstbox
+10.0.1.2	host1	ldap
+10.0.1.184	host2	gfs02
+10.0.1.198	host3	gfs03
+10.0.1.119	host4	gfs04	fabric	mongo3
+10.0.1.31	host5	mongo2
+10.0.1.43	host6	mongo1
 ```
 
 #### Create an admin user.
