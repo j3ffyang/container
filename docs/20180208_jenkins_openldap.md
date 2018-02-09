@@ -51,7 +51,7 @@ volumes:
 
 #### Initialization
 
-- Go to `http://<IP>:8081`, (the default port is ```8080```) the page will show as the following:
+- Go to `http://<IP>:8082`, (the default port is ```8080```) the page will show as the following:
 
 - Copy the initial password from ```/var/jenkins_home/secrets/initialAdminPassword``` and paste it into __Administrator password__, then click __Continue__ button, you'll see the following:
 
