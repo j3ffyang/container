@@ -81,6 +81,7 @@ Go to __Manage Jenkins__ > __Configure Global Security__ > __LDAP__
 #### Install ```Gerrit Trigger``` plugin
 
 - Pre- requisites
+  - (optional) Create ```jenkins``` user in OpenLDAP
   - On __Jenkins__@```/var/jenkins_home/.ssh/``` server, Generate an SSH key
   - Go to __Gerrit__ server (where is installed on ```172.29.167.178```) to add ```jenkins``` user and grant administrator access.
   - Copy and paste such SSH key into ```jenkins``` user on __Gerrit__ server
