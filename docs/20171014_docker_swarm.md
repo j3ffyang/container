@@ -40,20 +40,20 @@ Edit ```/etc/docker/daemon.json``` on each docker host
 
 ```
 sudo cat /etc/docker/daemon.json
-{"registry-mirrors": ["http://54e31bff.m.daocloud.io"],
-  "graph":"/data/docker",
-  "hosts":  ["fd://", "tcp://172.29.167.171:2375"]
+{
+  "registry-mirrors": ["http://54e31bff.m.daocloud.io"],
+  "graph":"/data/docker"
 }
 ```
 
 where ```/data/docker``` holds all docker data
 
-Create ```/etc/systemd/system/docker.service.d/override.conf```
+Create ```/etc/systemd/system/docker.service.d/docker.conf```
 
 ```
 [Service]
 ExecStart=
-ExecStart=/usr/bin/dockerd
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 ```
 
 Restart
