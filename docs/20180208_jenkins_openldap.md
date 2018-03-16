@@ -16,7 +16,7 @@
 - Launch jenkins container, make sure you have created the volume directory:
 
   ```shell
-  docker run -p 8080:8080 -p 50000:50000 -v ~/data/jenkins/:/var/jenkins_home --name jenkins -d jenkins/jenkins
+  docker run -p 8082:8080 -p 50000:50000 -v ~/data/jenkins/:/var/jenkins_home --name jenkins -d jenkins/jenkins
   ```
 
 - docker-compose.xml
