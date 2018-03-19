@@ -19,7 +19,7 @@
   docker run -p 8082:8080 -p 50000:50000 -v ~/data/jenkins/:/var/jenkins_home --name jenkins -d jenkins/jenkins
   ```
 
-- docker-compose.xml
+- docker-compose.yaml
 
 ```
 version: "3.3"
@@ -76,6 +76,30 @@ Go to __Manage Jenkins__ > __Configure Global Security__ > __LDAP__
 
 <center><img src="../imgs/20180209_jenkins_acl.png" width="680px"></center>
 
+## Generate Jenkins' SSH Keys
+
+Place keys under ```/var/jenkins_home/.ssh```
+
+```
+$ docker volume inspect jenkins_jenkins_home
+[
+    {
+        "CreatedAt": "2018-03-16T16:30:13+08:00",
+        "Driver": "local",
+        "Labels": {
+            "com.docker.stack.namespace": "jenkins"
+        },
+        "Mountpoint": "/data/docker/volumes/jenkins_jenkins_home/_data",
+        "Name": "jenkins_jenkins_home",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+
+$ sudo ls /data/docker/volumes/jenkins_jenkins_home/_data/.ssh/
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+```
+
 ## Create Gerrit- related Jobs
 
 #### Install ```Gerrit Trigger``` plugin
@@ -95,3 +119,5 @@ Go to __Manage Jenkins__ > __Configure Global Security__ > __LDAP__
 - Click button under __Status__
 
 <center><img src="../imgs/20180209_jenkins_gerrit_status.png" width="650px"></center>
+
+#### Install Git- related Plugins
