@@ -107,6 +107,9 @@ authorized_keys  id_rsa  id_rsa.pub  known_hosts
 - Pre- requisites
   - (optional) Create ```jenkins``` user in OpenLDAP
   - On __Jenkins__@```/var/jenkins_home/.ssh/``` server, Generate an SSH key
+
+    > Make sure ```/var/jenkins_home/.ssh/``` is owned by ```jenkins```. If not, run ```chown -R 1000:1000 /var/jenkins_home/.ssh```, where ```1000``` is ```jenkins```'s uid
+
   - Go to __Gerrit__ server (where is installed on ```172.29.167.178```) to add ```jenkins``` user and grant administrator access.
   - Copy and paste such SSH key into ```jenkins``` user on __Gerrit__ server
 
@@ -120,4 +123,16 @@ authorized_keys  id_rsa  id_rsa.pub  known_hosts
 
 <center><img src="../imgs/20180209_jenkins_gerrit_status.png" width="650px"></center>
 
-#### Install Git- related Plugins
+#### Install GitLab Plugins
+
+- Log into __Gitlab__ as ```jenkins``` user > __Settings__ > __Access Tokens__ > generate an API token
+
+- In __Jenkins__, Go to __Manage Jenkins__ > __Manage Plugins__ > choose __Available__ > select __Gitlab Plugin__
+
+- __Manage Jenkins__ > __Configure System__ > find __Gitlab__ section, copy and paste the API token generated from __Gitlab__
+
+    > In __Jenkins Credential Provider__ > __Kind__ > select __GitLab API token__
+
+<center><img src="../imgs/20180319_dynalink_jenkins_connect_gitlab.png" width="800px"></center>
+
+where ```10.0.1.6``` is __Gitlab__
