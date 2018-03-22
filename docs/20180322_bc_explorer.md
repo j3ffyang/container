@@ -4,23 +4,18 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
 
 ## Steps to Build Explorer
 
-- Pull Docker Image
+- Clone Repository
 
   ```shell
-  docker pull mysql:tag
+  git clone https://github.com/hyperledger/blockchain-explorer.git
+  cp fabricexplorer.sql /path/to/mysql_volume
   ```
 
 - Start Mysql container
 
   ```shell
-  docker run --name some-mysql -p 3306:3306 -v /path/to/dir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag
-  ```
-
-- Clone Repository
-
-  ```shell
-  git clone https://github.com/hyperledger/blockchain-explorer.git
-  cp fabricexplorer.sql /path/to/mysql-volume
+  docker run --name some-mysql -p 3306:3306 -v /path/to/mysql_volume:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql
   ```
 
 - Initialize Database
@@ -31,11 +26,9 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
   mysql -u root -p < ./fabricexplorer.sql
   ```
 
-- Startup Fabric Network
+- Startup Fabric Network. Then modify configuration of ```config.json```
 
-- Modify configuration
-
-  Here is my own ```config.json```, please ensure all the key files are suitable.
+  Here is a sample of ```config.json```
 
   ```json
   {
