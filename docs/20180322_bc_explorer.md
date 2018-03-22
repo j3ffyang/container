@@ -51,7 +51,7 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
   	"host": "localhost",
   	"port": "8080",
   	"channel": "mychannel",
-  	"keyValueStore": "/tmp/fabric-client-kvs",
+  	"keyValueStore": "/path/to/fabric-client-kvs",
   	"eventWaitTime": "30000",
   	"mysql": {
   		"host": "127.0.0.1",
