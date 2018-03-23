@@ -8,13 +8,15 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
 
   ```shell
   git clone https://github.com/hyperledger/blockchain-explorer.git
-  cp fabricexplorer.sql /path/to/mysql_volume
+  cp fabricexplorer.sql /path/to/mysql_vol
   ```
 
-- Start Mysql container
+> You need to create ```/path/to/mysql_vol``` manually first
+
+- Start MySQL container
 
   ```shell
-  docker run --name some-mysql -p 3306:3306 -v /path/to/mysql_volume:/var/lib/mysql \
+  docker run --name some-mysql -p 3306:3306 -v /path/to/mysql_vol:/var/lib/mysql \
     -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql
   ```
 
@@ -26,7 +28,7 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
   mysql -u root -p < ./fabricexplorer.sql
   ```
 
-- Startup Fabric Network. Then modify configuration of ```config.json```
+- Startup Fabric network. Then modify configuration of ```config.json``` accordingly
 
   Here is a sample of ```config.json```
 
@@ -58,11 +60,14 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
   		"port": "3306",
   		"database": "fabricexplorer",
   		"username": "root",
-  		"passwd": "secret"
+  		"passwd": "my-secret-pw"
   	}
   }
-
   ```
+
+> If ```tls``` is disabled,
+> - use ```grpc://host2:7051``` instead of ```grpcs://host2:7051```
+> - execute to create ```touch ~/blockchain-explorer/fabric-path/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt``` to avoid ```ca.crt``` not found error
 
 - Start Service
 
@@ -78,3 +83,46 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
   npm install
   node main.js
   ```
+
+#### Tips
+
+- List container_id of images from ```hyperledger``` and ```dev-peer```
+
+  ```
+  docker ps -a | grep 'hyperledger\ | dev-peer' | cut -f1 -d" "
+  ```
+
+    Or
+
+  ```
+  docker ps -a | awk '($2 ~ /hyperledger/) || ($2 ~ /dev-peer/) {print $1}'
+  ```
+
+- Disable __peer_tls__, edit ```~/fabric-samples/basic-network/docker-compose.yml```
+
+```
+orderer.example.com:
+  container_name: orderer.example.com
+  image: hyperledger/fabric-orderer
+  environment:
+    - ORDERER_GENERAL_LOGLEVEL=debug
+...
+    - ORDERER_GENERAL_TLS_ENABLED=false
+  working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+  command: orderer
+  ports:
+    - 7050:7050
+  volumes:
+      - ./config/:/etc/hyperledger/configtx
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/:/etc/hyperledger/msp/orderer
+      - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/msp/peerOrg1
+  networks:
+    - basic
+
+peer0.org1.example.com:
+  container_name: peer0.org1.example.com
+  image: hyperledger/fabric-peer
+  environment:
+...
+    - CORE_PEER_TLS_ENABLED=false
+```
