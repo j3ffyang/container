@@ -65,7 +65,7 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
 }
 ```
 
-> If ```tls``` is disabled,
+> If ```tls``` is disabled, (see Tips section for the details of how to disable TLS for demo)
 > - use ```grpc://host2:7051``` instead of ```grpcs://host2:7051```
 > - execute to create ```touch ~/blockchain-explorer/fabric-path/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt``` to avoid ```ca.crt``` not found error
 
