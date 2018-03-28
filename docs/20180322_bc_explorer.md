@@ -8,7 +8,7 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
 
   ```shell
   git clone https://github.com/hyperledger/blockchain-explorer.git
-  cp fabricexplorer.sql /path/to/mysql_vol
+  cp ~/blockchain-explorer/db/fabricexplorer.sql /path/to/mysql_vol
   ```
 
 > You need to create ```/path/to/mysql_vol``` manually first
@@ -16,8 +16,8 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
 - Start MySQL container
 
   ```shell
-  docker run --name some-mysql -p 3306:3306 -v /path/to/mysql_vol:/var/lib/mysql \
-    -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql
+  docker run --name mysql-bcexplorer -p 3306:3306 -v /path/to/mysql_vol:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=mysecret -d mysql
   ```
 
 - Initialize Database
@@ -60,7 +60,7 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
     "port": "3306",
     "database": "fabricexplorer",
     "username": "root",
-    "passwd": "my-secret-pw"
+    "passwd": "mysecret"
     }
 }
 ```
