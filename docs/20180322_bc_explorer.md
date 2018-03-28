@@ -23,7 +23,7 @@ Reference: [https://github.com/hyperledger/blockchain-explorer](https://github.c
 - Initialize Database
 
   ```shell
-  docker exec -it some-mysql bash
+  docker exec -it mysql-bcexplorer bash
   cd /var/lib/mysql
   mysql -u root -p < ./fabricexplorer.sql
   ```
