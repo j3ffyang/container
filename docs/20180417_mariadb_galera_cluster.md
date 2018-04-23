@@ -2,18 +2,19 @@
 #### Document Objective
 - Official MariaDB image
 - Built- in Galera plugin
+- Create a master- master MariaDB cluster
 
 #### Reference
 
-[Galera cluster, MariaDB, CoreOS and Docker](https://withblue.ink/2016/03/09/galera-cluster-mariadb-coreos-and-docker-part-1.html)
+[Galera cluster+ MariaDB on  Docker at withblue.ink](https://withblue.ink/2016/03/09/galera-cluster-mariadb-coreos-and-docker-part-1.html)
 
 ## Deployment
 
 #### Assumption and Pre- requisite
 - Must read the reference doc first!
 - MariaDB persistent volume mount = ```/data/mariadb/mysql``` in this doc
-- A configuration file of Galera ```mysql_server.cnf``` is copied to ```/data/mariadb/etc/mysql.conf.d```
-- ```mariadb-node-0,mariadb-node-1,mariadb-node-2``` (they're nodes to host MariaDB cluster) in ```mysql.conf.d/mysql_server.cnf``` need to reflect your actual domain resolving
+- A configuration file of Galera ```mysql_server.cnf``` is copied to ```/data/mariadb/etc/mysql.conf.d``` (where ```/data/mariadb/``` is persistent volume)
+- ```mariadb-node-0,mariadb-node-1,mariadb-node-2``` (they're node names to host MariaDB cluster) in ```mysql.conf.d/mysql_server.cnf``` need to reflect your actual domain resolving
 
 Configuration File
 
