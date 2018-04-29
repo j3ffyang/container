@@ -50,6 +50,8 @@ wsrep-sst-method=rsync
 # innodb_flush_log_at_trx_commit=0
 ```
 
+Where ```gcomm://mariadb-node-0,mariadb-node-1,mariadb-node-2``` could be ```wsrep_cluster_address="gcomm://10.0.1.6,10.0.1.2,10.0.1.10"```
+
 #### On 1st node
 
 ```
@@ -90,8 +92,27 @@ docker run \
 
 On each of node, log into ```mariadb``` (mysql actually)
 
+Query command example against ```mariadb-2```
+```
+docker exec -it mariadb-2 mysql -uroot -pmysecret -e "show status like 'wsrep_local_state_comment'"
+```
+
+The output should be:
+```
++---------------------------+--------+
+| Variable_name             | Value  |
++---------------------------+--------+
+| wsrep_local_state_comment | Synced |
++---------------------------+--------+
+```
+
+Or
+
 ```
 MariaDB [(none)]> show status like 'wsrep_%';
+```
+
+```
 +------------------------------+--------------------------------------------+
 | Variable_name                | Value                                      |
 +------------------------------+--------------------------------------------+
