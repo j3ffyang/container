@@ -1,6 +1,6 @@
 
 #### Document Objective
-- Build Redis cluster on distributed VMs
+- Build Redis master- slave cluster on distributed VMs
 
 #### Document Reference
 https://hub.docker.com/r/bitnami/redis/
@@ -46,6 +46,9 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=mysecret
+    volumes:
+      - /data/redis/redis.conf:/bitnami/redis/conf/redis.conf
+#      - /data/redis/data:/bitnami/redis/data
     ports:
       - 6379:6379
     networks:
@@ -66,6 +69,9 @@ services:
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_MASTER_PASSWORD=mysecret
       - REDIS_PASSWORD=mysecret
+    volumes:
+      - /data/redis/redis.conf:/bitnami/redis/conf/redis.conf
+#      - /data/redis/data:/bitnami/redis/data
     deploy:
         placement:
             constraints: [node.labels.host==03]
@@ -82,6 +88,9 @@ services:
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_MASTER_PASSWORD=mysecret
       - REDIS_PASSWORD=mysecret
+    volumes:
+      - /data/redis/redis.conf:/bitnami/redis/conf/redis.conf
+#      - /data/redis/data:/bitnami/redis/data
     deploy:
         placement:
             constraints: [node.labels.host==02]
@@ -91,4 +100,14 @@ networks:
   redis:
 #   external:
 #     name: "host"
+```
+
+#### Modify kernel to avoid potential memory leak issues
+
+```
+30:S 02 May 02:40:16.222 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+30:S 02 May 02:40:16.222 # Server initialized
+30:S 02 May 02:40:16.222 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+30:S 02 May 02:40:16.222 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+30:S 02 May 02:40:16.222 * Ready to accept connections
 ```
