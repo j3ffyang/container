@@ -239,6 +239,7 @@ docker service inspect galera-cluster -f "{{ .Endpoint.VirtualIPs }}"
 
 #### Reference Documents
 https://coreos.com/etcd/docs/latest/v2/docker_guide.html
+
 https://hub.docker.com/r/severalnines/mariadb/
 
 #### On 1st container
