@@ -302,6 +302,18 @@ docker service create --name mysql-galera \
   -e CLUSTER_NAME=mysql-galer perconalab/percona-xtradb-cluster:5.6
 ```
 
+#### Check ```wsrep```
+
+```
+ubuntu@host04:~$ docker exec -it mysql-galera.2.ifvaai2goxcv6gbjstaap6mhm mysql -uroot -pmysecret -e "show status like 'wsrep_local_state_comment'"
+Warning: Using a password on the command line interface can be insecure.
++---------------------------+--------+
+| Variable_name             | Value  |
++---------------------------+--------+
+| wsrep_local_state_comment | Synced |
++---------------------------+--------+
+```
+
 #### Check ```etcd``` health
 
 ```
