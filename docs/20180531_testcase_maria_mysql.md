@@ -300,7 +300,9 @@ docker service create --name mysql-galera \
   -e MYSQL_ROOT_PASSWORD=mysecret \
   -e DISCOVERY_SERVICE=0.0.0.0:2379 \
   -e XTRABACKUP_PASSWORD=mysecret \
-  -e CLUSTER_NAME=mysql-galer perconalab/percona-xtradb-cluster:5.6
+  -e CLUSTER_NAME=mysql-galer \
+  --mount type=volume,src=mysql-galer,dst=/var/lib/mysql \
+  perconalab/percona-xtradb-cluster:5.6
 ```
 
 #### Check ```wsrep```
