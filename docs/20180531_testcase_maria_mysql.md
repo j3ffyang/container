@@ -239,6 +239,7 @@ docker service inspect galera-cluster -f "{{ .Endpoint.VirtualIPs }}"
 
 #### Reference Documents
 https://coreos.com/etcd/docs/latest/v2/docker_guide.html
+https://hub.docker.com/r/severalnines/mariadb/
 
 #### On 1st container
 
@@ -247,7 +248,7 @@ docker run -d -v /usr/share/ca-certicates/:/etc/ssl/certs \
   -p 4001:4001 -p 2380:2380 -p 2379:2379 \
   --name etcd quay.io/coreos/etcd:v2.3.8 \
   -name etcd0 \
-  -advertise-client-urls http://10.0.1.6:2379,http://10.0.1.6:4001 \
+  -advertise-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
   -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
   -initial-advertise-peer-urls http://10.0.1.6:2380 \
   -listen-peer-urls http://0.0.0.0:2380 \
@@ -262,7 +263,7 @@ docker run -d -v /usr/share/ca-certicates/:/etc/ssl/certs \
   -p 4001:4001 -p 2380:2380 -p 2379:2379 \
   --name etcd quay.io/coreos/etcd:v2.3.8 \
   -name etcd1 \
-  -advertise-client-urls http://10.0.1.2:2379,http://10.0.1.2:4001 \
+  -advertise-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
   -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
   -initial-advertise-peer-urls http://10.0.1.2:2380 \
   -listen-peer-urls http://0.0.0.0:2380 \
@@ -271,14 +272,14 @@ docker run -d -v /usr/share/ca-certicates/:/etc/ssl/certs \
   -initial-cluster-state new
 ```
 
-#### On 3rd container 
+#### On 3rd container
 
 ```
 docker run -d -v /usr/share/ca-certicates/:/etc/ssl/certs \
   -p 4001:4001 -p 2380:2380 -p 2379:2379 \
   --name etcd quay.io/coreos/etcd:v2.3.8 \
   -name etcd2 \
-  -advertise-client-urls http://10.0.1.10:2379,http://10.0.1.10:4001 \
+  -advertise-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
   -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
   -initial-advertise-peer-urls http://10.0.1.10:2380 \
   -listen-peer-urls http://0.0.0.0:2380 \
@@ -286,4 +287,16 @@ docker run -d -v /usr/share/ca-certicates/:/etc/ssl/certs \
   -initial-cluster \
   etcd0=http://10.0.1.6:2380,etcd1=http://10.0.1.2:2380,etcd2=http://10.0.1.10:2380 \
   -initial-cluster-state new
+```
+
+#### Launch MySQL-Galera
+
+```
+docker service create --name mysql-galera \
+  --replicas 3 \
+  -p 13306:3306 \
+  -e MYSQL_ROOT_PASSWORD=mysecret \
+  -e DISCOVERY_SERVICE=0.0.0.0:2379 \
+  -e XTRABACKUP_PASSWORD=mysecret \
+  -e CLUSTER_NAME=mysql-galer perconalab/percona-xtradb-cluster:5.6
 ```
