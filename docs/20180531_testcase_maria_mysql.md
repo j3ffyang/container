@@ -301,3 +301,22 @@ docker service create --name mysql-galera \
   -e XTRABACKUP_PASSWORD=mysecret \
   -e CLUSTER_NAME=mysql-galer perconalab/percona-xtradb-cluster:5.6
 ```
+
+#### Check ```etcd``` health
+
+```
+ubuntu@host04:~$ etcdctl cluster-health
+member 26b098302d00adb is healthy: got healthy result from http://0.0.0.0:2379
+member 140fedbeeb74765d is healthy: got healthy result from http://0.0.0.0:2379
+member 819153d262a7846c is healthy: got healthy result from http://0.0.0.0:2379
+cluster is healthy
+```
+
+#### List ```etcd``` member
+
+```
+ubuntu@host04:~$ etcdctl -C http://10.0.1.6:2379,http://10.0.1.2:2379,http://10.0.1.10:2379 member list
+26b098302d00adb: name=etcd0 peerURLs=http://10.0.1.6:2380 clientURLs=http://0.0.0.0:2379,http://0.0.0.0:4001
+140fedbeeb74765d: name=etcd2 peerURLs=http://10.0.1.10:2380 clientURLs=http://0.0.0.0:2379,http://0.0.0.0:4001
+819153d262a7846c: name=etcd1 peerURLs=http://10.0.1.2:2380 clientURLs=http://0.0.0.0:2379,http://0.0.0.0:4001
+```
