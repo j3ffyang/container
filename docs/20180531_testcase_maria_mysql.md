@@ -1,4 +1,3 @@
-
 ## Doc Objective
 - Performance stress test comparison between MariaDB and MySQL
 - Dockerized
@@ -186,6 +185,8 @@ docker service create --name etcd \
 ```
 
 - Inspect ```etcd``` network
+
+
 ```
 docker service inspect etcd -f "{{ .Endpoint.VirtualIPs }}"
 [{pv0gr2386qxeu8rjwozknkhjw 10.255.0.152/16} {6xcxhy1szdqrxzkxcf63y8a1z 10.0.7.74/24}]
@@ -204,6 +205,8 @@ docker service create --name galera-cluster \
 ```
 
 - Sample ```/etc/my.cnf```
+
+
 ```
 ubuntu@host02:~$ docker exec -it galera-cluster.1.du7ziacs6f4sb4wh61gym5x8i /bin/bash -c "cat /etc/my.cnf"
 [mysqld]
@@ -230,6 +233,8 @@ wsrep_sst_auth="root:"
 ```
 
 - Inspect
+
+
 ```
 docker service inspect galera-cluster -f "{{ .Endpoint.VirtualIPs }}"
 [{pv0gr2386qxeu8rjwozknkhjw 10.255.0.159/16} {6xcxhy1szdqrxzkxcf63y8a1z 10.0.7.81/24}]
@@ -300,8 +305,8 @@ docker service create --name mysql-galera \
   -e MYSQL_ROOT_PASSWORD=mysecret \
   -e DISCOVERY_SERVICE=0.0.0.0:2379 \
   -e XTRABACKUP_PASSWORD=mysecret \
-  -e CLUSTER_NAME=mysql-galer \
-  --mount type=volume,src=mysql-galer,dst=/var/lib/mysql \
+  -e CLUSTER_NAME=mysql-galera \
+  --mount type=volume,src=mysql-galera,dst=/var/lib/mysql \
   perconalab/percona-xtradb-cluster:5.6
 ```
 
