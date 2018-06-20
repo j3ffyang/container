@@ -79,7 +79,7 @@ Install and configure Swarm
 Add label on __all__ hosts. This is an example for one host
 
 ```
-docker node update --label-add host=$ID $HOST_  ID
+docker node update $NODE_ID --label-add host=$ID
 ```
 
 Grant ```ubuntu``` user access to manage Docker
