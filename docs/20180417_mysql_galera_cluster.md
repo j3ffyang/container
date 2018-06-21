@@ -110,3 +110,5 @@ docker service inspect mysql-galera
     }
 ]
 ```
+
+Where ```10.0.5.4``` is the VirualIP for Galera cluster. 
