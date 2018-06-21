@@ -121,7 +121,7 @@ docker service inspect mysql-galera
 
 Where ```10.0.5.4``` is the VirtualIP for Galera cluster.
 
-## Performance
+## Performance Tuning
 
 Document ref > https://www.percona.com/blog/2013/09/20/innodb-performance-optimization-basics-updated/
 
