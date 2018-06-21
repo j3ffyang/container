@@ -1,8 +1,8 @@
 
 #### Document Objective
-- Official MariaDB image
+- Perconalab MySQL image
 - Built- in Galera plugin
-- Create a master- master MariaDB cluster with ```etcd```
+- Create a master- master Galera cluster with ```etcd```
 
 #### Reference
 
