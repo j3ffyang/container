@@ -84,6 +84,13 @@ docker exec -it $(docker ps -f name=mysql | awk '{print $1}' | grep -v CONTAINER
   mysql -uroot -pmysecret -hlocalhost -e "show status like '%wsrep_incoming%'"
 ```
 
+or
+
+```
+ docker exec -it $(docker ps -qf name=mysql) \
+  mysql -uroot -pmysecret -hlocalhost -e "show status like '%wsrep_incoming%'"
+ ```
+
 ```
 +--------------------------+-------------------------------------------+
 | Variable_name            | Value                                     |
@@ -111,4 +118,4 @@ docker service inspect mysql-galera
 ]
 ```
 
-Where ```10.0.5.4``` is the VirtualIP for Galera cluster. 
+Where ```10.0.5.4``` is the VirtualIP for Galera cluster.
