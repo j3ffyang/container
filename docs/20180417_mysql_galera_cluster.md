@@ -3,6 +3,7 @@
 - Perconalab MySQL image
 - Built- in Galera plugin
 - Create a master- master Galera cluster with ```etcd```
+- Performance tuning
 
 #### Reference
 
@@ -119,3 +120,39 @@ docker service inspect mysql-galera
 ```
 
 Where ```10.0.5.4``` is the VirtualIP for Galera cluster.
+
+## Performance
+
+Document ref > https://www.percona.com/blog/2013/09/20/innodb-performance-optimization-basics-updated/
+
+- Applied ```my.cnf```
+
+```
+[mysqld]
+
+datadir=/var/lib/mysql
+
+default_storage_engine=InnoDB
+binlog_format=ROW
+
+innodb_buffer_pool_size=6000M
+innodb_log_file_size=256M
+innodb_log_buffer_size=4M
+innodb_flush_log_at_trx_commit=0
+innodb_thread_concurrency=8
+innodb_flush_method=O_DIRECT
+innodb_file_per_table
+
+innodb_autoinc_lock_mode=2
+innodb_locks_unsafe_for_binlog=1
+
+bind_address = 0.0.0.0
+skip-name-resolve
+
+wsrep_slave_threads=2
+wsrep_cluster_address=gcomm://
+wsrep_provider=/usr/lib64/galera3/libgalera_smm.so
+
+wsrep_sst_method=xtrabackup-v2
+wsrep_sst_auth="root:"
+```
