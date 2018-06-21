@@ -280,3 +280,23 @@ where ```cfg.members[0]``` is the secondary ```node_id```
 rs0:PRIMARY> rs.add("secondary1")
 rs0:PRIMARY> rs.add("secondary2")
 ```
+
+#### Operation Hints
+
+- Connect and Use database
+
+```
+rs0:PRIMARY> show databases;
+admin       0.000GB
+dl_loc      0.027GB
+dl_loc_env  0.000GB
+local       0.105GB
+rs0:PRIMARY> use dl_loc
+switched to db dl_loc
+
+rs0:PRIMARY> show collections
+loc_current
+loc_record
+
+rs0:PRIMARY> db.loc_record.find({})
+```
