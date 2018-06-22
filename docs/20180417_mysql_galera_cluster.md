@@ -135,7 +135,7 @@ datadir=/var/lib/mysql
 default_storage_engine=InnoDB
 binlog_format=ROW
 
-innodb_buffer_pool_size=1000M
+innodb_buffer_pool_size=1024M
 innodb_log_file_size=256M
 innodb_log_buffer_size=4M
 innodb_flush_log_at_trx_commit=0
