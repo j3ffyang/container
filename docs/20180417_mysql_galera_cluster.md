@@ -135,7 +135,7 @@ datadir=/var/lib/mysql
 default_storage_engine=InnoDB
 binlog_format=ROW
 
-innodb_buffer_pool_size=6000M
+innodb_buffer_pool_size=1000M
 innodb_log_file_size=256M
 innodb_log_buffer_size=4M
 innodb_flush_log_at_trx_commit=0
@@ -155,4 +155,14 @@ wsrep_provider=/usr/lib64/galera3/libgalera_smm.so
 
 wsrep_sst_method=xtrabackup-v2
 wsrep_sst_auth="root:"
+```
+
+- To determine the ```buffer_pool_size```
+
+Document ref > https://dba.stackexchange.com/questions/27328/how-large-should-be-mysql-innodb-buffer-pool-size
+
+```
+SELECT CEILING(Total_InnoDB_Bytes*1.6/POWER(1024,3)) RIBPS FROM (SELECT \
+  SUM(data_length+index_length) Total_InnoDB_Bytes FROM information_schema.tables \
+  WHERE engine='InnoDB') A;
 ```
