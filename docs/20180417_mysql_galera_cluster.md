@@ -172,9 +172,26 @@ SELECT CEILING(Total_InnoDB_Bytes*1.6/POWER(1024,3)) RIBPS FROM (SELECT \
 ```
 SELECT (PagesData*PageSize)/POWER(1024,3) DataGB FROM \
   (SELECT variable_value PagesData \
-  FROM information_schema.global_status \
-  WHERE variable_name='Innodb_buffer_pool_pages_data') A, \
-  (SELECT variable_value PageSize \
-  FROM information_schema.global_status \
-  WHERE variable_name='Innodb_page_size') B;
+    FROM information_schema.global_status \
+    WHERE variable_name='Innodb_buffer_pool_pages_data') A, \
+      (SELECT variable_value PageSize \
+        FROM information_schema.global_status \
+        WHERE variable_name='Innodb_page_size') B;
+```
+
+- Check the recommended size of ```buffer_pool_size```
+
+```
+SELECT CONCAT(CEILING(RIBPS/POWER(1024,pw)),SUBSTR(' KMGT',pw+1,1))
+Recommended_InnoDB_Buffer_Pool_Size FROM
+(
+    SELECT RIBPS,FLOOR(LOG(RIBPS)/LOG(1024)) pw
+    FROM
+    (
+        SELECT SUM(data_length+index_length)*1.1*growth RIBPS
+        FROM information_schema.tables AAA,
+        (SELECT 1.25 growth) BBB
+        WHERE ENGINE='InnoDB'
+    ) AA
+) A;
 ```
