@@ -14,8 +14,8 @@
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
-- [Gitlab in Docker](./docs/20171020_gitlab.md)
-- [Gerrit in Docker and integration with Gitlab](./docs/20171022_gerrit.md)
+- [Gitlab integration with OpenLDAP](./docs/20171020_gitlab.md)
+- [Gerrit integration with Gitlab and OpenLDAP](./docs/20171022_gerrit.md)
 - [Portainer, monitoring of docker cluster](./docs/20171022_portainer.md)
 - [OpenProject](./docs/20171025_openproj.md)
 - [Zabbix, monitoring of all components](./docs/20171028_zabbix.md)
