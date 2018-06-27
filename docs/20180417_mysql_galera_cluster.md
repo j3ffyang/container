@@ -197,3 +197,25 @@ Recommended_InnoDB_Buffer_Pool_Size FROM
     ) AA
 ) A;
 ```
+
+## Stress Test by using ```sysbench```
+
+Reference doc > https://wiki.mikejung.biz/Docker
+
+```
+sysbench --test=/usr/share/doc/sysbench/tests/db/oltp.lua \
+  --db-driver=mysql --oltp-table-size=20000000 --mysql-db=sysbench \
+  --mysql-user=sysbench --mysql-password=password prepare
+```
+
+```
+for each in 1 4 8 16 32 64; do sysbench \
+  --test=/usr/share/doc/sysbench/tests/db/oltp.lua --oltp-table-size=20000000 \
+  --mysql-db=sysbench --mysql-user=sysbench --mysql-password=password \
+  --max-time=240 --max-requests=0 --num-threads=$each run; done
+
+for each in 1 4 8 16 32 64; do sysbench \
+  --test=/usr/share/doc/sysbench/tests/db/oltp.lua --oltp-table-size=20000000 \ --mysql-db=sysbench --mysql-user=sysbench --mysql-password=password \
+  --oltp-read-only=on --max-time=240 --max-requests=0 \
+  --num-threads=$each run; done
+```
