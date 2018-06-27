@@ -27,7 +27,7 @@
 - [MySQL, MariaDB in Galera with etcd](./docs/20180531_testcase_maria_mysql.md)
 - [MySQL cluster stress test](./docs/20180615_mysql_perf_stress.md)
 
-#### BigData
+#### Analytics
 - [Gluster Filesystem](./docs/20171118_gfs.md)
 - [Mongo cluster](./docs/20170829_mongo_cluster_in_docker.md)
 - [Redis cluster](./docs/20180428_redis_cluster.md)
