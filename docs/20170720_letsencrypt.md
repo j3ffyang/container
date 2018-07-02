@@ -162,7 +162,7 @@ sudo certbot certonly --webroot \
   -d daotech.io -d www.daotech.io
 ```
 
-Then ```systemctl restart nginx.service"
+Then ```systemctl restart nginx.service```
 
 Configure a cronjob to automate the renew execution
 ```shell
