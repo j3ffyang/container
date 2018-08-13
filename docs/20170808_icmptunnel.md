@@ -3,8 +3,11 @@
 - Configure OpenVPN client with adding routing to ICMP tunnel server, so that OpenVPN client knows where to route
 
 #### Reference Docs
+- https://github.com/albertzak/hanstunnel
 - [http://code.gerade.org/hans/](http://code.gerade.org/hans/)
+- http://thomer.com/icmptx/
 - [https://labs.mwrinfosecurity.com/tools/pivot-with-ping/](https://labs.mwrinfosecurity.com/tools/pivot-with-ping/)
+- https://github.com/jamesbarlow/icmptunnel
 
 ## Architecture
 
@@ -25,6 +28,7 @@ make
 - Run as server by root (blue one)
 ```
 sudo ./hans -s 10.10.10.0 -p password
+[sudo] echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
 ```
 
 - Run as client by root (green one)
@@ -32,13 +36,13 @@ sudo ./hans -s 10.10.10.0 -p password
 sudo ./hans -c SERVER_IP -p password
 ```
 
-where ```SERVER_IP``` is tunnel_server's public IP. Now you can ping between server and client  
-
+where ```SERVER_IP``` is tunnel_server's public IP. Now you can ping between server (blue) and client (green)
 
 - (optional) Add route on a VPN client (yellow one) manually
 ```
 ip route add 10.10.10.0/24 dev tun0
 ```
+Then you can ping between server (blue) and VPN_client (yellow)
 
 #### Modify ```/etc/openvpn/server.conf``` on OpenVPN Server
 ```
