@@ -2,6 +2,8 @@
 
 I have an account at [Steam.com](https://store.steampowered.com/) and used to play some shooting games on Windows on one old laptop. Recently I decided to enable Steam on my Debian Stretch on my Dell XPS Developer Edition. It's running smoothly.
 
+<center><img src=../imgs/20190113_steam_deb.png width="600px"></center>
+
 #### Edit ```/etc/apt/sources.list``` and Add
 
 ```
