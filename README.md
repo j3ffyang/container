@@ -35,3 +35,6 @@
 - [Mongo cluster](./docs/20170829_mongo_cluster_in_docker.md)
 - [Redis cluster](./docs/20180428_redis_cluster.md)
 - [Redis cluster by Sentinel](./docs/20180626_redis_sentinel.md)
+
+#### Fun
+- [How to Install Steam on Debian Stretch](./docs/20190113_install_steam_debian_stretch.md)
