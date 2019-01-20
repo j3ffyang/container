@@ -47,3 +47,8 @@ PasswordAuthentication no
 ```
 
 Then ```sudo systemctl restart sshd.service```
+
+#### Set hostname
+```
+sudo hostnamectl set-hostname linode
+```
