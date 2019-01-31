@@ -3,16 +3,9 @@
 - Deploy RabbitMQ by Swarm to labeled (dedicated) nodes
 - Store queue data in persistent volume
 
-
-#### Why RabbitMQ
-
-- Upstream doesn't mind whether downstream run successfully or not. For example, our API service would call lots of third part services, such as SMS service, blockchain service, etc. But It should run as normal even if these services failed.
-
-- Upstream do care about the result of the downstream, but it will take too long. In our case, API service save one record into MongoDB, then our client receive this event and review it, response a comment finally, if we didn't use MQ, the final result would depends on us and our client.
-
 #### How to use
 
-The most important feature is __decouple__.
+The most objective is to __decouple__.
 
 <center><img src="../imgs/Rabbitmq.png" width="auto"></center>
 

@@ -56,7 +56,7 @@ Here belows the reasons about choosing Mongo.
 
 ## Steps
 
-<center><img src=../imgs/20171018_mongo_cluster.png width="500px"></center>
+<center><img src="../imgs/20171018_mongo_cluster.png" width="500px"></center>
 
 #### Launch Mongo containers through compose yaml
 
