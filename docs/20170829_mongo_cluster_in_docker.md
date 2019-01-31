@@ -2,6 +2,47 @@
 - MongoDB in docker
 - Clustering across 3 VMs
 
+
+#### Why Mongo
+
+Here belows the reasons about choosing Mongo.
+
+- Our core data is unstructured
+
+    This is the most important reason. Our data, about GPS, traffic, is redundant and almost unstructured, the redundant means we collect lots of attributes of data, and some of them are useless now.
+
+- Scaling MongoDB and achieving HA are extremely simple
+
+- Performance
+
+    On the `out-of-box` stage, the performance of Mongo is much better than PG.
+
+- We don't have a professional DBA.
+
+    This is a very important factor to us. As we know the performance of PG is better than Mongo, but to reach this point, one have to master PG and pay much attention on it.
+
+
+#### Data classification
+
+  Data type | Database
+  -- | --
+  User | PostgreSQL
+  Permission | PostgreSQL
+  Payment | PostgreSQL
+  Traffic | MongoDB
+  GPS | MongoDB
+  Live Session Record | MongoDB
+  Blockchain Points Flow record | MongoDB
+
+#### Architecture
+
+
+  <center><img src="../imgs/Mongo_Sharding_Cluster.png" width="auto"></center>
+
+  The sharding feature split data into different MongoDB shards, each shards stores one part of data and have it's own cluster.
+
+
+
 #### Reference
 - [https://docs.mongodb.com/manual/tutorial/force-member-to-be-primary/](https://docs.mongodb.com/manual/tutorial/force-member-to-be-primary/)
 - [https://stackoverflow.com/questions/16331276/how-to-convert-secondary-node-to-primary-if-maximum-of-node-down-in-a-replica-se](https://stackoverflow.com/questions/16331276/how-to-convert-secondary-node-to-primary-if-maximum-of-node-down-in-a-replica-se)
@@ -24,18 +65,18 @@ docker stack deploy -c mongo.yaml mongo
 ```
 
 ```yaml
-version: "3.3"
+version: "3"
 
-# networks:
-#   mongonet2:
+networks:
+  mongonet:
 
 services:
   mongo1:
     image: mongo:3.4
     networks:
-      - outside
-#    ports:
-#      - '27017:27017'
+      - mongonet
+    ports:
+      - '27017:27017'
     hostname: "mongo1"
     volumes:
       - mongodata:/data/db
@@ -52,9 +93,7 @@ services:
   mongo2:
     image: mongo:3.4
     networks:
-      - outside
-#    ports:
-#      - '27017:27017'
+      - mongonet
     hostname: "mongo2"
     volumes:
       - mongodata:/data/db
@@ -68,59 +107,33 @@ services:
         constraints: [node.labels.host==5]
       replicas: 1
 
-  mongo3:
-    image: mongo:3.4
-    networks:
-      - outside
-#    ports:
-#      - '27017:27017'
-    hostname: "mongo3"
+      mongo3:
+        image: mongo:3.4
+        networks:
+          - mongonet
+        hostname: "mongo3"
+        volumes:
+          - mongodata:/data/db
+          - mongoconfigdb:/data/configdb
+          - mongokeyfile:/opt/keyfile
+        environment:
+          - keyFile:/opt/keyfile/mongodb-keyfile
+        command: ["mongod", "--replSet", "rs0"]
+        deploy:
+          placement:
+            constraints: [node.labels.host==4]
+          replicas: 1
+
     volumes:
-      - mongodata:/data/db
-      - mongoconfigdb:/data/configdb
-      - mongokeyfile:/opt/keyfile
-    environment:
-      - keyFile:/opt/keyfile/mongodb-keyfile
-    command: ["mongod", "--replSet", "rs0"]
-    deploy:
-      placement:
-        constraints: [node.labels.host==4]
-      replicas: 1
-
-networks:
-  outside:
-    external:
-      name: "host"
-
-volumes:
-  mongodata:
-  mongoconfigdb:
-  mongokeyfile:
-```
-
-> Note: since the network in the stack is using ```outside``` network, which is on container's host respectively, Mongo replicaSet ```rs0``` requires entries in ```/etc/hosts``` for naming resolve. Therefore ```/etc/hosts``` needs modified on __all__ container hosts, such as
-
-```
-ubuntu@host6:/data/yaml$ cat /etc/hosts
-127.0.0.1  localhost  localhost.localdomain  VM-0-2-ubuntu
-
-# The following lines are desirable for IPv6 capable hosts
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-
-10.0.0.2	host0	gfs00	firstbox
-10.0.1.2	host1	ldap
-10.0.1.184	host2	gfs02
-10.0.1.198	host3	gfs03
-10.0.1.119	host4	gfs04	fabric	mongo3
-10.0.1.31	host5	mongo2
-10.0.1.43	host6	mongo1
+      mongodata:
+      mongoconfigdb:
+      mongokeyfile:
 ```
 
 #### Create an admin user.
 
 - Log into mongo shell on ```primary``` container
+
 ```shell
 docker exec -it $(docker ps -qf name=mongo) mongo
 ```
@@ -197,11 +210,13 @@ docker exec -it $(docker ps -qf name=mongo) mongo
 ```
 
 - Verify
+
 ```
 > rs0:PRIMARY> rs.conf()
 ```
 
 - Add the other 2 nodes into the replica set, on ```primary```
+
 ```
 rs0:PRIMARY> rs.add("secondary1")
 rs0:PRIMARY> rs.add("secondary2")
@@ -279,24 +294,4 @@ where ```cfg.members[0]``` is the secondary ```node_id```
 ```
 rs0:PRIMARY> rs.add("secondary1")
 rs0:PRIMARY> rs.add("secondary2")
-```
-
-#### Operation Hints
-
-- Connect and Use database
-
-```
-rs0:PRIMARY> show databases;
-admin       0.000GB
-dl_loc      0.027GB
-dl_loc_env  0.000GB
-local       0.105GB
-rs0:PRIMARY> use dl_loc
-switched to db dl_loc
-
-rs0:PRIMARY> show collections
-loc_current
-loc_record
-
-rs0:PRIMARY> db.loc_record.find({})
 ```
