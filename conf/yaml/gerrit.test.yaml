@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  gerrit:
+    # restart: always
+    image: docker.io/fabric8/gerrit:latest
+    networks:
+    - gerrit
+    ports:
+    - 0.0.0.0:8080:8080
+    - 29418:29418
+
+networks:
+  gerrit:
