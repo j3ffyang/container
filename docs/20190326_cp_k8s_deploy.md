@@ -6,7 +6,36 @@
 
 # Deploy Kubernetes on Private OpenStack Cloud
 
+<!-- TOC depthFrom:2 depthTo:4 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [Existing Environment](#existing-environment)
+- [Security Hardening](#security-hardening)
+		- [Operating System on Virtual Machine](#operating-system-on-virtual-machine)
+		- [Update Hostname](#update-hostname)
+		- [Turn-on Firewall](#turn-on-firewall)
+		- [Harden SSHd, then ```systemctl restart sshd.service```](#harden-sshd-then-systemctl-restart-sshdservice)
+		- [Create a non-root user and grant it ```sudo``` permission](#create-a-non-root-user-and-grant-it-sudo-permission)
+- [Update other Nodes in the Environment](#update-other-nodes-in-the-environment)
+		- [Network Topology](#network-topology)
+		- [Update ```/etc/hosts``` on 1st host](#update-etchosts-on-1st-host)
+		- [Setup all hostnames by using ```hostnamectl set-hostname```](#setup-all-hostnames-by-using-hostnamectl-set-hostname)
+		- [Setup network to allow other hosts go internet](#setup-network-to-allow-other-hosts-go-internet)
+- [Docker](#docker)
+		- [Install](#install)
+		- [Use China local image repo. Modify ```/etc/docker/daemon.json```](#use-china-local-image-repo-modify-etcdockerdaemonjson)
+		- [Grant non-root to control Docker](#grant-non-root-to-control-docker)
+- [Kubernetes](#kubernetes)
+		- [Using China local repo for install](#using-china-local-repo-for-install)
+		- [Pull images while using local repo](#pull-images-while-using-local-repo)
+		- [Start K8S by root](#start-k8s-by-root)
+		- [Grant non-root user to control K8S](#grant-non-root-user-to-control-k8s)
+		- [Check the status by non-root user](#check-the-status-by-non-root-user)
+		- [Install ```flannel``` network](#install-flannel-network)
+		- [Install and configure Docker and K8S on other hosts](#install-and-configure-docker-and-k8s-on-other-hosts)
+- [Appendix](#appendix)
+		- [Output of ```kubeadm init```](#output-of-kubeadm-init)
+
+<!-- /TOC -->
 
 ## Existing Environment
 
@@ -21,7 +50,7 @@ CPU 核 | Memory (G) 内存 | OS Disk (G) | IP | External Disk (G) 外挂磁盘
 
 ## Security Hardening
 
-### Operating System on Virtual Machine
+#### Operating System on Virtual Machine
 
 ```
 root@vantiq01:~# cat /etc/lsb-release
@@ -56,7 +85,7 @@ adduser ubuntu
 usermod -aG sudo ubuntu
 ```
 
-## Update other Nodes
+## Update other Nodes in the Environment
 
 #### Network Topology
 We're given total 6 virtual machines and one of 6 has access to internet
@@ -106,7 +135,7 @@ ip r add default via 10.100.100.11 dev eth0
 
 > Note: you might have to delete the pre-configured default gateway. Caution: be careful when you do this and you know what exactly you're doing!
 
-## Install Docker
+## Docker
 
 #### Install
 > Reference > https://docs.docker.com/install/linux/docker-ce/ubuntu/
@@ -134,7 +163,7 @@ Restart Docker ```systemctl restart docker.service```
 sudo gpasswd -a $USER docker
 ```
 
-## Install Kubernetes
+## Kubernetes
 
 > Reference > https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
@@ -236,7 +265,7 @@ kube-system   kube-proxy-sbsp6                   1/1     Running   0          91
 kube-system   kube-scheduler-vantiq01            1/1     Running   0          90m
 ```
 
-#### Install other hosts
+#### Install and configure Docker and K8S on other hosts
 
 ```
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "apt install apt-transport-https ca-certificates curl software-properties-common"; done
@@ -245,7 +274,21 @@ for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "curl -fsSL http
 
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'; done
 
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; apt install docker-ce'; done
+```
 
+> Note: you should NOT pass ```-y``` when installing to prevent automatically upgrade without your permission
+
+- Check ```docker --version```
+
+```
+for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; docker --version'; done
+```
+
+- Copy ```/etc/docker/daemon.json``` from host01 to all other hosts then restart docker
+```
+for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem /etc/docker/daemon.json root@vantiq0$i:/etc/docker/; done
+for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; systemctl restart docker.service'; done
 ```
 
 
