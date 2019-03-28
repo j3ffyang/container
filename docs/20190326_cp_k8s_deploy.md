@@ -6,35 +6,7 @@
 
 # Deploy Kubernetes on Private OpenStack Cloud
 
-<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
-- [Existing Environment](#existing-environment)
-- [Security Hardening](#security-hardening)
-	- [Operating System on Virtual Machine](#operating-system-on-virtual-machine)
-		- [Update Hostname](#update-hostname)
-		- [Turn-on Firewall](#turn-on-firewall)
-		- [Harden SSHd, then ```systemctl restart sshd.service```](#harden-sshd-then-systemctl-restart-sshdservice)
-		- [Create a non-root user and grant it ```sudo``` permission](#create-a-non-root-user-and-grant-it-sudo-permission)
-- [Update other Nodes](#update-other-nodes)
-		- [Network Topology](#network-topology)
-		- [Update ```/etc/hosts``` on 1st host](#update-etchosts-on-1st-host)
-		- [Setup all hostnames by using ```hostnamectl set-hostname```](#setup-all-hostnames-by-using-hostnamectl-set-hostname)
-		- [Setup network to allow other hosts go internet](#setup-network-to-allow-other-hosts-go-internet)
-- [Install Docker](#install-docker)
-		- [Install](#install)
-		- [Use China local image repo. Modify ```/etc/docker/daemon.json```](#use-china-local-image-repo-modify-etcdockerdaemonjson)
-		- [Grant non-root to control Docker](#grant-non-root-to-control-docker)
-- [Install Kubernetes](#install-kubernetes)
-		- [Using China local repo for install](#using-china-local-repo-for-install)
-		- [Pull images while using local repo](#pull-images-while-using-local-repo)
-		- [Start K8S by root](#start-k8s-by-root)
-		- [Grant non-root user to control K8S](#grant-non-root-user-to-control-k8s)
-		- [Check the status by non-root user](#check-the-status-by-non-root-user)
-		- [Install ```flannel``` network](#install-flannel-network)
-- [Appendix](#appendix)
-		- [Output of ```kubeadm init```](#output-of-kubeadm-init)
-
-<!-- /TOC -->
 
 ## Existing Environment
 
@@ -132,23 +104,7 @@ On other hosts
 ip r add default via 10.100.100.11 dev eth0
 ```
 
-From now on, other hosts should be able to access the internet
-
-Specifically on Ubuntu 18.04 LTS, the networking DNS service has been changed to ```netplan``` in yaml format configuration, you need to run
-
-```
-netplan generate
-netplan apply
-
-systemctl restart NetworkManager.service
-```
-
-
-
-
-
-
-
+> Note: you might have to delete the pre-configured default gateway. Caution: be careful when you do this and you know what exactly you're doing!
 
 ## Install Docker
 
@@ -280,6 +236,17 @@ kube-system   kube-proxy-sbsp6                   1/1     Running   0          91
 kube-system   kube-scheduler-vantiq01            1/1     Running   0          90m
 ```
 
+#### Install other hosts
+
+```
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "apt install apt-transport-https ca-certificates curl software-properties-common"; done
+
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"; done
+
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'; done
+
+
+```
 
 
 
