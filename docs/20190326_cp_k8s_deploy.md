@@ -197,17 +197,17 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 ```
 
-#### Pull images while using local repo (optional if you don't have this challenge)
+#### (optional) Pull images while using local repo (if you have this challenge)
 
 ```
 images=(
-    kube-apiserver:v1.13.4
-    kube-controller-manager:v1.13.4
-    kube-scheduler:v1.13.4
-    kube-proxy:v1.13.4
+    kube-apiserver:v1.14.0
+    kube-controller-manager:v1.14.0
+    kube-scheduler:v1.14.0
+    kube-proxy:v1.14.0
     pause:3.1
-    etcd:3.2.24
-    coredns:1.2.6
+    etcd:3.3.10
+    coredns:1.3.1
 )
 
 for imageName in ${images[@]} ; do
@@ -409,5 +409,6 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 You can now join any number of machines by running the following on each node
 as root:
 
-  kubeadm join 10.100.100.11:6443 --token jx059c.wrud9vy63apx8lg3 --discovery-token-ca-cert-hash sha256:1af79ce9f381c5dec72b0d9df0e68ad6d91641ae14e823360d46646b187fd491
+kubeadm join 10.100.100.11:6443 --token 7li01q.z4d1rcdlowkr7m42 \
+	--discovery-token-ca-cert-hash sha256:bbad2c92df60b77d1bb91c5cc56c762b4a736ca942d4c5674eae8b8a634b91f8
 ```
