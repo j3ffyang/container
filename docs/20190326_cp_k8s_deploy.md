@@ -265,7 +265,9 @@ kube-system   kube-proxy-sbsp6                   1/1     Running   0          91
 kube-system   kube-scheduler-vantiq01            1/1     Running   0          90m
 ```
 
-#### Install and configure Docker and K8S on other hosts
+#### Install and Configure Docker and K8S on other hosts
+
+- Instasll Docker
 
 ```
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "apt install apt-transport-https ca-certificates curl software-properties-common"; done
@@ -290,6 +292,27 @@ for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; docke
 for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem /etc/docker/daemon.json root@vantiq0$i:/etc/docker/; done
 for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; systemctl restart docker.service'; done
 ```
+
+- Copy ```/etc/apt/sources.list.d/kubernetes.list``` to other hosts
+```
+for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem kubernetes.list root@vantiq0$i:/etc/apt/sources.list.d/; done
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -'; done
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'apt update'; done
+```
+
+- Install K8S
+```
+for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'apt install kubelet kubeadm kubectl'; done
+```
+
+- Modify ```ufw``` on 1st host
+```
+sudo ufw allow from 10.100.100.0/24 to any port 6443
+```
+
+where ```10.100.100.0``` is the network in which K8S resides and port ```6443``` is for cluster
+
+- Join K8S cluster
 
 
 
