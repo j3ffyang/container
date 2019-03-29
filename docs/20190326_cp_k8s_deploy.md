@@ -156,7 +156,27 @@ sudo apt install docker-ce
 }
 ```
 
-Restart Docker ```systemctl restart docker.service```
+#### Using ```systemd``` to control the Docker daemon
+Overriding Defaults for the Docker Daemon
+
+```
+sudo systemctl edit docker
+```
+
+The above command generates ```/etc/systemd/system/docker.service.d``` and ```override.conf``` under it
+
+```
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+```
+
+```
+systemctl daemon-reload
+systemctl restart docker.service
+```
+
+Bonus: if you prefer ```vi``` as default editor on Ubuntu, run ```update-alternatives --config editor```
 
 #### Grant non-root to control Docker
 ```
