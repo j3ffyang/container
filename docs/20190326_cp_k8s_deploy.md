@@ -197,7 +197,7 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 ```
 
-#### Pull images while using local repo
+#### Pull images while using local repo (optional if you don't have this challenge)
 
 ```
 images=(
@@ -227,7 +227,7 @@ and https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-#### Grant non-root user to control K8S
+#### Grant non-root user access to control K8S
 ```
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -261,11 +261,11 @@ kube-system   kube-scheduler-vantiq01            1/1     Running   0          11
 > Reference > https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 - Pre-requisite
-For flannel to work correctly, you must pass ```--pod-network-cidr=10.244.0.0/16``` to kubeadm init.
-Set ```/proc/sys/net/bridge/bridge-nf-call-iptables``` to ```1``` by running ```sysctl net.bridge.bridge-nf-call-iptables=1``` to pass bridged IPv4 traffic to iptables’ chains. ...
+	- For flannel to work correctly, you MUST pass ```--pod-network-cidr=10.244.0.0/16``` to ```kubeadm init```.
+	- Set ```/proc/sys/net/bridge/bridge-nf-call-iptables``` to ```1``` by running ```sysctl net.bridge.bridge-nf-call-iptables=1``` to pass bridged IPv4 traffic to iptables’ chains. ...
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 - After install, check status
