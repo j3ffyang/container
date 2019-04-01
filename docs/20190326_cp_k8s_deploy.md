@@ -422,6 +422,11 @@ The proposed workaround
 https://github.com/coredns/coredns/tree/master/plugin/loop#troubleshooting-loops-in-kubernetes-clusters
 ```
 
+and another good summary and fix
+```
+https://stackoverflow.com/questions/53075796/coredns-pods-have-crashloopbackoff-or-error-state/53414041#53414041
+```
+
 Basically to disable ```systemd-resolved.service``` then use native ```network-manager.service``` instead, on Ubuntu 18.04 LTS. Here are my steps
 
 Update ```/etc/NetworkManager/NetworkManager.conf``` and add
