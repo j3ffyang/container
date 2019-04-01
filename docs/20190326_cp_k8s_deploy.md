@@ -424,6 +424,12 @@ https://github.com/coredns/coredns/tree/master/plugin/loop#troubleshooting-loops
 
 Basically to disable ```systemd-resolved.service``` then use native ```network-manager.service``` instead, on Ubuntu 18.04 LTS. Here are my steps
 
+Update ```/etc/NetworkManager/NetworkManager.conf``` and add
+```
+dns=default
+```
+
+then restart daemons
 ```
 sudo systemctl disable systemd-resolved.service
 sudo systemctl stop systemd-resolved.service
