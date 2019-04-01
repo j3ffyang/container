@@ -439,6 +439,33 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 ```
 
+Delete and restart ```coredns``` pod, then its status again
+```
+kubectl delete pod -n=kube-system coredns-fb8b8dccf-8ggcf
+
+ubuntu@vantiq01:~$ kubectl get pods -n=kube-system
+NAME                               READY   STATUS    RESTARTS   AGE
+coredns-fb8b8dccf-fwbl4            1/1     Running   0          17m
+coredns-fb8b8dccf-kpq75            1/1     Running   0          18m
+etcd-vantiq01                      1/1     Running   0          2d21h
+kube-apiserver-vantiq01            1/1     Running   0          2d21h
+kube-controller-manager-vantiq01   1/1     Running   0          2d21h
+kube-flannel-ds-amd64-f4w6k        1/1     Running   0          19h
+kube-flannel-ds-amd64-fd6tc        1/1     Running   0          2d21h
+kube-flannel-ds-amd64-jtvbl        1/1     Running   0          19h
+kube-flannel-ds-amd64-nsmzn        1/1     Running   0          2d20h
+kube-flannel-ds-amd64-sncvq        1/1     Running   0          2d21h
+kube-flannel-ds-amd64-wttjw        1/1     Running   0          20h
+kube-proxy-5xxk6                   1/1     Running   0          2d21h
+kube-proxy-8rdt7                   1/1     Running   0          19h
+kube-proxy-j5fgw                   1/1     Running   0          2d21h
+kube-proxy-p8rzl                   1/1     Running   0          19h
+kube-proxy-thpgm                   1/1     Running   0          20h
+kube-proxy-vhgvr                   1/1     Running   0          2d20h
+kube-scheduler-vantiq01            1/1     Running   0          2d21h
+```
+
+
 
 
 
