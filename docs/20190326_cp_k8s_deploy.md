@@ -353,8 +353,7 @@ Generally, the rule should cover the following access requirements
 
 1. Request from ```10.100.100.0/24``` to ```10.100.100.11:6443```
 2. Request from ```10.224.0.0/24``` to  ```10.100.100.11:6443```
-3. The incoming from random Github IP outside to ```10.100.100.11:6443```, associated to outgoing traffic when image download is initialized
-
+3. The incoming from random Github IPs to ```10.100.100.11:6443```, associated to outgoing traffic when image download is initialized
 
 - Pull docker images on each of hosts, including ```flannel```
 
