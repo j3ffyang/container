@@ -482,10 +482,47 @@ Server Version: v1.14.0
 Cluster access verified -- have fun deploying Vantiq!
 ```
 
+#### Pre-requisite for Product Install
 
+- Install OpenJAVA
 
+```
+sudo apt install openjdk-8-jre-headless
 
+ubuntu@vantiq01:~$ java -version
+openjdk version "1.8.0_191"
+OpenJDK Runtime Environment (build 1.8.0_191-8u191-b12-2ubuntu0.18.04.1-b12)
+OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
+```
 
+- Git version
+```
+ubuntu@vantiq01:~$ git version
+git version 2.17.1
+```
+
+- Docker version and controllable by a non-root user 
+```
+ubuntu@vantiq01:~$ docker version
+Client:
+ Version:           18.09.3
+ API version:       1.39
+ Go version:        go1.10.8
+ Git commit:        774a1f4
+ Built:             Thu Feb 28 06:53:11 2019
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          18.09.3
+  API version:      1.39 (minimum version 1.12)
+  Go version:       go1.10.8
+  Git commit:       774a1f4
+  Built:            Thu Feb 28 05:59:55 2019
+  OS/Arch:          linux/amd64
+  Experimental:     false
+```
 
 ## Exception Received during Deployment
 
