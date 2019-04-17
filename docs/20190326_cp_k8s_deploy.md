@@ -412,6 +412,12 @@ bgd6cx.2x0fxxqw6cx3l0q4
 
 And re-join by using the new token
 
+#### Label Nodes
+
+```
+ubuntu@vantiq01:~$ kubectl label node vantiq03 node-role.kubernetes.io/worker=worker
+```
+
 ## Install Vantiq Product
 
 Below are steps of installing Vantiq software, which requires the access to Vantiq private repo at Github.com
@@ -501,7 +507,7 @@ ubuntu@vantiq01:~$ git version
 git version 2.17.1
 ```
 
-- Docker version and controllable by a non-root user 
+- Docker version and controllable by a non-root user
 ```
 ubuntu@vantiq01:~$ docker version
 Client:
