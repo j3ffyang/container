@@ -137,6 +137,30 @@ ip r add default via 10.100.100.11 dev eth0
 
 > Note: you might have to delete the pre-configured default gateway. Caution: be careful when you do this and you know what exactly you're doing!
 
+#### Block Device for Mount
+
+```
+for i in {2..4}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; lsblk'; done
+vantiq02
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+vda    252:0    0   40G  0 disk
+└─vda1 252:1    0   40G  0 part /
+vdb    252:16   0  530G  0 disk
+└─vdb1 252:17   0  530G  0 part
+vantiq03
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+vda    252:0    0   40G  0 disk
+└─vda1 252:1    0   40G  0 part /
+vdb    252:16   0  530G  0 disk
+vantiq04
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+vda    252:0    0   40G  0 disk
+└─vda1 252:1    0   40G  0 part /
+vdb    252:16   0   20G  0 disk
+vdc    252:32   0  160G  0 disk
+vdg    252:96   0   20G  0 disk
+```
+
 ## Docker
 
 #### Install
