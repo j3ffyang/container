@@ -526,6 +526,18 @@ Cluster access verified -- have fun deploying Vantiq!
 ./helm repo update
 ```
 
+Update stable-repo
+```
+./helm repo add stable https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts/
+"stable" has been added to your repositories
+
+ubuntu@vantiq01:~/k8sdeploy_tools$ ./helm repo list
+NAME     	URL                                                                      
+stable   	https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts/          
+local    	http://127.0.0.1:8879/charts                                             
+incubator	https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts-incubator/
+```
+
 #### Pre-requisite for Product Install
 
 - Install OpenJAVA
