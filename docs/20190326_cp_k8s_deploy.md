@@ -37,6 +37,10 @@
 
 <!-- /TOC -->
 
+## Objective
+- Create a standard Kubernetes cluster for production
+- Specify how to create Persistent Volume and Persistent Volume Claim 
+
 ## Existing Environment
 
 CPU 核 | Memory (G) 内存 | OS Disk (G) | IP | External Disk (G) 外挂磁盘
