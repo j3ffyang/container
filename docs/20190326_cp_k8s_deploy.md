@@ -39,7 +39,7 @@
 
 ## Objective
 - Create a standard Kubernetes cluster for production
-- Specify how to create Persistent Volume and Persistent Volume Claim 
+- Specify how to create Persistent Volume and Persistent Volume Claim
 
 ## Existing Environment
 
@@ -514,6 +514,12 @@ Happy Helming!
 Client Version: v1.10.2
 Server Version: v1.14.0
 Cluster access verified -- have fun deploying Vantiq!
+```
+
+#### Install Tiller within GFW
+
+```
+./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 --skip-refresh
 ```
 
 #### Pre-requisite for Product Install
