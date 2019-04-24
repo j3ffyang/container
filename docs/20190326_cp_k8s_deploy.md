@@ -98,7 +98,7 @@ usermod -aG sudo ubuntu
 
 #### Environment Stack
 
-<center><img src="../imgs/20190309_vantiq_k8s.png"></center>
+<center><img src="../imgs/20190420_vantiq_k8s_openstack.png"></center>
 
 #### Network Topology
 We're given total 6 virtual machines and one of 6 has access to internet
