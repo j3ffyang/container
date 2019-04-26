@@ -445,6 +445,8 @@ images=(
     pause:3.1
     etcd:3.3.10
     coredns:1.3.1
+    defaultbackend:1.4
+    flannel:v0.10.0
 )
 
 for imageName in ${images[@]} ; do
@@ -454,7 +456,7 @@ for imageName in ${images[@]} ; do
 done
 ```
 
-Since I couldn't find ```flannel:v0.11.0``` at the time I create this document, I use ```flannel:v0.10.0``` instead. And this is the workaround to pull any images from alternative repo instead of ```k8s.gcr.io``` when need through __GFW__
+Since I couldn't find ```flannel:v0.11.0``` at the time I create this document, I use ```flannel:v0.10.0``` instead. And this is the workaround to pull any images from alternative repo instead of ```quay.io``` when need through __GFW__
 
 ```
 docker pull registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
