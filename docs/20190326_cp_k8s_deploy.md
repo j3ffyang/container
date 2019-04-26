@@ -124,6 +124,11 @@ Note: ```eth0``` is the network interface. Then
 sysctl -p
 ```
 
+Check whether ipv6 disabled
+```
+for i in {1..4}; do ssh root@vantiq0$i "cat /proc/sys/net/ipv6/conf/all/disable_ipv6"; done
+```
+
 ## Architecture Overview and Network Topology
 
 #### Environment Stack
