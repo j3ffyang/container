@@ -282,6 +282,7 @@ images=(
     pause:3.1
     etcd:3.3.10
     coredns:1.3.1
+    defaultbackend:1.4
 )
 
 for imageName in ${images[@]} ; do
