@@ -101,10 +101,27 @@ Open the ```/etc/default/grub```, Modify ```GRUB_CMDLINE_LINUX``` and  ```GRUB_C
 ```
 GRUB_CMDLINE_LINUX="ipv6.disable=1"
 GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1"
+```
 
+Then
+```
 update-grub
-
 systemctl reboot
+```
+
+or edit ```/etc/sysctl.conf```
+
+```
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+net.ipv6.conf.eth0.disable_ipv6 = 1
+```
+
+Note: ```eth0``` is the network interface. Then
+
+```
+sysctl -p
 ```
 
 ## Architecture Overview and Network Topology
