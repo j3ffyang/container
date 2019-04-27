@@ -574,5 +574,23 @@ kube-proxy-vhgvr                   1/1     Running   0          2d20h
 kube-scheduler-vantiq01            1/1     Running   0          2d21h
 ```
 
+#### Install Tiller
+
+Use alternative chart repo in China. You can search alternative image from dockerhub
+
+```
+docker search tiller
+```
+
+Then pick one from list
+
+```
+docker pull sapcc/tiller:v2.12.2
+docker tag sapcc/tiller:v2.12.2 gcr.io/kubernetes-helm/tiller:v2.12.2
+```
+
+```
+./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+```
 
 ## Appendix
