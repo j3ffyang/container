@@ -548,6 +548,14 @@ nameserver 208.67.222.222
 nameserver 208.67.220.220
 ```
 
+Comment out ```loop``` in
+
+> Reference > https://stackoverflow.com/questions/52645473/coredns-fails-to-run-in-kubernetes-cluster
+
+```
+kubectl -n kube-system edit configmap coredns
+```
+
 - Delete and restart ```coredns``` pod to take the change effective, then check their status again
 ```
 kubectl delete pod -n=kube-system coredns-fb8b8dccf-8ggcf
@@ -591,4 +599,33 @@ docker tag sapcc/tiller:v2.12.2 gcr.io/kubernetes-helm/tiller:v2.12.2
 
 ```
 ./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+```
+
+#### Connect Private Git Repo by using Personal Token
+
+```
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cp config config.orig
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote rm origin
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[branch "master"]
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote add origin https://j3ffyang:<PERSONAL_TOKEN>@github.com/Vantiq/k8sdeploy_setup.git
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[branch "master"]
+[remote "origin"]
+	url = https://j3ffyang:<PERSONAL_TOKEN>@github.com/Vantiq/k8sdeploy_setup.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote get-url origin
+https://j3ffyang:<PERSONAL_TOKEN@github.com/Vantiq/k8sdeploy_setup.git
+
 ```
