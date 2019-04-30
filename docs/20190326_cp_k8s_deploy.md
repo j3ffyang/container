@@ -629,3 +629,20 @@ ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote get-url origin
 https://j3ffyang:<PERSONAL_TOKEN@github.com/Vantiq/k8sdeploy_setup.git
 
 ```
+
+#### Save and Load Image in Docker
+
+On node where an image resides, for example,
+
+```
+root@vantiq05:~# docker image list | grep vantiq
+vantiq/vantiq-server                                             1.24.12             ab30f4dfd278        6 weeks ago         601MB
+vantiq/keycloak                                                  4.2.1.Final         0c41c64e19a4        6 weeks ago         801MB
+root@vantiq05:~# docker save -o ./vantiq-server.tar  vantiq/vantiq-server
+```
+
+Copy the tar file to the target node. On node where to load the image,
+
+```
+root@vantiq06:~# docker load -i ./vantiq-server.tar
+```
