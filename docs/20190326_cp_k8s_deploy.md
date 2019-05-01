@@ -525,16 +525,16 @@ https://github.com/coredns/coredns/tree/master/plugin/loop#troubleshooting-loops
 https://stackoverflow.com/questions/53075796/coredns-pods-have-crashloopbackoff-or-error-state/53414041#53414041
 
 
-- Use ```systemd-resolved.service``` which is by default shipped in Ubuntu 18.04
+- Use ```systemd-resolved.service``` which is by default shipped in Ubuntu 18.04 on each of nodes
 
-- Update ```/run/systemd/resolve/resolv.conf``` with correct DNS
+- Update ```/run/systemd/resolve/resolv.conf``` with correct DNS on each of nodes
 
-- Restart ```systemd-resolved.service```
+- Restart ```systemd-resolved.service``` on each of nodes
 ```
 sudo systemctl restart systemd-resolved.service
 ```
 
-- Update softlink of ```/etc/resolv.conf```
+- Update softlink of ```/etc/resolv.conf``` on each of nodes
 ```
 ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 ```
