@@ -585,6 +585,10 @@ ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
 	logallrefupdates = true
 [branch "master"]
 ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote add origin https://j3ffyang:<PERSONAL_TOKEN>@github.com/Vantiq/k8sdeploy_setup.git
+
+ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote get-url origin
+https://j3ffyang:<PERSONAL_TOKEN>@github.com/Vantiq/k8sdeploy_setup.git
+
 ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
 [core]
 	repositoryformatversion = 0
@@ -595,10 +599,6 @@ ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
 [remote "origin"]
 	url = https://j3ffyang:<PERSONAL_TOKEN>@github.com/Vantiq/k8sdeploy_setup.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
-
-ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote get-url origin
-https://j3ffyang:<PERSONAL_TOKEN>@github.com/Vantiq/k8sdeploy_setup.git
-
 ```
 
 #### Save and Load Image in Docker
