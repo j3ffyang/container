@@ -534,7 +534,7 @@ https://stackoverflow.com/questions/53075796/coredns-pods-have-crashloopbackoff-
 sudo systemctl restart systemd-resolved.service
 ```
 
-- Create softlink ```/run/systemd/resolve/resolv.conf```
+- Update softlink of ```/etc/resolv.conf```
 ```
 ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 ```
