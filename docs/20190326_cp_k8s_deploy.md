@@ -555,7 +555,7 @@ kubectl -n kube-system delete pod -l k8s-app=kube-dns
 
 #### Install Tiller
 
-Use alternative chart repo in China. You can search alternative image from dockerhub
+You can search and use alternative image from dockerhub. For example
 
 ```
 docker search tiller
