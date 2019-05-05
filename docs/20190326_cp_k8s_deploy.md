@@ -559,7 +559,10 @@ kubectl -n kube-system delete pod -l k8s-app=kube-dns
 kubectl -n kube-system edit deployment.apps/coredns
 ```
 
-Add
+Update the correct DNS
+
+> Reference > https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+
 ```
   dnsPolicy: Default
   dnsConfig:
@@ -567,7 +570,7 @@ Add
     - 172.16.51.100
     options:
     - name: ndots
-    value: "2"
+    value: "5"
     searches:
     - cptheat.com
 ```
