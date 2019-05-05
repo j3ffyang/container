@@ -500,9 +500,9 @@ eg.
 ubuntu@vantiq01:~$ kubectl label node vantiq03 node-role.kubernetes.io/worker=worker
 ```
 
-## Exception Received during Deployment
+## Appendix
 
-#### ```coredns``` STATUS= ```CrashLoopBackOff```
+#### Exception Received during Deployment ```coredns``` STATUS= ```CrashLoopBackOff```
 
 Cause: Network Configuration on Ubuntu 18.04
 
@@ -553,6 +553,25 @@ kubectl -n kube-system edit configmap coredns
 kubectl -n kube-system delete pod -l k8s-app=kube-dns
 ```
 
+#### Update ```dnsConfig``` in ```coredns```
+
+```
+kubectl -n kube-system edit deployment.apps/coredns
+```
+
+Add
+```
+  dnsPolicy: Default
+  dnsConfig:
+    nameservers:
+    - 172.16.51.100
+    options:
+    - name: ndots
+    value: "2"
+    searches:
+    - cptheat.com
+```
+
 #### Install Tiller
 
 You can search and use alternative image from dockerhub. For example
@@ -569,7 +588,17 @@ docker tag sapcc/tiller:v2.12.2 gcr.io/kubernetes-helm/tiller:v2.12.2
 ```
 
 ```
-./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 \
+  --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
+```
+
+(Optional) repo update
+
+```
+helm repo remove stable
+
+helm repo add stable http://mirror.azure.cn/kubernetes/charts/
+helm repo add incubator http://mirror.azure.cn/kubernetes/charts-incubator/
 ```
 
 #### Connect Private Git Repo by using Personal Token
