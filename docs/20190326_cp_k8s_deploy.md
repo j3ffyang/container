@@ -95,6 +95,9 @@ usermod -aG sudo ubuntu
 ```
 
 #### ~~Disable IPv6 on Ubuntu~~
+
+__IPv6 has been tested in production environment. So I decided to leave it enabled.__
+
 > Reference > https://www.configserverfirewall.com/ubuntu-linux/ubuntu-disable-ipv6/
 
 Open the ```/etc/default/grub```, Modify ```GRUB_CMDLINE_LINUX``` and  ```GRUB_CMDLINE_LINUX_DEFAULT``` to append ipv6.disable=1:
@@ -564,15 +567,15 @@ Update the correct DNS
 > Reference > https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 
 ```
-  dnsPolicy: Default
-  dnsConfig:
-    nameservers:
-    - 172.16.51.100
-    options:
-    - name: ndots
+dnsConfig:
+  nameservers:
+  - 172.16.51.100
+  options:
+  - name: ndots
     value: "5"
-    searches:
-    - cptheat.com
+  searches:
+  - cptheat.com
+dnsPolicy: Default
 ```
 
 #### Install Tiller
