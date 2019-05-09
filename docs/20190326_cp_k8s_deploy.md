@@ -595,7 +595,7 @@ docker tag sapcc/tiller:v2.12.2 gcr.io/kubernetes-helm/tiller:v2.12.2
   --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
 ```
 
-(Optional) repo update
+(Optional) alternative stable repo update
 
 ```
 helm repo remove stable
