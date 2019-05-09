@@ -94,7 +94,7 @@ adduser ubuntu
 usermod -aG sudo ubuntu
 ```
 
-#### Disable IPv6 on Ubuntu
+#### ~~Disable IPv6 on Ubuntu~~
 > Reference > https://www.configserverfirewall.com/ubuntu-linux/ubuntu-disable-ipv6/
 
 Open the ```/etc/default/grub```, Modify ```GRUB_CMDLINE_LINUX``` and  ```GRUB_CMDLINE_LINUX_DEFAULT``` to append ipv6.disable=1:
