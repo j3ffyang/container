@@ -644,7 +644,7 @@ On node where an image resides, for example,
 root@vantiq05:~# docker image list | grep vantiq
 vantiq/vantiq-server                                             1.24.12             ab30f4dfd278        6 weeks ago         601MB
 vantiq/keycloak                                                  4.2.1.Final         0c41c64e19a4        6 weeks ago         801MB
-root@vantiq05:~# docker save -o ./vantiq-server.tar  vantiq/vantiq-server
+root@vantiq05:~# docker save -o ./vantiq-server.tar  vantiq/vantiq-server:1.25.6
 ```
 
 Copy the tar file to the target node. On node where to load the image,
