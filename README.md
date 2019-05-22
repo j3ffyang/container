@@ -25,6 +25,7 @@
 - [OpenProject](./docs/20171025_openproj.md)
 - [Zabbix, monitoring of all components](./docs/20171028_zabbix.md)
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
+- [Create custom docker image](./docs/20190522_docker_img.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
