@@ -14,7 +14,7 @@
 - [hans icmp/ ping tunneling](./docs/20171114_icmp_tunnel.md)
 - [PiVPN setup](./docs/20180912_pivpn.md)
 - [Post-install of Linode](./docs/20190120_linode_postinst.md)
-- [Standard Kubernetes Base Deployment](./docs/20190326_cp_k8s_deploy.md)
+- [Standard Kubernetes Base Deployment](./docs/20190326_ch_k8s_deploy.md)
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
