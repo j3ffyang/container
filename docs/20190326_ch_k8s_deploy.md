@@ -223,7 +223,7 @@ sudo apt update
 sudo apt install docker-ce
 ```
 
-#### Use China alternative image repo for perfoemance purpose. Modify ```/etc/docker/daemon.json```
+#### (optional) Use China alternative image repo for performance purpose. Modify ```/etc/docker/daemon.json```
 > Reference > https://www.docker-cn.com/registry-mirror
 ```
 {
