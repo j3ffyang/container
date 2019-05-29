@@ -464,6 +464,7 @@ Since I couldn't find ```flannel:v0.11.0``` at the time I create this document, 
 ```
 docker pull registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
 docker tag  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
+docker rmi  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
 ```
 
 - Join K8S cluster
