@@ -495,6 +495,11 @@ kubeadm token create
 bgd6cx.2x0fxxqw6cx3l0q4
 ```
 
+Generate ```sha256 token-ca-cert-hash```
+```
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+```
+
 And re-join with the new token
 
 - Label Nodes in Cluster
