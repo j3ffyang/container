@@ -697,7 +697,7 @@ cat  key.pem | base64
 cat cert.pem | base64
 ```
 
-How to check SSL certificate details
+How to check SSL certificate details in command line
 ```
 ubuntu@vantiq2-test02:~$ curl -v https://10.100.102.13:30753/auth -k
 *   Trying 10.100.102.13...
