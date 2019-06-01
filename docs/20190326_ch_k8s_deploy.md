@@ -580,7 +580,7 @@ dnsConfig:
   - name: ndots
     value: "5"
   searches:
-  - cptheat.com
+  - .com
 dnsPolicy: Default
 ```
 
@@ -688,11 +688,60 @@ kubectl -n default get secrets
 kubectl -n default get secret vantiq-cert -o yaml
 ```
 
-The output should be identical to respective values from the following command
+The output should be identical to respective values from the following command, ```cat key.pem | base64``` and ```cat cert.pem | base64```
 
-We put 2 SSL keys, ```key.pem``` and ```cert.pem``` in 2 places under ```~/targetCluster/deploy/```. To encode it in ```bse64``` format
+We put 2 SSL keys, ```key.pem``` and ```cert.pem``` in 2 places under ```~/targetCluster/deploy/{certificates,vantiq}```. To encode it in ```bse64``` format
 
 ```
 cat  key.pem | base64
 cat cert.pem | base64
+```
+
+How to check SSL certificate details
+```
+ubuntu@vantiq2-test02:~$ curl -v https://10.100.102.13:30753/auth -k
+*   Trying 10.100.102.13...
+* TCP_NODELAY set
+* Connected to 10.100.102.13 (10.100.102.13) port 30753 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: /etc/ssl/certs/ca-certificates.crt
+  CApath: /etc/ssl/certs
+* TLSv1.2 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Client hello (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: C=CN; ST=Beijing; L=Beijing; O=An_Org; OU=IT; CN=eda-dev.an_org.com; emailAddress=admin@an_org.com
+*  start date: May 31 09:08:11 2019 GMT
+*  expire date: May 28 09:08:11 2029 GMT
+*  issuer: C=CN; ST=Beijing; L=Beijing; O=An_Org; OU=IT; CN=eda-dev.an_org.com; emailAddress=admin@an_org.com
+*  SSL certificate verify result: self signed certificate (18), continuing anyway.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x564f218d3900)
+> GET /auth HTTP/2
+> Host: 10.100.102.13:30753
+> User-Agent: curl/7.58.0
+> Accept: */*
+>
+* Connection state changed (MAX_CONCURRENT_STREAMS updated)!
+< HTTP/2 303
+< server: nginx/1.15.5
+< date: Sat, 01 Jun 2019 04:34:41 GMT
+< content-length: 0
+< location: https://10.100.102.13:30753/auth/
+< strict-transport-security: max-age=15724800; includeSubDomains
+<
+* Connection #0 to host 10.100.102.13 left intact
+ubuntu@vantiq2-test02:~$
 ```
