@@ -658,3 +658,19 @@ Copy the tar file to the target node. On node where to load the image,
 ```
 root@vantiq06:~# docker load -i ./vantiq-server.tar
 ```
+
+#### Unable to delete an unused PersistentVolume (PV). Alway in ```terminating``` state
+
+After running ```kubectl delete pv local-pv-324352d9```, received
+
+```
+ubuntu@vantiq2-test01:~/k8sdeploy_tools$ kubectl get pv
+NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS        CLAIM                                                STORAGECLASS    REASON   AGE
+local-pv-324352d9   520Gi      RWO            Retain           Terminating   eda-dev/datadir-vantiq-eda-dev-mongodb-secondary-0   local-storage            2d2h
+local-pv-37f6d898   520Gi      RWO            Retain           Terminating   eda-dev/datadir-vantiq-eda-dev-mongodb-primary-0     local-storage            2d2h
+```
+
+This is because the PV is protected. Patch it with updating ```finalizers```
+```
+kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' --type=merge
+```
