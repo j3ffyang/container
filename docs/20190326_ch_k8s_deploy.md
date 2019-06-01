@@ -674,3 +674,25 @@ This is because the PV is protected. Patch it with updating ```finalizers```
 ```
 kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
+
+#### SSL Keys in K8S
+
+- List
+```
+kubectl -n default get secrets
+```
+
+- Describe
+
+```
+kubectl -n default get secret vantiq-cert -o yaml
+```
+
+The output should be identical to respective values from the following command
+
+We put 2 SSL keys, ```key.pem``` and ```cert.pem``` in 2 places under ```~/targetCluster/deploy/```. To encode it in ```bse64``` format
+
+```
+cat  key.pem | base64
+cat cert.pem | base64
+```
