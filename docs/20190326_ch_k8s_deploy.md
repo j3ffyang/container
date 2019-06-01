@@ -677,27 +677,46 @@ kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' -
 
 #### SSL Keys in K8S
 
-- List
+- List in ```default``` namespace
 ```
 kubectl -n default get secrets
 ```
 
-- Describe
+- Describe the secret, named ```vantiq-cert``` in ```default``` namespace
 
 ```
 kubectl -n default get secret vantiq-cert -o yaml
 ```
 
-The output should be identical to respective values from the following command, ```cat key.pem | base64``` and ```cat cert.pem | base64```
+The output of ```tls.key``` and ```tls.crt``` should be identical to respective values from the following command, ```cat key.pem | base64``` and ```cat cert.pem | base64```
 
-We put 2 SSL keys, ```key.pem``` and ```cert.pem``` in 2 places under ```~/targetCluster/deploy/{certificates,vantiq}```. To encode it in ```bse64``` format
+- Encode SSL in ```base64```
+We put 2 SSL keys, ```key.pem``` and ```cert.pem``` in 2 places under ```~/targetCluster/deploy/{certificates,vantiq}```. To encode it in ```base64``` format
 
 ```
 cat  key.pem | base64
 cat cert.pem | base64
 ```
 
-How to check SSL certificate details in command line
+- Apply ```ssl_default.yaml```
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vantiq-cert
+  namespace: default
+type: kubernetes.io/tls
+data:
+  tls.crt: <cert.pem_in_base64>
+  tls.key: <key.pem_in_base64>
+```
+
+```
+kubectl apply -f ssl_default.yaml     
+```
+
+- How to check SSL certificate details in command line
 ```
 ubuntu@vantiq2-test02:~$ curl -v https://10.100.102.13:30753/auth -k
 *   Trying 10.100.102.13...
@@ -720,10 +739,10 @@ ubuntu@vantiq2-test02:~$ curl -v https://10.100.102.13:30753/auth -k
 * SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
 * ALPN, server accepted to use h2
 * Server certificate:
-*  subject: C=CN; ST=Beijing; L=Beijing; O=An_Org; OU=IT; CN=eda-dev.an_org.com; emailAddress=admin@an_org.com
+*  subject: C=CN; ST=Beijing; L=Beijing; O=org; OU=IT; CN=eda-dev.org.com; emailAddress=admin@org.com
 *  start date: May 31 09:08:11 2019 GMT
 *  expire date: May 28 09:08:11 2029 GMT
-*  issuer: C=CN; ST=Beijing; L=Beijing; O=An_Org; OU=IT; CN=eda-dev.an_org.com; emailAddress=admin@an_org.com
+*  issuer: C=CN; ST=Beijing; L=Beijing; O=org; OU=IT; CN=eda-dev.org.com; emailAddress=admin@org.com
 *  SSL certificate verify result: self signed certificate (18), continuing anyway.
 * Using HTTP2, server supports multi-use
 * Connection state changed (HTTP/2 confirmed)
