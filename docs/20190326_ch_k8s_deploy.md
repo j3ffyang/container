@@ -644,7 +644,7 @@ ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
 
 #### Save and Load Image in Docker
 
-On node where an image resides, for example,
+- On node where an image resides, for example,
 
 ```
 root@vantiq05:~# docker image list | grep vantiq
@@ -653,10 +653,24 @@ vantiq/keycloak                                                  4.2.1.Final    
 root@vantiq05:~# docker save -o ./vantiq-server.tar  vantiq/vantiq-server:1.25.6
 ```
 
-Copy the tar file to the target node. On node where to load the image,
+- Copy the tar file to the target node. On node where to load the image,
 
 ```
 root@vantiq06:~# docker load -i ./vantiq-server.tar
+```
+
+- After installing the required package, create new docker image
+
+```
+docker commit -m "<MESSAGE>" -a "<AUTHOR>" [container_name] [image_name]
+```
+
+where image_name = ```j3ffyang/ubuntu-nslookup:v1```
+
+- Push new image to ducker hub
+
+```
+docker push j3ffyang/ubuntu=nslookup:v1
 ```
 
 #### Unable to delete an unused PersistentVolume (PV). Alway in ```terminating``` state
