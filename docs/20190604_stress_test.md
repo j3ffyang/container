@@ -69,10 +69,11 @@ After finishing, the home dashboard looks like
 
 ```
 ../gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=profile_name \
-  -Pgatling.users=700 -Pgatling.duration="10 minutes" -Pvantiq.namespace.create=false \ -Pvantiq.namespace.save=true
+  -Pgatling.users=700 -Pgatling.duration="10 minutes" \
+  -Pvantiq.namespace.create=false -Pvantiq.namespace.save=true
 ```
 
-#### Output 
+#### Output
 ```
 ================================================================================
 2019-06-05 10:54:38                                         602s elapsed
