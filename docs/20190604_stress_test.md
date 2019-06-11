@@ -35,7 +35,40 @@ token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
 - project
 - organization
 
-#### Grafana dataSource
+#### Configure Products
+
+Operations > Administer > Organizations > Actions > Configure Products
+
+```
+{
+    "Pronto": {
+        "enabled": true,
+        "maxEventCatalogs": 1
+    },
+    "Modelo": {
+        "enabled": true
+    }
+}
+```
+
+#### Modify Quota
+
+Operations > Administer > Organizations > Actions > Edit Quotas
+```
+{
+    "rates": {
+        "execution": 20010,
+        "receiveMessage": 20000
+    },
+    "credit": {
+        "default": {
+            "percentage": 100,
+            "q
+```
+
+#### Grafana dataSources
+
+Create the following dataSources
 
 - mongoDB
 <center><img src="../imgs/20190604_grafana_datasource_mongodb.png" width="550px"></center>
@@ -49,6 +82,11 @@ token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
   - Name: vantiqServer
   - URL: http://influxdb-influxdb:8086
   - influxDB Details > Database = vantiq_server
+
+- kubernetes
+  - Name: kubernetes
+  - URL: http://influxdb-influxdb:8086
+  - influxDB Details > Database = kubernetes
 
 - internals
   - Name: internals
@@ -66,6 +104,15 @@ After finishing, the home dashboard looks like
 - 1K upsert per minute for status history storage
 
 #### Script
+
+Simulation code is located
+
+```
+ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
+/home/ubuntu/stress_test/gatlingTestInfra3/loadTest
+
+~/gatlingTestInfra3/loadTest/src/gatling/resources/namespaces
+```
 
 ```
 ../gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=profile_name \
