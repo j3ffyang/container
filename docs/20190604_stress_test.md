@@ -184,4 +184,4 @@ log into database | mongo ars02 -u ars -p ars
 list database | show dbs
 use database | use ars02
 list all tables | show collections
-query table | vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count() = 105335
+query table | db.realtimeData_his__myfirstnamespace.count() = 105335
