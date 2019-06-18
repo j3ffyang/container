@@ -1,20 +1,23 @@
 # Stress-Test of Vantiq Product
 
 ## Project Overview
+
+To simulate several business scenarios to generate workload, in order to monitor and capture the response behaviors of our product which has been deployed in production-grade cluster
+
 - Monitoring spec
   - product
   - system
 - Capacity
 - Bottleneck
-- Performance
+- Performance tuning
 
 ## Environment and Architecture
 
 - 6 VMs as K8S work nodes (-1 as of master)
-- 4vCPU, 16Gram
-- 3 MongoDB (1 arbitor, 1 primary, 1 secondary), standard disk
-- 3 Vantiq
-- 3 Keycloak
+- 4vCPU, 16G memory, each node
+- 3* MongoDB (1 arbitor, 1 primary, 1 secondary), standard disk
+- 3* Vantiq-server (1.25.13)
+- 3* Keycloak
 
 ## Configuration
 
@@ -29,11 +32,6 @@ url = 'https://eda-dev.profile_name.com'
 token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
 }
 ```
-
-#### Pronto and Modelo
-- namespace
-- project
-- organization
 
 #### Configure Products
 
@@ -51,9 +49,8 @@ Operations > Administer > Organizations > Actions > Configure Products
 }
 ```
 
-#### Modify Quota
-
-Operations > Administer > Organizations > Actions > Edit Quotas
+#### Code Change
+-  Modify Quota: Operations > Administer > Organizations > Actions > Edit Quotas
 ```
 {
     "rates": {
@@ -63,7 +60,10 @@ Operations > Administer > Organizations > Actions > Edit Quotas
     "credit": {
         "default": {
             "percentage": 100,
-            "q
+            "queueRatio": 10
+        }
+    }
+}
 ```
 
 #### Grafana dataSources
@@ -97,7 +97,9 @@ After finishing, the home dashboard looks like
 
 <center><img src="../imgs/20190604_grafana_dashboard.png" width="900px"></center>
 
-## Stress-Test Result
+## Stress-Test, scenario: LimitLiftsSim
+
+Description:
 
 #### Scenario in Stress
 - 5K update per second for status update
@@ -108,61 +110,106 @@ After finishing, the home dashboard looks like
 Simulation code is located
 
 ```
-ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
-/home/ubuntu/stress_test/gatlingTestInfra3/loadTest
-
 ~/gatlingTestInfra3/loadTest/src/gatling/resources/namespaces
 ```
 
 ```
-../gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=profile_name \
-  -Pgatling.users=700 -Pgatling.duration="10 minutes" \
+ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
+/home/ubuntu/stress_test/gatlingTestInfra3/loadTest
+
+./gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=profile_name \
+  -Pgatling.users=500 -Pgatling.duration="10 minutes" \
   -Pvantiq.namespace.create=false -Pvantiq.namespace.save=true
 ```
 
-#### Output
+#### Test Output
 ```
-================================================================================
-2019-06-05 10:54:38                                         602s elapsed
----- Requests ------------------------------------------------------------------
-> Global                                                   (OK=1156209 KO=0     )
-> authenticate token                                       (OK=700    KO=0     )
-> Publish                                                  (OK=1155509 KO=0     )
-
----- LimitLiftsSim -------------------------------------------------------------
-[--------------------------------------------------------------------------]  0%
-          waiting: 0      / active: 700    / done: 0     
-================================================================================
-
-Simulation LimitLiftsSim completed in 600 seconds
-Parsing log file(s)...
-Parsing log file(s) done
-Generating reports...
-
 ================================================================================
 ---- Global Information --------------------------------------------------------
-> request count                                    1156209 (OK=1156209 KO=0     )
+> request count                                     822825 (OK=822825 KO=0     )
 > min response time                                      0 (OK=0      KO=-     )
-> max response time                                   5104 (OK=5104   KO=-     )
-> mean response time                                    12 (OK=12     KO=-     )
+> max response time                                    713 (OK=713    KO=-     )
+> mean response time                                    17 (OK=17     KO=-     )
 > std deviation                                         28 (OK=28     KO=-     )
 > response time 50th percentile                          6 (OK=6      KO=-     )
-> response time 75th percentile                         14 (OK=14     KO=-     )
-> response time 95th percentile                         40 (OK=40     KO=-     )
-> response time 99th percentile                         79 (OK=79     KO=-     )
-> mean requests/sec                                1923.809 (OK=1923.809 KO=-     )
+> response time 75th percentile                         18 (OK=18     KO=-     )
+> response time 95th percentile                         67 (OK=67     KO=-     )
+> response time 99th percentile                        132 (OK=132    KO=-     )
+> mean requests/sec                                1371.375 (OK=1371.375 KO=-     )
 ---- Response Time Distribution ------------------------------------------------
-> t < 800 ms                                       1155835 (100%)
-> 800 ms < t < 1200 ms                                 371 (  0%)
-> t > 1200 ms                                            3 (  0%)
+> t < 800 ms                                        822825 (100%)
+> 800 ms < t < 1200 ms                                   0 (  0%)
+> t > 1200 ms                                            0 (  0%)
 > failed                                                 0 (  0%)
 ================================================================================
-
-Reports generated in 16s.
-Please open the following file: /home/ubuntu/stress_test/gatlingTestInfra3/loadTest/build/reports/gatling/limitliftssim-20190605024436333/index.html
 ```
-- data stat from Gatling
-<center><img src="../imgs/20190604_load_2min.png"></center>
 
-- data stat from Grafana
-<center><img src="../imgs/20190604_load_grafana.png"></center>
+###### data stat from Grafana
+<center><img src="../imgs/20190618_vtq_resource.png"></center>
+
+- Reduced concurrent user from 1000 down to 500.
+- Network ~450K/s in/out (busy)
+- Vantiq Resources reached to ~80%. Quite heavy
+
+<center><img src="../imgs/20190618_vtq_mongo.png"></center>
+
+- MongoDB: 49 connections and up to 4.5G memory usage (busy). Transaction per second:
+  ```
+  query= 369
+  insert= 39
+  update= 83
+  ```
+- realtimeData table in MongoDB:
+  ```vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count() =105335```
+  (not that high as expected. Some cap possibly limits this)
+
+###### data stat from Gatling
+<center><img src="../imgs/20190618_vtq_gatling.png"></center>
+<center><img src="../imgs/20190618_vtq_gatling2.png"></center>
+
+###### data stat from MongoDB
+
+```
+vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
+105335
+```
+
+
+#### Check MongoDB
+
+- Log in from K8S
+
+```
+kubectl -n eda-dev exec -it vantiq-eda-dev-mongodb-primary-0 /bin/bash
+```
+
+- Log into database
+
+```
+mongo ars02 -u ars -p ars
+```
+
+- List database
+
+```
+show dbs
+```
+
+- Use database
+
+```
+use ars02
+```
+
+- List all tables
+
+```
+show collections
+```
+
+- Query table
+
+```
+vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
+105335
+```
