@@ -100,8 +100,6 @@ After finishing, the home dashboard looks like
 ## Stress-Test, scenario: LimitLiftsSim
 
 Description:
-
-#### Scenario in Stress
 - 5K update per second for status update
 - 1K upsert per minute for status history storage
 
@@ -110,12 +108,11 @@ Description:
 Simulation code is located
 
 ```
-~/gatlingTestInfra3/loadTest/src/gatling/resources/namespaces
+~/stress_test/gatlingTestInfra3/loadTest/src/gatling/resources/namespaces
 ```
 
 ```
-ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
-/home/ubuntu/stress_test/gatlingTestInfra3/loadTest
+cd ~/stress_test/gatlingTestInfra3/loadTest
 
 ./gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=profile_name \
   -Pgatling.users=500 -Pgatling.duration="10 minutes" \
@@ -144,11 +141,11 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 ================================================================================
 ```
 
-###### data stat from Grafana
+###### Statistic from Grafana
 <center><img src="../imgs/20190618_vtq_resource.png"></center>
 
-- Reduced concurrent user from 1000 down to 500.
-- Network ~450K/s in/out (busy)
+- Reduced concurrent user from 1000 down to 500
+- Network ~450K/s input and output. Busy
 - Vantiq Resources reached to ~80%. Quite heavy
 
 <center><img src="../imgs/20190618_vtq_mongo.png"></center>
@@ -160,56 +157,31 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
   update= 83
   ```
 - realtimeData table in MongoDB:
-  ```vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count() =105335```
+  ```vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count() = 105335```
   (not that high as expected. Some cap possibly limits this)
 
-###### data stat from Gatling
+###### Statistic from Gatling
 <center><img src="../imgs/20190618_vtq_gatling.png"></center>
+
+- Total 822,825 requests completed 100% in success, including 500 token accesses, about 1,371 req/s (not bad)
+- Response-time: 99th pct = 132 ms (good enough for production. The less the better)
+
 <center><img src="../imgs/20190618_vtq_gatling2.png"></center>
 
-###### data stat from MongoDB
+###### Statistic from MongoDB
 
 ```
 vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
 105335
 ```
-
 
 #### Check MongoDB
 
-- Log in from K8S
-
-```
-kubectl -n eda-dev exec -it vantiq-eda-dev-mongodb-primary-0 /bin/bash
-```
-
-- Log into database
-
-```
-mongo ars02 -u ars -p ars
-```
-
-- List database
-
-```
-show dbs
-```
-
-- Use database
-
-```
-use ars02
-```
-
-- List all tables
-
-```
-show collections
-```
-
-- Query table
-
-```
-vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
-105335
-```
+action | command
+-- | --
+log into mongo | kubectl -n eda-dev exec -it vantiq-eda-dev-mongodb-primary-0 /bin/bash
+log into database | mongo ars02 -u ars -p ars
+list database | show dbs
+use database | use ars02
+list all tables | show collections
+query table | vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count() = 105335
