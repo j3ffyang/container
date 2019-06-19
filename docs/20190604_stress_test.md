@@ -198,7 +198,8 @@ query table | db.realtimeData_his__myfirstnamespace.count() = 105335
 
 #### Description:
 - 50 concurrent users
-- insert data into MongoDB
+- insert 1000 rows into MongoDB over and over
+- 10 minutes running
 
 #### Script
 ```
@@ -243,7 +244,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 #### Statistic of MongoDB
 <img src="../imgs/20190619_dbinsert_mongo.png">
 
-- Insert 3.15k and Query 2.15k
+- Insert __3,150/sec__ and Query __2,150/sec__ (slower than on AWS)
 - 174 connections (looks good)
 - Memory usage 5.48G
 - Network IO close to 3MB/s (busy)
