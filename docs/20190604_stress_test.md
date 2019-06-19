@@ -50,7 +50,7 @@ Operations > Administer > Organizations > Actions > Configure Products
 ```
 
 #### Code Change
--  Modify Quota: Operations > Administer > Organizations > Actions > Edit Quotas
+-  Modify Quota: Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20)
 ```
 {
     "rates": {
@@ -97,11 +97,17 @@ After finishing, the home dashboard looks like
 
 <center><img src="../imgs/20190604_grafana_dashboard.png" width="900px"></center>
 
+<div style="page-break-after: always;"></div>
+
+
 ## Stress-Test, scenario: LimitLiftsSim
 
 Description:
-- 5K update per second for status update
-- 1K upsert per minute for status history storage
+- 5K/sec update for status update
+- 1K/min upsert for status history storage
+- 500 users, 3 event / user
+- 1,500 elevators/ second, upsert/ second in collection ```realtimeData``` (value the same as ```StatisticData_Derived```)
+- 1,500 insert/ minute in ```realtimeData_his``` (history)
 
 #### Script
 
@@ -132,7 +138,7 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
 > response time 75th percentile                         18 (OK=18     KO=-     )
 > response time 95th percentile                         67 (OK=67     KO=-     )
 > response time 99th percentile                        132 (OK=132    KO=-     )
-> mean requests/sec                                1371.375 (OK=1371.375 KO=-     )
+> mean requests/sec                                1371.375 (OK=1371.375 KO=-  )
 ---- Response Time Distribution ------------------------------------------------
 > t < 800 ms                                        822825 (100%)
 > 800 ms < t < 1200 ms                                   0 (  0%)
@@ -140,6 +146,8 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
 > failed                                                 0 (  0%)
 ================================================================================
 ```
+
+<div style="page-break-after: always;"></div>
 
 ###### Statistic from Grafana
 <center><img src="../imgs/20190618_vtq_resource.png"></center>
