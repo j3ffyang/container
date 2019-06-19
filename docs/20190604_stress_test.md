@@ -100,7 +100,7 @@ After finishing, the home dashboard looks like
 <div style="page-break-after: always;"></div>
 
 
-## Stress-Test, scenario: LimitLiftsSim
+## Test-Case 1: LimitLiftsSim
 
 Description:
 - 5K/sec update for status update
@@ -188,7 +188,7 @@ vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
 action | command
 -- | --
 log into mongo | kubectl -n eda-dev exec -it vantiq-eda-dev-mongodb-primary-0 /bin/bash
-log into database | mongo ars02 -u ars -p ars
+log into database on primary | mongo ars02 -u ars -p ars
 list database | show dbs
 use database | use ars02
 list all tables | show collections
