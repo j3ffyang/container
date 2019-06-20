@@ -125,6 +125,8 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
   -Pvantiq.namespace.create=false -Pvantiq.namespace.save=true
 ```
 
+<div style="page-break-after: always;"></div>
+
 #### Test Output
 ```
 ================================================================================
@@ -194,6 +196,8 @@ use database | use ars02
 list all tables | show collections
 query table | db.realtimeData_his__myfirstnamespace.count() = 105335
 
+<div style="page-break-after: always"></div>
+
 ## Test-Case 2: DBInsertSim
 
 #### Description:
@@ -233,6 +237,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 ================================================================================
 ```
 
+<div style="page-break-after: always"></div>
 
 #### Statistic of Vantiq_Resource
 
@@ -240,6 +245,8 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 
 - CPU up to 100% for Vantiq-servers (very busy)
 - Req 35 ops (operation/ second)
+
+<div style="page-break-after: always;"></div>
 
 #### Statistic of MongoDB
 <img src="../imgs/20190619_dbinsert_mongo.png">
@@ -249,10 +256,14 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 - Memory usage 5.48G
 - Network IO close to 3MB/s (busy)
 
-#### Statistic of Vantiq Resource_Usage > API > vail
+<div style="page-break-after: always;"></div>
+
+#### Statistic of Vantiq Resource_Usage > API > VAIL
 <img src="../imgs/20190619_dbinsert_resource_uage_api_vail.png">
 
 - insert p99 avg = 50ms (very good)
+
+<div style="page-break-after: always;"></div>
 
 #### Statistic of Gatling
 
@@ -263,6 +274,8 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 <img src="../imgs/20190619_dbinsert_gatling_response_time_percentile_over_time.png">
 
 - 95% of response completed within 20kms = 20 second, with avg 40 concurrent users!!! (__quite busy__)
+
+<div style="page-break-after: always;"></div>
 
 <img src="../imgs/20190619_dbinsert_gatling_number_of_req_per_second.png">
 
