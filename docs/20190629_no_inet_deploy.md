@@ -1,5 +1,7 @@
 # Install Kubernetes without Internet Connection
 
+
+
 #### Ubuntu 18.04 LTS Repo
 
 - Install
@@ -65,7 +67,31 @@ Download is about 108GB in size
 sudo apt-mirror
 ```
 
-#### Save and Restart Docker Images
+- Update path
+
+Create a soft-link under ```/var/www/html/``` that points to the actual location. Eg,
+
+```
+ubuntu@vantiq2-test03:/var/www/html$ pwd
+/var/www/html
+ubuntu@vantiq2-test03:/var/www/html$ ls -la debs
+lrwxrwxrwx 1 root root 27 Jun 29 10:48 debs -> /mnt/disks-by-id/disk0/debs
+```
+
+- Update apt client ```sudo vi /etc/apt/sources.list``` and add
+
+```
+deb http://10.100.102.13/ubuntu bionic universe
+deb http://10.100.102.13/ubuntu bionic main restricted
+deb http://10.100.102.13/ubuntu bionic-updates main restricted
+```
+
+Reference >
+- https://www.unixmen.com/setup-local-repository-in-ubuntu-15-04/
+- https://www.maketecheasier.com/setup-local-repository-ubuntu/
+- https://askubuntu.com/questions/170348/how-to-create-a-local-apt-repository
+
+#### Save and Restore Docker Images
 
 - All in one
 
@@ -76,3 +102,27 @@ docker load -i allinone.tar
 ```
 
 Reference > https://stackoverflow.com/questions/35575674/how-to-save-all-docker-images-and-copy-to-another-machine
+
+#### DNS
+
++ Create and Launch
+
+```
+docker pull sameersbn/bind:latest
+docker run -d --name=bind --dns=127.0.0.1 --publish=10.100.102.11:53:53/udp \
+ --publish=10.100.102.11:10000:10000 --env='ROOT_PASSWORD=secret' sameersbn/bind:latest
+```
+
+Reference > https://linoxide.com/containers/setting-dns-server-docker/
+
+http://www.damagehead.com/blog/2015/04/28/deploying-a-dns-server-using-docker/
+
++ Configure DNS entry
+https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-ubuntu-14-04
+
+#### SMTP
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postfix-as-a-send-only-smtp-server-on-ubuntu-14-04
+
+https://mailu.io/1.6/kubernetes/mailu/index.html
+
+https://github.com/tomav/docker-mailserver/wiki/Using-in-Kubernetes
