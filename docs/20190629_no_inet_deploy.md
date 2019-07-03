@@ -1,8 +1,13 @@
 # Install Kubernetes without Internet Connection
 
+#### Document Objective
+- Ubuntu local repository
+- apt install through proxy
+- curl/ wget through proxy
+- Docker through proxy
+- Kubernetes through proxy  
 
-
-#### Ubuntu 18.04 LTS Repo
+## Ubuntu 18.04 LTS Repo
 
 - Install
 ```
@@ -91,19 +96,7 @@ Reference >
 - https://www.maketecheasier.com/setup-local-repository-ubuntu/
 - https://askubuntu.com/questions/170348/how-to-create-a-local-apt-repository
 
-#### Save and Restore Docker Images
-
-- All in one
-
-```
-docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o allinone.tar
-
-docker load -i allinone.tar
-```
-
-Reference > https://stackoverflow.com/questions/35575674/how-to-save-all-docker-images-and-copy-to-another-machine
-
-#### DNS
+## DNS
 
 + Create and Launch
 
@@ -120,9 +113,118 @@ http://www.damagehead.com/blog/2015/04/28/deploying-a-dns-server-using-docker/
 + Configure DNS entry
 https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-ubuntu-14-04
 
-#### SMTP
+## SMTP
 https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postfix-as-a-send-only-smtp-server-on-ubuntu-14-04
 
 https://mailu.io/1.6/kubernetes/mailu/index.html
 
 https://github.com/tomav/docker-mailserver/wiki/Using-in-Kubernetes
+
+
+## Save and Restore Docker Images
+
+#### Tar all images in one
+
+```
+docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o allinone.tar
+
+docker load -i allinone.tar
+```
+
+Reference > https://stackoverflow.com/questions/35575674/how-to-save-all-docker-images-and-copy-to-another-machine
+
+#### Copy and split tar files
+
+https://superuser.com/questions/362177/how-to-split-big-files-on-mac
+
+```
+mac:sg jeff$ split -b 2000000000 allinone.tar "allinone.part"
+mac:sg jeff$ ls -la
+total 26497152
+drwxrwxr-x  11 jeff  staff         352 Jul  1 20:20 .
+drwxr-xr-x  10 jeff  staff         320 Jul  1 15:32 ..
+-rw-rw-r--   1 jeff  staff        4478 Jun 29 11:26 allinone.lst
+-rw-r--r--   1 jeff  staff  2000000000 Jul  1 20:20 allinone.partaa
+-rw-r--r--   1 jeff  staff  2000000000 Jul  1 20:20 allinone.partab
+-rw-r--r--   1 jeff  staff  1899848704 Jul  1 20:20 allinone.partac
+-rw-------   1 jeff  staff  5899848704 Jun 29 11:25 allinone.tar
+
+mac:sg jeff$ mkdir split_dir
+mac:sg jeff$ cd split_dir/
+mac:split_dir jeff$ ls
+mac:split_dir jeff$ cat ../allinone.parta* > a.tar
+mac:split_dir jeff$ ls
+a.tar
+mac:split_dir jeff$ md5 a.tar
+MD5 (a.tar) = f874fb298c6818fce938b836441c33d3
+mac:split_dir jeff$ md5 ../allinone.tar
+MD5 (../allinone.tar) = f874fb298c6818fce938b836441c33d3
+mac:split_dir Jeff$
+```
+
+#### Copy image tar to all nodes
+
+#### Restore all images
+
+## Setup proxy
+
+http://www.iasptk.com/ubuntu-server-behind-proxy-firewall/
+
+Switch to China docker repo
+
+Configure proxy for the following
+apt > /etc/apt/apt.conf.d/proxy > Acquire::http::Proxy “http://ip:port/"
+curl > ~/.curlers
+docker > /etc/systemd/system/docker.service.d/http-proxy.conf
+https://stackoverflow.com/questions/23111631/cannot-download-docker-images-behind-a-proxy#28093517
+
+kubeadm
+
+Check no_proxy
+
+```
+env | grep -i _proxy=
+```
+
+Set no_proxy
+http://xmodulo.com/how-to-configure-http-proxy-exceptions.html
+
+```
+sudo swap off -a
+```
+
+## Install specific version of kubelet/ kubectl/ kubeadm
+
+```
+apt install -qy kubelet=1.14.1-00 kubectl=1.14.1-00 kubeadm=1.14.1-00
+https://stackoverflow.com/questions/49721708/how-to-install-specific-version-of-kubernetes
+```
+
+```
+sudo kubeadm init —apiserver-advertise-address=10.216.78.16 —pod-network-cidr=10.244.0.0/16 —image-repository registry.cn-hangzhou.aliyuncs.com/google_containers —kubernetes-version “1.14.1"
+```
+
+#### Save all images in one tar
+
+```
+docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o allinone.tar
+```
+
+#### Load/ restore all images on each of docker nodes
+```
+for i in {17..21}; do ssh 10.$i 'docker load -i base_img.tar'; done
+```
+
+Reference > https://stackoverflow.com/questions/35575674/how-to-save-all-docker-images-and-copy-to-another-machine
+
+## Product
+
+#### Setup proxy for git
+
+```
+git config --global http.proxy http://10.216.1.213:3128
+```
+
+```
+./gradlew configureClient -Dhttps.proxyHost=xxxx -Dhttps.proxyPort=3128
+  -Dhttps.protocols="TLSv1,TLSv1.1,TLSv1.2"
