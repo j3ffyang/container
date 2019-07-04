@@ -204,6 +204,15 @@ For example, ```wget``` without checking SSL
 wget https://kubernetes-charts.storage.googleapis.com/index.yaml --no-check-certificate
 ```
 
+#### ```git```
+```
+http_proxy=http://ip:3128
+https_proxy=http://ip:3128
+
+git config --global http.proxy $http_proxy
+git config --global https.proxy $http_proxy
+```
+
 #### ```docker```
 
 ```
@@ -336,3 +345,7 @@ gradle.rootProject { root ->
   root.ext.set('deployment', 'production')
 }
 ```
+
+Create own chart?
+
+Reference > https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/
