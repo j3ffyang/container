@@ -1,11 +1,14 @@
 # Install Kubernetes without Internet Connection or Behind Proxy
 
 #### Document Objective
+
+Under a circumstance of lack of internet access or through a dedicated proxy, how to install and configure the following
 - Ubuntu local repository
 - apt install through proxy
 - curl/ wget through proxy
 - Docker through proxy
 - Kubernetes through proxy  
+- Helm and charts repo 
 
 ## Ubuntu 18.04 LTS Repo
 
@@ -240,6 +243,8 @@ systemProp.https.proxyPort=3128
 gitUsername=j3ffyang
 gitPassword=token
 ```
+
+Reference > https://docs.gradle.org/current/userguide/build_environment.html#sec:accessing_the_web_via_a_proxy
 
 #### ```kubeadm```
 
