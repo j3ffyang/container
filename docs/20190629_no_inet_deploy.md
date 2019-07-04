@@ -301,10 +301,38 @@ git checkout -b sg  # sg = value of Pcluster
 
 There might be up to 50~ 100 dependency files
 
+Follow the instruction at https://github.com/Vantiq/k8sdeploy_tools
+
+cp ~/.kube/config ~/targetCluster/kubeconfig
+
+./gradlew -Pcluster=sg clusterInfo
+
+
+
 #### Configure tiller
 
 Reference > https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-init/
 
 ```
 helm init -c --skip-refresh
+```
+
+Install tiller
+```
+kubectl -n kube-system create serviceaccount tiller
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin \
+  --serviceaccount=kube-system:tiller
+helm init --service-account tiller
+```
+
+Create SSL keys and copy them into ```~/targetCluster/deploy/{certificates,vantiq/certificates}```
+
+Edit ```~/targetCluster/```
+
+Customize ```~/settings.gradle``` , line 35
+```
+gradle.rootProject { root ->
+  ...
+  root.ext.set('deployment', 'production')
+}
 ```
