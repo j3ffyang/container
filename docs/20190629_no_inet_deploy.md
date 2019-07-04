@@ -260,8 +260,10 @@ sudo swapoff -a
 
 ```
 apt install -qy kubelet=1.14.1-00 kubectl=1.14.1-00 kubeadm=1.14.1-00
-https://stackoverflow.com/questions/49721708/how-to-install-specific-version-of-kubernetes
 ```
+
+Reference > https://stackoverflow.com/questions/49721708/how-to-install-specific-version-of-kubernetes
+
 
 ```
 sudo kubeadm init —apiserver-advertise-address=10.216.78.16 —pod-network-cidr=10.244.0.0/16 —image-repository registry.cn-hangzhou.aliyuncs.com/google_containers —kubernetes-version “1.14.1"
@@ -285,7 +287,7 @@ Reference > https://stackoverflow.com/questions/35575674/how-to-save-all-docker-
 #### Setup proxy for git
 
 ```
-git config --global http.proxy http://10.216.1.213:3128
+git config --global http.proxy http://ip:3128
 ```
 
 Update
@@ -349,3 +351,8 @@ gradle.rootProject { root ->
 Create own chart?
 
 Reference > https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/
+
+https://chryswoods.com/inception_workshop/course/part07.html
+
+Helm trick
+https://whmzsu.github.io/helm-doc-zh-cn/quickstart/install_faq-zh_cn.html
