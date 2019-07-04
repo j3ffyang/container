@@ -1,4 +1,4 @@
-# Install Kubernetes without Internet Connection
+# Install Kubernetes without Internet Connection or Behind Proxy
 
 #### Document Objective
 - Ubuntu local repository
@@ -123,7 +123,7 @@ https://github.com/tomav/docker-mailserver/wiki/Using-in-Kubernetes
 
 ## Save and Restore Docker Images
 
-#### Tar all images in one
+#### Tar all images in one from an existing working env
 
 ```
 docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o allinone.tar
@@ -162,23 +162,77 @@ MD5 (../allinone.tar) = f874fb298c6818fce938b836441c33d3
 mac:split_dir Jeff$
 ```
 
-#### Copy image tar to all nodes
-
-#### Restore all images
+#### Copy image tar to all nodes then Restore all images
+```
+docker load -i allinone.tar
+```
 
 ## Setup proxy
 
-http://www.iasptk.com/ubuntu-server-behind-proxy-firewall/
+Reference > http://www.iasptk.com/ubuntu-server-behind-proxy-firewall/
 
 Switch to China docker repo
 
 Configure proxy for the following
-apt > /etc/apt/apt.conf.d/proxy > Acquire::http::Proxy “http://ip:port/"
-curl > ~/.curlers
-docker > /etc/systemd/system/docker.service.d/http-proxy.conf
-https://stackoverflow.com/questions/23111631/cannot-download-docker-images-behind-a-proxy#28093517
 
-kubeadm
+#### ```apt```
+
+```
+cat /etc/apt/apt.conf.d/proxy
+
+Acquire::http::Proxy  "http://ip:3128";
+Acquire::https::Proxy "http://ip:3128";
+```
+
+#### ```curl```
+```
+cat ~/.curlrc
+
+proxy = ip:3128
+```
+
+#### ```wget```
+```
+cat ~/.wgetrc
+
+http_proxy = http://ip:3128
+https_proxy = http://ip:3128
+```
+
+For example, ```wget``` without checking SSL
+```
+wget https://kubernetes-charts.storage.googleapis.com/index.yaml --no-check-certificate
+```
+
+#### ```docker```
+
+```
+cat /etc/systemd/system/docker.service.d/http-proxy.conf
+
+[Service]
+Environment="HTTP_PROXY=http://ip:3128"
+```
+
+```
+systemctl daemon-reload; systemctl restart docker.service
+```
+
+Reference > https://stackoverflow.com/questions/23111631/cannot-download-docker-images-behind-a-proxy#28093517
+
+#### ```gradle```
+```
+cat ~/.gradle/gradle.properties
+
+systemProp.http.proxyHost=ip
+systemProp.http.proxyPort=3128
+systemProp.https.proxyHost=ip
+systemProp.https.proxyPort=3128
+
+gitUsername=j3ffyang
+gitPassword=token
+```
+
+#### ```kubeadm```
 
 Check no_proxy
 
@@ -190,10 +244,10 @@ Set no_proxy
 http://xmodulo.com/how-to-configure-http-proxy-exceptions.html
 
 ```
-sudo swap off -a
+sudo swapoff -a
 ```
 
-## Install specific version of kubelet/ kubectl/ kubeadm
+## Install specific version of ```kubelet```/ ```kubectl```/ ```kubeadm```
 
 ```
 apt install -qy kubelet=1.14.1-00 kubectl=1.14.1-00 kubeadm=1.14.1-00
@@ -225,6 +279,32 @@ Reference > https://stackoverflow.com/questions/35575674/how-to-save-all-docker-
 git config --global http.proxy http://10.216.1.213:3128
 ```
 
+Update
+
 ```
-./gradlew configureClient -Dhttps.proxyHost=xxxx -Dhttps.proxyPort=3128
+~/targetCluster/cluster.properties
+~/.gradle/gradle.properties
+```
+
+#### Create a specific branch under ```~/targetCluster```
+
+```
+cd targetCluster/
+git checkout -b sg  # sg = value of Pcluster
+```
+
+```
+./gradlew configureClient -Pcluster=sg -Dhttps.proxyHost=xxxx \
+  -Dhttps.proxyPort=3128 \
   -Dhttps.protocols="TLSv1,TLSv1.1,TLSv1.2"
+```
+
+There might be up to 50~ 100 dependency files
+
+#### Configure tiller
+
+Reference > https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-init/
+
+```
+helm init -c --skip-refresh
+```
