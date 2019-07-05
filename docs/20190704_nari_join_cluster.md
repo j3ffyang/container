@@ -13,6 +13,14 @@ kubeadm join 192.168.0.70:6443 --token 7li01q.z4d1rcdlowkr7m42 \
   --discovery-token-ca-cert-hash sha256:bbad2c92df60b77d1bb91c5cc56c762b4a736ca942d4c5674eae8b8a634b91f8
 ```
 
+Print join command
+```
+kubeadm token create --print-join-command
+
+kubeadm join 10.100.102.11:6443 --token eieqoa.letha4damisvvt0r \
+  --discovery-token-ca-cert-hash sha256:b2e3fa0dd14dfafa8dcb77620ba59a8238ed0dba77787aa39a0d6a966306ff20
+```
+
 Regen token, for example
 ```
 kubeadm token create
