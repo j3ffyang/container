@@ -15,6 +15,7 @@
 - [PiVPN setup](./docs/20180912_pivpn.md)
 - [Post-install of Linode](./docs/20190120_linode_postinst.md)
 - [Standard Kubernetes Base Deployment](./docs/20190326_ch_k8s_deploy.md)
+- [Ubuntu behind Firewall/ Proxy](./docs/20190702_proxy.md)
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
@@ -27,7 +28,7 @@
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
 - [Create custom docker image](./docs/20190522_docker_img.md)
 - [Install Nexus](./docs/20190619_nexus.md)
-- [Ubuntu behind Firewall/ Proxy](./docs/20190702_proxy.md)
+- [Istio serviceMesh](./docs/20190705_istio.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
