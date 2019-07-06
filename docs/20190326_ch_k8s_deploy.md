@@ -32,7 +32,7 @@ CPU 核 | Memory (G) 内存 | OS Disk (G) | IP | External Disk (G) 外挂磁盘
 4 | 16 | 40 | 10.100.100.11 |
 4 | 16 | 40 | 10.100.100.12 | 530 (MongoDB)
 4 | 16 | 40 | 10.100.100.13 | 530 (MongoDB)
-4 | 16 | 40 | 10.100.100.14 | 20 (Postgres for KeyCloak)/ 20 (Grafana)/ 20 (GrafanaDB)/ 165 (InfluxDB) 分别生成，共3个
+4 | 16 | 40 | 10.100.100.14 | 20 (Postgres for KeyCloak)/ 20 (Grafana)/ 20 (GrafanaDB)/ 165 (InfluxDB)
 4 | 16 | 40 | 10.100.100.15 | 50 (Nexus)
 4 | 16 | 40 | 10.100.100.16 |
 
