@@ -8,7 +8,7 @@ Under a circumstance of lack of internet access or through a dedicated proxy, ho
 - curl/ wget through proxy
 - Docker through proxy
 - Kubernetes through proxy  
-- Helm and charts repo 
+- Helm and charts repo
 
 ## Ubuntu 18.04 LTS Repo
 
@@ -271,7 +271,10 @@ Reference > https://stackoverflow.com/questions/49721708/how-to-install-specific
 
 
 ```
-sudo kubeadm init —apiserver-advertise-address=10.216.78.16 —pod-network-cidr=10.244.0.0/16 —image-repository registry.cn-hangzhou.aliyuncs.com/google_containers —kubernetes-version “1.14.1"
+sudo kubeadm init —apiserver-advertise-address=192.168.0.70 \
+  —pod-network-cidr=10.244.0.0/16 \
+  —image-repository registry.cn-hangzhou.aliyuncs.com/google_containers \
+  —kubernetes-version “1.14.1"
 ```
 
 #### Save all images in one tar
