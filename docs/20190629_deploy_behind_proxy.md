@@ -153,9 +153,14 @@ openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out c
 ```
 
 ```
-Org Name: stategrid.nx
-Org Unit Name: stategrid.nx
-Common Name (e.g. server FQDN): eda2
+Org Name: fqdn.com
+Org Unit Name: fqdn.com
+Common Name (e.g. server FQDN): eda2.fqdn.com
+```
+
+```
+openssl req -new -x509 -nodes -out ingress.crt -keyout ingress.key -days 9999 \
+  -subj /CN=hostname.fqdn.com
 ```
 
 ```
@@ -289,4 +294,41 @@ quay.io/prometheus/node-exporter                                 v0.15.2        
 telegraf                                                         1.9.4-alpine        07140bfde316        5 months ago        74.1MB
 vantiq/helm-kubectl                                              2.11.0              a92e4902c4bb        5 months ago        166MB
 vantiq/vantiq-server                                             1.25.13             ed619139fc57        6 weeks ago         622MB
+```
+
+#### SSL Keys in K8S
+
+- List in ```default``` namespace
+```
+kubectl -n default get secrets
+```
+
+- Describe the secret, named ```vantiq-cert``` in ```default``` namespace
+
+```
+kubectl -n default get secret vantiq-cert -o yaml
+```
+
+Re-generate secret by using new {cert,key}.pem files
+
+```
+kubectl -n default create secret tls --cert cert.pem --key key.pem \
+  vantiq-cert --dry-run -o yaml | kubectl apply -f -
+```
+
+Reference > https://developer.ibm.com/recipes/tutorials/changing-the-tls-certificate-in-ingress-in-information-server-kubernetes-deployments/
+
+In case, you need to create a CSR
+```
+openssl req -new -newkey rsa:2048 -nodes -keyout ingress.key -out ingress.csr
+```
+
+Convert p12 to pem
+```
+openssl pkcs7 -print_certs -in certificate.p7b -out ingress.pem  
+```
+
+To inspect cert.pem
+```
+openssl x509 -in ingress.pem -text -noout
 ```

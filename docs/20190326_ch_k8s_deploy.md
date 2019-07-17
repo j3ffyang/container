@@ -691,6 +691,8 @@ kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' -
 
 #### SSL Keys in K8S
 
+#### SSL Keys in K8S
+
 - List in ```default``` namespace
 ```
 kubectl -n default get secrets
@@ -702,32 +704,28 @@ kubectl -n default get secrets
 kubectl -n default get secret vantiq-cert -o yaml
 ```
 
-The output of ```tls.key``` and ```tls.crt``` should be identical to respective values from the following command, ```cat key.pem | base64``` and ```cat cert.pem | base64```
-
-- Encode SSL in ```base64```
-We put 2 SSL keys, ```key.pem``` and ```cert.pem``` in 2 places under ```~/targetCluster/deploy/{certificates,vantiq}```. To encode it in ```base64``` format
+Re-generate secret by using new {cert,key}.pem files
 
 ```
-cat  key.pem | base64
-cat cert.pem | base64
+kubectl -n default create secret tls --cert cert.pem --key key.pem \
+  vantiq-cert --dry-run -o yaml | kubectl apply -f -
 ```
 
-- Apply ```ssl_default.yaml```
+Reference > https://developer.ibm.com/recipes/tutorials/changing-the-tls-certificate-in-ingress-in-information-server-kubernetes-deployments/
 
+In case, you need to create a CSR
 ```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: vantiq-cert
-  namespace: default
-type: kubernetes.io/tls
-data:
-  tls.crt: <cert.pem_in_base64>
-  tls.key: <key.pem_in_base64>
+openssl req -new -newkey rsa:2048 -nodes -keyout ingress.key -out ingress.csr
 ```
 
+Convert p12 to pem
 ```
-kubectl apply -f ssl_default.yaml     
+openssl pkcs7 -print_certs -in certificate.p7b -out ingress.pem  
+```
+
+To inspect cert.pem
+```
+openssl x509 -in ingress.pem -text -noout
 ```
 
 - How to check SSL certificate details in command line
