@@ -168,7 +168,7 @@ cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/vantiq/certificates/
 cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/certificates/
 ```
 
-#### Modify
+#### Modify, pay attention to FQDN's value
 
 - ```~/k8sdeploy_tools/targetCluster/deploy.yaml```
 - ```~/k8sdeploy_tools/targetCluster/cluster.properties```
