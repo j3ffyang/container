@@ -691,8 +691,6 @@ kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' -
 
 #### SSL Keys in K8S
 
-#### SSL Keys in K8S
-
 - List in ```default``` namespace
 ```
 kubectl -n default get secrets
@@ -776,3 +774,12 @@ ubuntu@vantiq2-test02:~$ curl -v https://10.100.102.13:30753/auth -k
 * Connection #0 to host 10.100.102.13 left intact
 ubuntu@vantiq2-test02:~$
 ```
+
+#### Can't delete pv, always in ```terminating```
+
+- edit terminating pv and delete
+
+  ```
+  finalizer:
+  kubernetes.io/pv-protection
+  ```

@@ -168,7 +168,10 @@ cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/vantiq/certificates/
 cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/certificates/
 ```
 
-#### Modify ```~/k8sdeploy_tools/targetCluster/deploy.yaml```
+#### Modify
+
+- ```~/k8sdeploy_tools/targetCluster/deploy.yaml```
+- ```~/k8sdeploy_tools/targetCluster/cluster.properties```
 
 #### Setup private helm for Vantiq
 
