@@ -1,8 +1,9 @@
 # Kubernetes and Vantiq Product Deployment on Private Cloud behind a Proxy
 
-#### Document Objective
+#### Document Summary
 - Deployment occurs on a OpenStack based private cloud
 - Everything is behind __proxy__. Again, everything is behind a __proxy__
+- No KeyCloak installed, as well as PostgreSQL for KeyCloak
 
 ## Highlighted Steps
 
