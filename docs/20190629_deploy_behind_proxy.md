@@ -259,3 +259,33 @@ systemProp.https.proxyPost=3128
 gitUsername=me
 gitPassword=token
 ```
+
+#### ```docker image ls```
+
+Up to 20190717, the latest used images
+
+```
+ubuntu@vantiq2-test01:~$ docker image ls | sort
+bitnami/mongodb                                                  4.0.3-debian-9      b0bfbf15c8ae        6 months ago        382MB
+gcr.io/kubernetes-helm/tiller                                    v2.11.0             ac5f7ee9ae7e        9 months ago        71.8MB
+gcr.io/kubernetes-helm/tiller                                    v2.12.2             e3e79362c9d6        6 months ago        81.4MB
+grafana/grafana                                                  5.4.3               d0454da13c84        6 months ago        240MB
+influxdb                                                         1.7.4-alpine        1063411109c2        4 months ago        117MB
+k8s.gcr.io/coredns                                               1.3.1               eb516548c180        6 months ago        40.3MB
+k8s.gcr.io/defaultbackend                                        1.4                 846921f0fe0e        21 months ago       4.84MB
+k8s.gcr.io/etcd                                                  3.3.10              2c4adeb21b4f        7 months ago        258MB
+k8s.gcr.io/kube-apiserver                                        v1.14.1             cfaa4ad74c37        3 months ago        210MB
+k8s.gcr.io/kube-controller-manager                               v1.14.1             efb3887b411d        3 months ago        158MB
+k8s.gcr.io/kube-proxy                                            v1.14.1             20a2d7035165        3 months ago        82.1MB
+k8s.gcr.io/kube-scheduler                                        v1.14.1             8931473d5bdb        3 months ago        81.6MB
+k8s.gcr.io/pause                                                 3.1                 da86e6ba6ca1        19 months ago       742kB
+mysql                                                            5.7.14              4b3b6b994512        2 years ago         385MB
+quay.io/coreos/flannel                                           v0.11.0-amd64       ff281650a721        5 months ago        52.6MB
+quay.io/coreos/kube-rbac-proxy                                   v0.3.0              543e2018dcac        15 months ago       40.2MB
+quay.io/external_storage/local-volume-provisioner                v2.2.0              a17d656ccc81        11 months ago       289MB
+quay.io/kubernetes-ingress-controller/nginx-ingress-controller   0.20.0              a3f21ec4bd11        9 months ago        513MB
+quay.io/prometheus/node-exporter                                 v0.15.2             ff5ecdcfc4a2        19 months ago       22.8MB
+telegraf                                                         1.9.4-alpine        07140bfde316        5 months ago        74.1MB
+vantiq/helm-kubectl                                              2.11.0              a92e4902c4bb        5 months ago        166MB
+vantiq/vantiq-server                                             1.25.13             ed619139fc57        6 weeks ago         622MB
+```
