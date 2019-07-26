@@ -370,3 +370,16 @@ spec:
 ```
 
 Reference > https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+
+#### Product Reinstall Steps
+
+In case you want to undeploy/ re-deploy the product, here are the steps
+1. undeployVantiq > undeployShared > undeployNginx > ```./gradlew -Pcluster=<cluster_name> clean```
+2. Go to each of mounted disks under ```/mnt/disks-by-id/diskX```
+    - Delete all in those path, then umount # You understand what you're doing
+    - ```kubectl get pv``` > ```kubectl delete pv local-pv-xxx```  # assume all PVs belong to this product. And you know what you're doing
+3. deployNginx > deployShared
+    - Disk mount sequence > 50G (grafana mysql) > 150G (influx) > 50G (mysql)
+    - You'd see ```Bound``` status in ```kubectl get pv```
+4. deployVantiq
+    - mount 2* 530G disks

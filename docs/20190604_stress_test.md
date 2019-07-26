@@ -111,6 +111,20 @@ After finishing, the home dashboard looks like
 
 #### Script
 
+```
+cat ~/.vantiq/profile
+```
+
+```
+XXX {
+// url = 'http://eda-dev.cptheat.com:8080'
+url = 'https://eda-dev.cptheat.com'
+// user 'test' in system
+// vantiq -s docs1 load document /tmp/vantiq-docs
+token = 'olog2XOpHW5eMa52mwjinLVHjBQKVFVviG-mSoy_MZU='
+}
+```
+
 Simulation code is located
 
 ```
@@ -120,7 +134,7 @@ Simulation code is located
 ```
 cd ~/stress_test/gatlingTestInfra3/loadTest
 
-./gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=profile_name \
+../gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=XXX \
   -Pgatling.users=500 -Pgatling.duration="10 minutes" \
   -Pvantiq.namespace.create=false -Pvantiq.namespace.save=true
 ```
