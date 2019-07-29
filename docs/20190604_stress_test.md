@@ -50,7 +50,7 @@ Operations > Administer > Organizations > Actions > Configure Products
 ```
 
 #### Code Change
--  Modify Quota: Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20)
+-  Modify Quota: Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20) > update "receiveMessage": 30000 according to actual resource and "percentage": 100
 ```
 {
     "rates": {
@@ -66,7 +66,42 @@ Operations > Administer > Organizations > Actions > Configure Products
 }
 ```
 
-#### Grafana dataSources
+#### ```kubectl -n eda-dev edit cm vantiq-config```
+
+```
+apiVersion: v1
+data:
+  io.vantiq.monitoring.MonitoringManager.json: |-
+    {
+      "config": {
+        "grafana": {
+          "host": "grafana.shared.svc.cluster.local",
+          "port": 80,
+          "influxDbHost": "influxdb-influxdb"
+        },
+        "influxDb": {
+          "host": "influxdb-influxdb.shared.svc.cluster.local"
+        }
+      }
+    }
+  io.vantiq.rulemgr.RuleManager.json: |-
+    {
+      "config": {
+        "executionCredit": 150
+                }
+    }
+```
+
+Then re-scale to take the above change effective
+```
+kubectl -n eda-dev scale --replicas=0 statefulset vantiq-eda-dev
+kubectl -n eda-dev scale --replicas=3 statefulset vantiq-eda-dev
+```
+
+#### SSL
+
+
+## Grafana dataSources
 
 Create the following dataSources
 
