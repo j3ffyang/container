@@ -31,14 +31,44 @@
 
 ---
 
-## KubeCon
+## KubeCon 2019 Shanghai
 
-- Database
-	- kubeDB
-- TensorFlow
-	- kubeFlow
-- IoT
-	- kubeEdge
-	- k3s + gitops
-- Encryption and Auth 
+item | technology
+-- | -- 
+serviceMesh/ microService | istio
+dataPipelining | istio + knative
+ci/ cd | tekton.dev
+database | kubeDB
+tensorFlow | kubeFlow
+IoT | kubeEdge and (k3s + gitops)
+Encryption and Auth | 
 
+---
+
+## istio
+
+---
+
+## knative
+
+---
+
+## tekton.dev
+
+---
+
+## kubeDB
+
+---
+
+## k3s
+
+---
+
+### CI/ CD
+
+- Git
+- Gerrit
+- Jenkins
+
+Reference > https://cloud.google.com/kubernetes-engine/docs/tutorials/gitops-cloud-build
