@@ -311,9 +311,11 @@ Ensure you pass ```--pod-network-cidr``` param during ```kubeadm init```, which 
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-To specify an alternative repo
+To specify an alternative repo and binding IP
 ```
-kubeadm init --pod-network-cidr=10.244.0.0/16 --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers
+kubeadm init --pod-network-cidr=10.244.0.0/16 \
+  --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers \
+  --apiserver-advertise-address 192.168.100.3
 ```
 
 #### Grant non-root user access to control K8S

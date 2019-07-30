@@ -49,8 +49,9 @@ Operations > Administer > Organizations > Actions > Configure Products
 }
 ```
 
-#### Code Change
--  Modify Quota: Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20) > update "receiveMessage": 30000 according to actual resource and "percentage": 100
+#### Modify Quota
+
+Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20) > update "receiveMessage": 30000 according to actual resource and "percentage": 100
 ```
 {
     "rates": {
@@ -66,7 +67,11 @@ Operations > Administer > Organizations > Actions > Configure Products
 }
 ```
 
-#### ```kubectl -n eda-dev edit cm vantiq-config```
+#### Update Vantiq ConfigMap
+
+```
+kubectl -n eda-dev edit cm vantiq-config
+```
 
 ```
 apiVersion: v1
@@ -98,7 +103,17 @@ kubectl -n eda-dev scale --replicas=0 statefulset vantiq-eda-dev
 kubectl -n eda-dev scale --replicas=3 statefulset vantiq-eda-dev
 ```
 
-#### SSL
+#### How to config SSL for Nodes to ignore SSL challenge
+
+- In both "Deployment" and "Operations", Deploy -> Nodes
+- Create or Select one
+- Under [Client Options] add configure
+
+```
+{
+    "trustAll" : true
+}
+```
 
 
 ## Grafana dataSources
