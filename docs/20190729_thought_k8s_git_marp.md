@@ -70,5 +70,7 @@ Encryption and Auth |
 - Git
 - Gerrit
 - Jenkins
+- Jira
+- ...
 
 Reference > https://cloud.google.com/kubernetes-engine/docs/tutorials/gitops-cloud-build

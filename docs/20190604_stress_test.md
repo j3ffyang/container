@@ -298,6 +298,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 <div style="page-break-after: always;"></div>
 
 #### Statistic of MongoDB
+
 <img src="../imgs/20190619_dbinsert_mongo.png">
 
 - Insert __3,150/sec__ and Query __2,150/sec__ (slower than on AWS)
@@ -308,6 +309,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 <div style="page-break-after: always;"></div>
 
 #### Statistic of Vantiq Resource_Usage > API > VAIL
+
 <img src="../imgs/20190619_dbinsert_resource_uage_api_vail.png">
 
 - insert p99 avg = 50ms (very good)
@@ -333,3 +335,25 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 <img src="../imgs/20190619_dbinsert_gatling_number_of_response_per_sec.png">
 
 - Avg = 10 response/ second
+
+## Appendix
+
+# Stress-test Strategy and Plan
+
+As my understanding of statistic collected at an elevator operation company, I can try the load-test simply simulated to it. The pattern of load, generally looks like
+* Event rate: 1 event per elevator per every 1~ 3 second (configurable in real case. Currently it's set 1 sec, but it might be too frequent)
+* 5K update per 1 or 3 second for 1 event (elevator real-time status data)
+* 1K accumulative insert per minute (elevator history data) for each elevator
+
+Would possibly increase load every 2 thousand elevators, one increase for every 2 hours (too short? Usually we ran load-test for 48 hours before) till performance obviously drops. During the load, capture the data of behavior of our database response and other computing layers relatively.
+* I/O of Mongo
+* Response rate from Vantiq
+* Load of Kubernetes and CPU/ memory from VM underneath
+* JVM?
+
+Currently the hardware we're going to use for test
+* 4 vCPU, 16G ram, normal I/O VM/ memory/ disk (could be upgraded to high I/O disk if required)
+* 4 VMs across Kubernetes cluster, OpenStack on Huawei hardware
+* Enough disk space to be allocated to Mongo if needed
+
+The load-test data would be the starting-point of performance tuning.

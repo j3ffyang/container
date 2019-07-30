@@ -55,6 +55,14 @@ DISTRIB_DESCRIPTION="Ubuntu 18.04.1 LTS"
 hostnamectl set-hostname vantiq01
 ```
 
+#### Harden SSHd, then ```systemctl restart sshd.service```
+```
+PermitRootLogin prohibit-password
+
+PubkeyAuthentication yes
+PasswordAuthentication no
+```
+
 #### Turn-on Firewall
 ```
 ufw allow ssh
@@ -79,14 +87,8 @@ Generally, the iptables rule should allow the following access requirements
 2. Request from ```10.224.0.0/24``` to  ```10.100.100.11:6443``` by ```flannel```
 3. The incoming from random Github IPs to ```10.100.100.11:6443```, associated to outgoing traffic when image download is initialized
 
+Relative port required by Kubernetes > https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports
 
-#### Harden SSHd, then ```systemctl restart sshd.service```
-```
-PermitRootLogin prohibit-password
-
-PasswordAuthentication no
-PermitEmptyPasswords no
-```
 
 #### Create a non-root user and grant it ```sudo``` permission
 ```
@@ -266,12 +268,12 @@ sudo gpasswd -a $USER docker
 
 #### Using China alternative repo for workaround of ```gcr.io``` unaccessible
 ```
-apt-get update && apt-get install -y apt-transport-https
-curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -
+sudo apt-get update && apt-get install -y apt-transport-https
+curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main EOF
-apt-get update
-apt-get install -y kubelet kubeadm kubectl
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
 ```
 
 #### Pull Images by using alternative repo when ```gcr.io``` unavailable in China
