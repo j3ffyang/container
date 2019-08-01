@@ -43,6 +43,10 @@
 
 <img src="../imgs/20190729_kubernetes_ecosystem.png">
 
+<font size=3>
+Source > dzone.com
+</font>
+
 ---
 
 ## Kubernetes Provides ...
@@ -71,16 +75,24 @@ Reference > https://www.magalix.com/blog/kubernetes-101-concepts-and-why-it-matt
 
 ---
 
-## Git
+## Git > K8S > DevOps
 
 - Config is code
 - Code must be version controlled and so must Config
 - What can be described can be automated
 - Describe everything: code, config, monitoring & policy; and then keep it in version control
 
+<center>
+<img src="../imgs/20190729_baofeng_devops_pipeline.png">
+</center>
+
+<font size=3>
+Ref > https://dzone.com/articles/gitops-for-istio-manage-istio-config-like-code
+</font>
+
 ---
 
-## KubeCon 2019 Shanghai
+## KubeCon 2019 Shanghai (my personal focus)
 
 item | technology
 -- | -- 
@@ -186,5 +198,7 @@ Source > cloudtp.com
 - Jenkins
 - Jira
 - ...
+
+
 
 Reference > https://cloud.google.com/kubernetes-engine/docs/tutorials/gitops-cloud-build
