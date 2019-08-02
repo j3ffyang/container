@@ -23,7 +23,7 @@
 	- dev > test > staging > production > mon > ops & maintenance
 	- dev & ops model changed much
 - Vertical 
- 	- IaaS, platform (HA/ LB/ FT), persistent_vol, 
+ 	- IaaS, platform (HA/ LB/ FT), persistent_vol, SDN
 
 ---
 
@@ -34,10 +34,6 @@
 </center>
 
 --- 
-
-<img src="../imgs/20190729_k8s_arch.png" width=900px>
-
----
 
 ## Kubernetes Eco-system
 
@@ -87,7 +83,7 @@ Reference > https://www.magalix.com/blog/kubernetes-101-concepts-and-why-it-matt
 </center>
 
 <font size=3>
-Ref > https://dzone.com/articles/gitops-for-istio-manage-istio-config-like-code
+Reference > https://dzone.com/articles/gitops-for-istio-manage-istio-config-like-code
 </font>
 
 ---

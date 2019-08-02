@@ -34,7 +34,7 @@
 #### Distribute all images to all workers
 
 - ```docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o all_optimized.tar```
-- rsync image.tar to all nodes then untar and extract ```docker -load -i base.tar```
+- rsync image.tar to all nodes then untar and extract ```docker load -i base.tar```
 
 #### Install K8S on all workers, with specific version K8S
 - ```apt install -qy {kubelet,kubectl,kubeadm}=1.14-00```
