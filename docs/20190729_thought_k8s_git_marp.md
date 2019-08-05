@@ -4,10 +4,10 @@
 
 ## DevOps and Kubernetes
 
-<img src="../imgs/20190729_k8s_arch_hacknoon.png" width=900px>
+<img src="../imgs/20190729_k8s_arch_hacknoon2.png" width=900px>
 
 <font size=3>
-  Source: hackernoon.com
+  Source> https://medium.com/@dpaunin/the-best-architecture-with-docker-and-kubernetes-myth-or-reality-77b4f8f3804d
 </font>
 
 ---
@@ -19,18 +19,19 @@
 	- vCPU, memory, disk and network
 	- Componentized - Postgres, MySQL, MongoDB, ...
 	- statefulset, daemonset, configmap, deployment, replicaset, service...
-- Horizontal in process and automation 
+- Horizontal in process and automation (unattended)
 	- dev > test > staging > production > mon > ops & maintenance
 	- dev & ops model changed much
-- Vertical 
- 	- IaaS, platform (HA/ LB/ FT), persistent_vol, SDN
+- Vertical across layers
+ 	- IaaS > vCPU, persistent_vol, SDN
+ 	- Platform > HA/ LB/ FT
 
 ---
 
 ## Kubernetes Architecture
 
 <center>
-<img src="../imgs/20190729_k8s_arch0.png" width=1000px>
+<img src="../imgs/20190729_k8s_arch0.png" width=860px>
 </center>
 
 --- 
@@ -62,12 +63,12 @@ Reference > https://www.magalix.com/blog/kubernetes-101-concepts-and-why-it-matt
 
 ---
 
-## What We Learn
+## What Kubernetes is changing = Industrial Standard
 
-- Workload Standardization
-	- Componentization
-	- The way to consume computing resource
-- LIfe-cycle of development and operation 
+- Workload standardization > componentization
+- The way to orchestrate and consume computing resources
+- Life-cycle of end-to-end development and operation  (DevOps)
+- Compliance management
 
 ---
 
@@ -117,22 +118,23 @@ Reference > https://www.infoworld.com/article/3328817/what-is-istio-the-kubernet
 
 ---
 
-## (Kubernetes + Istio) with Docker
+## (Kubernetes + Istio) through Docker
 
 <!--
 <img src="../imgs/20190729_k8s_istio_relationship.jpg" width=1000px>
 --> 
 
-<table style="margin: 0px auto;">
+<table border=0>
+  
   <tr>
     <td><center><img src="../imgs/20190729_k8s_logo.png" width=110px></center>
     </td>
     <td>
     </td>
     <td><center><img src="../imgs/20190729_istio_logo.png" width=100px></center>
-    </td>
-    
+    </td>    
   </tr>
+  
   <tr>
     <td>
       <li>Orchestration
@@ -149,7 +151,40 @@ Reference > https://www.infoworld.com/article/3328817/what-is-istio-the-kubernet
       <li>Control Plane
     </td>
   </tr>
+  
 </table>
+
+<!--
+<table border=0>
+  
+  <tr>
+    <td><center><img src="../imgs/20190729_k8s_logo.png" width=110px></center>
+    </td>
+    <td>
+    </td>
+    <td><center><img src="../imgs/20190729_istio_logo.png" width=100px></center>
+    </td>    
+  </tr>
+  
+  <tr>
+    <td>
+      <li>Orchestration
+      <li>Deployment
+      <li>Scaling
+      <li>Data Plane
+    </td>
+    <td><img src="../imgs/20190729_docker_logo.png" width=150px>
+    </td>
+    <td>
+      <li>Policy Enforcement
+      <li>Traffic Management
+      <li>Telemetry
+      <li>Control Plane
+    </td>
+  </tr>
+  
+</table>
+-->
 
 ---
 
@@ -174,7 +209,7 @@ The __control plane__, Istio’s core, manages and secures the data plane. It co
 </center>
 
 <font size=3>
-	Source:_katacoda.com
+	Source: katacoda.com
 </font>
 
 ---
@@ -199,7 +234,7 @@ Source > https://dzone.com/articles/metadata-management-in-big-data-systems-a-co
 
 ---
 
-## Knative
+## Knative.dev
 
 <center>
 <img src="../imgs/20190729_knative_istio_k8s.jpg">
