@@ -1,3 +1,15 @@
+# <center>Thoughts on Kubernetes and DevOps</center>
+
+<center>
+<font size=3>
+  github.com/j3ffyang
+  
+  @j3ffyang
+</font>
+</center>
+
+---
+
 <img src="../imgs/20170301_unknown_unknowns.png">
 
 ---
