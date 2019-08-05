@@ -64,10 +64,10 @@ Reference > https://www.magalix.com/blog/kubernetes-101-concepts-and-why-it-matt
 
 ## What We Learn
 
-- Standard of Workload
+- Workload Standardization
 	- Componentization
-	- The way to consume resource
-- Model of development and operation
+	- The way to consume computing resource
+- LIfe-cycle of development and operation 
 
 ---
 
@@ -117,24 +117,60 @@ Reference > https://www.infoworld.com/article/3328817/what-is-istio-the-kubernet
 
 ---
 
+## (Kubernetes + Istio) with Docker
+
+<!--
 <img src="../imgs/20190729_k8s_istio_relationship.jpg" width=1000px>
+--> 
+
+<table style="margin: 0px auto;">
+  <tr>
+    <td><center><img src="../imgs/20190729_k8s_logo.png" width=110px></center>
+    </td>
+    <td>
+    </td>
+    <td><center><img src="../imgs/20190729_istio_logo.png" width=100px></center>
+    </td>
+    
+  </tr>
+  <tr>
+    <td>
+      <li>Orchestration
+      <li>Deployment
+      <li>Scaling
+      <li>Data Plane
+    </td>
+    <td><img src="../imgs/20190729_docker_logo.png" width=150px>
+    </td>
+    <td>
+      <li>Policy Enforcement
+      <li>Traffic Management
+      <li>Telemetry
+      <li>Control Plane
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## Istio Components
 
+<font size=5>
+  
 Istio works as a service mesh by providing two basic pieces of architecture for your cluster, a __data plane__ and a __control plane__.
 
 The __data plane__ handles network traffic between the services in the mesh. All of this traffic is intercepted and redirected by a network proxying system. In Istio’s case, the proxy is provided by an open source project called __Envoy__. A second component in the data plane, __Mixer__, gathers telemetry and statistics from Envoy and the flow of service-to-service traffic.
 
 The __control plane__, Istio’s core, manages and secures the data plane. It configures both the Envoy proxies and the Mixers that enforce the network policies for the services, such as who gets to talk to whom and when. The control plane also provides a programmatic abstraction layer for the data plane and all of its behaviors.
 
+</font>
+
 ---
 
 ## Istio Abstract Architecture
 
 <center>
-<img src="../imgs/20190729_istio-arch.png" width=800px>
+<img src="../imgs/20190729_istio-arch.png" width=700px>
 </center>
 
 <font size=3>
@@ -154,7 +190,7 @@ Image Source > Jimmy Song's Istio Handbook
 ## Istio serviceMesh
 
 <center>
-<img src="../imgs/20190729_Istio-proxy.png" width=600px>
+<img src="../imgs/20190729_Istio-proxy.png" width=500px>
 </center>
 
 <font size=3>
