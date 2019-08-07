@@ -2,9 +2,9 @@
 
 <center>
 <font size=3>
-  github.com/j3ffyang
+  { github.com/j3ffyang ; @j3ffyang ; jyang@vantiq.com }
   
-  @j3ffyang
+  20190729
 </font>
 </center>
 
@@ -26,17 +26,21 @@
 
 ## Kubernetes
 
+<font size=5>
+  
 - docker and dockerization
 - Workload as Service_Oriented_Architecture (SOA)
 	- vCPU, memory, disk and network
 	- Componentized - Postgres, MySQL, MongoDB, ...
-	- statefulset, daemonset, configmap, deployment, replicaset, service...
+	- microService, as micro as statefulset, daemonset, configmap, deployment, replicaset, service... 
 - Horizontal in process and automation (unattended)
 	- dev > test > staging > production > mon > ops & maintenance
-	- dev & ops model changed much
+	- dev & ops model changed much - automated health-check and self-healing (no human involved)
 - Vertical across layers
  	- IaaS > vCPU, persistent_vol, SDN
  	- Platform > HA/ LB/ FT
+
+</font>
 
 ---
 
