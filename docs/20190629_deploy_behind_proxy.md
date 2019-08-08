@@ -77,55 +77,88 @@ git config —global https.proxy $http_proxy
 
 - Configure gradle proxy in ```~/k8sdeploy_tools/.gradle/gradle.properties``` # Sample is available in Appendix
 
-- ```./gradlew -Pcluster=jd configureClient```    # targetCluster is created
+  ```
+  gitUsername=MY_GITHUB_ID
+  gitPassword=MY_TOKEN
+  ```
 
-- The above proc will fail and ```~/k8sdeploy_tools/targetCluster``` directory is created
+- Run to create ```targetCluster``` and associated files # jd = -Pcluster's value as example
+
+  ```
+  ./gradlew -Pcluster=jd configureClient
+  ```
+
+- The above process will fail, as expected, and ```~/k8sdeploy_tools/targetCluster``` directory is created
+
+- ```  cp ~/.kube/config ~/k8sdeploy_tools/targetCluster/kubeconfig```
 
 - Modify ```~/k8sdeploy_tools/targetCluster/cluster.properties```
 
   ```
   requireRemote=false
+  provider=kubeadm
   vantiq_system_release=1.1.5
   deployment=production
-  vantiq.installation=eda    # this value will be used for namespace to hold Vantiq
-  excludeKeycloak=true
+  vantiq.installation=eda    # used for namespace to hold Vantiq and the same as 1st part of FQDN!!!
+  excludeKeycloak=true    # this excludes KeyCloak install
   ```
 
-- After modifying ```cluster.properties```, create a branch # important
+  __Attention__ to setting of ```vantiq.installation```, which will be used as Vantiq namespace in Kubernetes and must be the same as 1st part of FQDN matching to signed SSL Key.
+  __End of Attention__
+<br>
+
+- After modifying ```cluster.properties```, create a Git branch # important
 
   ```
   cd ~/k8sdeploy_tools/targetCluster/; git checkout -b jd    # jd = -Pcluster’s value
   ```
 
-- rerun >
+- At this moment, the access to http://github.com/Vantiq/k8sdeploy_clusters.git is required to get granted in current shell session where to continue installation and configuration
 
   ```
-  ./gradlew -Pcluster=jd configureClient    # targetCluster is created
+  cd /tmp/; git clone http://github.com/Vantiq/k8sdeploy_clusters.git
   ```
 
-- At this moment, the access to http://github.com/Vantiq/k8sdeploy_clusters.git is required in this session where to continue installation and configuration
+- Then come back to ```~/k8sdeploy_tools/targetCluster```, keep running
 
-  ```
-  cd /tmp/
-  git clone http://github.com/Vantiq/k8sdeploy_clusters.git
-  ```
+  ```./gradlew -Pcluster=jd configureClient```
 
-  Then come back to ```~/k8sdeploy_tools/targetCluster```, keep running ```./gradlew -Pcluster=jd configureClient```till the proc succeeds (download all dependencies of gradle)
-  The expected output looks when configuring helm repo
+  till the proc succeeds (download all dependencies of gradle). The expected output looks when configuring helm repo
+
   ```
   Adding stable repo with URL:
   ...
   ```
 
-  ```cd ~/k8sdeploy_tools/.gradle; du -ksh    # at least 561MB```
+  ```
+  cd ~/k8sdeploy_tools/.gradle; du -ksh    # at least 561MB
+  ```
 
 - ```./gradlew -Pcluster=jd clusterInfo```
 
+
 - ```kubectl apply -f rbac-config.yaml```
-  Important or access-control err challenging later
+  Important or access-control err challenging later. You'd see
+
+  ```
+  kubectl apply -f rbac-config.yaml
+  serviceaccount/tiller created
+  clusterrolebinding.rbac.authorization.k8s.io/tiller created
+  ```
+
 - ```./gradlew -Pcluster=jd setupCluster```
 
-At this time, ```local-volume-provisioner``` are running on all workers
+- At this time, ```local-volume-provisioner``` are running on all workers. If receiving ```ImagePullBackOff``` in status, go edit
+
+  ```
+  kubectl -n default edit daemonsets.apps local-volume-provisioner
+  ```
+
+  as the following (you'd need to manually download such docker image on each node before and image name = ```quay.io/external_storage/local-volume-provisioner```)
+
+  ```
+  imagePullPolicy: IfNotPresent
+  ```
 
 #### Install ```tiller```
 Manually install tiller, preventing from being init’d by helm through proxy
@@ -136,7 +169,43 @@ cd ~/k8sdeploy_tools/
 kubectl apply -f tiller.yaml
 ```
 
-Initialize Helm client
+#### Initialize Helm Client Manually
+
+If receiving the error
+
+```
+./gradlew -Pcluster=ins setupCluster
+serviceaccount/tiller unchanged
+clusterrolebinding.rbac.authorization.k8s.io/tiller configured
+configmap/local-provisioner-config created
+daemonset.extensions/local-volume-provisioner created
+serviceaccount/local-storage-admin created
+clusterrolebinding.rbac.authorization.k8s.io/local-storage-provisioner-pv-binding created
+clusterrole.rbac.authorization.k8s.io/local-storage-provisioner-node-clusterrole created
+clusterrolebinding.rbac.authorization.k8s.io/local-storage-provisioner-node-binding created
+storageclass.storage.k8s.io/local-storage created
+storageclass.storage.k8s.io/vantiq-sc created
+Creating /root/.helm/repository/repositories.yaml
+Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com
+Error: Looks like "https://kubernetes-charts.storage.googleapis.com" is not a valid chart repository or cannot be reached: read tcp 172.17.0.2:36652->216.58.200.48:443: read: connection reset by peer
+> Task :initHelmServer FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':initHelmServer'.
+> COMMAND: vantiq_helm init --service-account tiller --upgrade
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 4m 23s
+5 actionable tasks: 3 executed, 2 up-to-date
+```
+
+Run
 
 ```
 ./helm init —client-only —skip-refresh
