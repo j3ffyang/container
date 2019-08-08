@@ -787,3 +787,25 @@ ubuntu@vantiq2-test02:~$
   finalizer:
   kubernetes.io/pv-protection
   ```
+
+#### Nexus Registry
+
+LB IP = http://10.100.102.201:8081/
+
+```
+kubectl -n default -l app=nexus-server get all
+NAME                        READY   STATUS    RESTARTS   AGE
+pod/nexus-dc775bbf7-2dm28   2/2     Running   0          2d12h
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nexus   1/1     1            1           2d12h
+
+NAME                              DESIRED   CURRENT   READY   AGE
+replicaset.apps/nexus-dc775bbf7   1         1         1       2d12h
+```
+
+```
+kubectl -n default get all | grep NodePort | grep nexus
+
+service/nexus-service       NodePort    10.107.129.163   <none>        8081:32000/TCP               2d12h
+```
