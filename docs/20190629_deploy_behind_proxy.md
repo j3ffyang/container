@@ -47,7 +47,8 @@ kubeadm init —pod-network-cidr=10.244.0.0/16 \
   —kubernetes-version “1.14.1"
 ```
 
-#### Apply flannel.yaml network plugin manually
+#### Apply ```flannel.yaml``` network plugin manually
+
 ```
 kubectl apply -f flannel.yaml
 ```
@@ -56,15 +57,17 @@ kubectl apply -f flannel.yaml
 
 ---
 
-## Install Vantiq
+## Install Vantiq Product
 
-#### Install Java
+#### Pre-requisite
+
+##### Install Java
 
 ```
 apt install opened-8-jre-headless
 ```
 
-#### Configure ```git``` on Master
+##### Configure ```git``` on Master, if there is a proxy
 
 ```
 http_proxy=http://ip:3128
@@ -73,7 +76,7 @@ git config —global http.proxy $http_proxy
 git config —global https.proxy $http_proxy
 ```
 
-#### Configure ```gradle```
+##### Configure ```gradle```
 
 - Configure gradle proxy in ```~/k8sdeploy_tools/.gradle/gradle.properties``` # Sample is available in Appendix
 
@@ -81,6 +84,8 @@ git config —global https.proxy $http_proxy
   gitUsername=MY_GITHUB_ID
   gitPassword=MY_TOKEN
   ```
+
+#### Setup Vantiq Env
 
 - Run to create ```targetCluster``` and associated files # jd = -Pcluster's value as example
 
@@ -103,8 +108,7 @@ git config —global https.proxy $http_proxy
   excludeKeycloak=true    # this excludes KeyCloak install
   ```
 
-  __Attention__ to setting of ```vantiq.installation```, which will be used as Vantiq namespace in Kubernetes and must be the same as 1st part of FQDN matching to signed SSL Key.
-  __End of Attention__
+  __Attention__ to setting of ```vantiq.installation```, which will be used as Vantiq namespace in K8S and must match the 1st part of FQDN, being used to sign SSL Key.
 <br>
 
 - After modifying ```cluster.properties```, create a Git branch # important
@@ -112,6 +116,9 @@ git config —global https.proxy $http_proxy
   ```
   cd ~/k8sdeploy_tools/targetCluster/; git checkout -b jd    # jd = -Pcluster’s value
   ```
+
+  __Attention__: the Git branch must match the value of ```-Pcluster``` which will be used in service def in K8S
+<br>  
 
 - At this moment, the access to http://github.com/Vantiq/k8sdeploy_clusters.git is required to get granted in current shell session where to continue installation and configuration
 
@@ -132,6 +139,12 @@ git config —global https.proxy $http_proxy
 
   ```
   cd ~/k8sdeploy_tools/.gradle; du -ksh    # at least 561MB
+  ```
+
+- Check helm repo. If it doesn't have ```vantiq``` repo, check "update helm repo" part in this doc
+
+  ```
+  cd ~/k8sdeploy_tools/; ./helm repo list
   ```
 
 - ```./gradlew -Pcluster=jd clusterInfo```
@@ -160,7 +173,7 @@ git config —global https.proxy $http_proxy
   imagePullPolicy: IfNotPresent
   ```
 
-#### Install ```tiller```
+##### Install Tiller
 Manually install tiller, preventing from being init’d by helm through proxy
 
 ```
@@ -169,9 +182,9 @@ cd ~/k8sdeploy_tools/
 kubectl apply -f tiller.yaml
 ```
 
-#### Initialize Helm Client Manually
+##### Initialize Helm client manually
 
-If receiving the error
+If receiving the error when running ```./gradlew -Pcluster=ins setupCluster```
 
 ```
 ./gradlew -Pcluster=ins setupCluster
@@ -215,34 +228,30 @@ Reference > https://whmzsu.github.io/helm-doc-zh-cn/quickstart/install_faq-zh_cn
 
 > stty erase ^h    # prevent ^H when hitting BACKSPACE in openssl req cmd
 
-#### Generate ```key.pem``` and ```cert.pem```
+##### Update ```vantiq``` repo in Helm
 
 ```
-openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+./helm repo list
+NAME    URL                                             
+stable	https://kubernetes-charts.storage.googleapis.com
+local 	http://127.0.0.1:8879/charts                    
+vantiq	https://vantiq.github.io/k8sdeploy/charts       
 ```
 
-```
-Org Name: fqdn.com
-Org Unit Name: fqdn.com
-Common Name (e.g. server FQDN): eda2.fqdn.com
-```
+If ```vantiq``` repo not existing, re-run
 
 ```
-openssl req -new -x509 -nodes -out ingress.crt -keyout ingress.key -days 9999 \
-  -subj /CN=hostname.fqdn.com
+./gradlew -Pcluster=ins configureClient
+$HELM_HOME has been configured at /root/.helm.
+Not installing Tiller due to 'client-only' flag having been set
+Happy Helming!
+"vantiq" has been added to your repositories
+
+BUILD SUCCESSFUL in 7s
+2 actionable tasks: 2 executed
 ```
 
-```
-cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/vantiq/certificates/
-cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/certificates/
-```
-
-#### Modify, pay attention to FQDN's value
-
-- ```~/k8sdeploy_tools/targetCluster/deploy.yaml```
-- ```~/k8sdeploy_tools/targetCluster/cluster.properties```
-
-#### Setup private helm for Vantiq
+##### Setup private helm for Vantiq (optional)
 
 ```
 cp modified {build,settings}.gradle ~/k8sdeploy_tools/
@@ -269,17 +278,81 @@ docker run -d —name chart-repo -p 8879:8879 -v /home/ubuntu/helm_local/charts/
 docker logs chart-repo    # check logs
 ```
 
+##### Update stable repo in Helm (optional)
 
-#### ```deployNginx```, ```deployShared``` and ```deployVantiq```
+The purpose of doing this is to avoid time-out connection attempt to googleapis.com which is blocked by firewall
+
+```
+k8s_master:~/k8sdeploy_tools$ ./helm repo list
+NAME  	URL                                             
+stable	https://kubernetes-charts.storage.googleapis.com
+local 	http://127.0.0.1:8879/charts                    
+vantiq	https://vantiq.github.io/k8sdeploy/charts       
+
+k8s_master:~/k8sdeploy_tools$ ./helm repo remove stable
+"stable" has been removed from your repositories
+
+k8s_master:~/k8sdeploy_tools$ ./helm repo list
+NAME  	URL                                      
+local 	http://127.0.0.1:8879/charts             
+vantiq	https://vantiq.github.io/k8sdeploy/charts
+
+k8s_master:~/k8sdeploy_tools$ ./helm repo add stable http://mirror.azure.cn/kubernetes/charts/
+"stable" has been added to your repositories
+
+k8s_master:~/k8sdeploy_tools$ ./helm repo list
+NAME  	URL                                      
+local 	http://127.0.0.1:8879/charts             
+vantiq	https://vantiq.github.io/k8sdeploy/charts
+stable	http://mirror.azure.cn/kubernetes/charts/
+
+k8s_master:~/k8sdeploy_tools$ ./helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "vantiq" chart repository
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+```
+
+#### SSL, if self-signed
+
+##### Generate ```key.pem``` and ```cert.pem```
+
+```
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+```
+
+```
+Org Name: fqdn.com
+Org Unit Name: fqdn.com
+Common Name (e.g. server FQDN): eda2.fqdn.com
+```
+
+```
+openssl req -new -x509 -nodes -out ingress.crt -keyout ingress.key -days 9999 \
+  -subj /CN=hostname.fqdn.com
+```
+
+```
+cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/vantiq/certificates/
+cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/certificates/
+```
+
+##### Modify, pay attention to FQDN's value
+
+- ```~/k8sdeploy_tools/targetCluster/deploy.yaml```
+- ```~/k8sdeploy_tools/targetCluster/cluster.properties```
+
+#### Start Install
+
+###### ```deployNginx```, and ```deployShared```
 ```
 ./gradlew -Pcluster=jd repoUpdate
-
 ./gradlew -Pcluster=jd deployNginx
-
 ./gradlew -Pcluster=jd deployShared
 ```
 
-#### The pattern of creating mount-point
+##### The pattern of creating mount-point
 * ```sudo mkdir -p /mnt/disks-by-id/disk0```
 * ```sudo fdisk /dev/vdX``` > create partition then commit
 * ```sudo mkfs.ext4 -j /dev/vdX1```
@@ -287,37 +360,38 @@ docker logs chart-repo    # check logs
 
 The sequence to mount:
 * 50G for ```grafanadb-mysql```
-* 150G for ```influxdb-influxdb```
+* 160G for ```influxdb-influxdb```  # at least 156G or failed
 * 50G for ```grafana```, on worker which perhaps needs to ```docker pull grafana/grafana:5.4.3```
 
+#####  ```deployVantiq```
 ```
 ./gradlew -Pcluster=jd deployVantiq
 ```
-* Find workers that have 2* 530G block disks
+* Find workers that have 2* 520G block disks  # at least 520G each
 * ```sudo mkdir -p /mnt/disks-by-id/disk0```
 * ```sudo fdisk /dev/vdX```
 * ```sudo mount /dev/vdX1 /mnt/disks-by-id/disk0```
 
 ## Appendix
-#### ```/etc/apt/apt.conf.d/proxy```
+##### ```/etc/apt/apt.conf.d/proxy```
 
 ```
 Acquire::http::Proxy "http://ip:3128"
 Acquire::https::Proxy "http://ip:3128"
 ```
 
-#### ```~/.curlrc```
+##### ```~/.curlrc```
 ```
 proxy = ip:3128
 ```
 
-#### ```/etc/systemd/system/docker.service.d/http-proxy.conf```
+##### ```/etc/systemd/system/docker.service.d/http-proxy.conf```
 ```
 [Service]
 Environment="HTTP_PROXY=http://up:3128/"
 ```
 
-#### ```/etc/systemd/system/docker.service.d/override.conf```
+##### ```/etc/systemd/system/docker.service.d/override.conf```
 
 This file is generated by ```systemctl edit docker``` automatically
 ```
@@ -326,7 +400,7 @@ ExecStart=
 ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 ```
 
-#### ```~/k8sdeploy_tools/.gradle/gradle.properties```
+##### ```~/k8sdeploy_tools/.gradle/gradle.properties```
 
 ```
 systemProp.http.proxyHost=ip
@@ -338,7 +412,7 @@ gitUsername=me
 gitPassword=token
 ```
 
-#### ```docker image ls```
+##### ```docker image ls```
 
 Up to 20190717, the latest used images
 
@@ -361,14 +435,14 @@ mysql                                                            5.7.14         
 quay.io/coreos/flannel                                           v0.11.0-amd64       ff281650a721        5 months ago        52.6MB
 quay.io/coreos/kube-rbac-proxy                                   v0.3.0              543e2018dcac        15 months ago       40.2MB
 quay.io/external_storage/local-volume-provisioner                v2.2.0              a17d656ccc81        11 months ago       289MB
-quay.io/kubernetes-ingress-controller/nginx-ingress-controller   0.20.0              a3f21ec4bd11        9 months ago        513MB
+quay.io/kubernetes-ingress-controller/nginx-ingress-controller   0.23.0              a3f21ec4bd11        9 months ago        513MB
 quay.io/prometheus/node-exporter                                 v0.15.2             ff5ecdcfc4a2        19 months ago       22.8MB
 telegraf                                                         1.9.4-alpine        07140bfde316        5 months ago        74.1MB
 vantiq/helm-kubectl                                              2.11.0              a92e4902c4bb        5 months ago        166MB
 vantiq/vantiq-server                                             1.25.13             ed619139fc57        6 weeks ago         622MB
 ```
 
-#### SSL Keys in K8S
+##### SSL Keys in K8S
 
 - List in ```default``` namespace
 ```
@@ -405,7 +479,7 @@ To inspect cert.pem
 openssl x509 -in ingress.pem -text -noout
 ```
 
-#### Add a DNS entry in lb-nginx-ingress-controller
+##### Add a DNS entry in lb-nginx-ingress-controller
 
 ```
 kubectl -n default edit daemonsets.apps lb-nginx-ingress-controller
@@ -440,7 +514,7 @@ spec:
 
 Reference > https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 
-#### Product Reinstall Steps
+##### Product Reinstall Steps
 
 In case you want to undeploy/ re-deploy the product, here are the steps
 1. undeployVantiq > undeployShared > undeployNginx > ```./gradlew -Pcluster=<cluster_name> clean```
@@ -452,3 +526,29 @@ In case you want to undeploy/ re-deploy the product, here are the steps
     - You'd see ```Bound``` status in ```kubectl get pv```
 4. deployVantiq
     - mount 2* 530G disks
+
+##### Alternative Repos in China
+
+- Ubuntu APT
+  https://mirrors.aliyun.com/docker-ce/linux/ubuntu for https://download.docker.com/linux/ubuntu
+  https://mirrors.aliyun.com/kubernetes/apt/ for https://apt.kubernetes.io/
+- docker registry mirrors
+  https://registry.docker-cn.com
+- k8s.gcr.io
+  registry.aliyuncs.com/google_containers
+- quay.io
+
+  ```
+  docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
+  ```
+
+  Reference > https://www.ilanni.com/?p=14534
+
+- Install docker-ce
+  ```
+  apt-get update && apt-get install -y apt-transport-https ca-certificates curl
+  curl -s http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | apt-key add -
+  cat <<EOF >/etc/apt/sources.list.d/docker-ce.list
+  deb [arch=amd64] https://mirror.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu xenial stable
+  EOF
+  ```
