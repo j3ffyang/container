@@ -529,6 +529,8 @@ In case you want to undeploy/ re-deploy the product, here are the steps
 
 ##### Alternative Repos in China
 
+Reference > https://github.com/Azure/container-service-for-azure-china/tree/master/aks
+
 - Ubuntu APT
   https://mirrors.aliyun.com/docker-ce/linux/ubuntu for https://download.docker.com/linux/ubuntu
   https://mirrors.aliyun.com/kubernetes/apt/ for https://apt.kubernetes.io/
