@@ -28,6 +28,7 @@
 #### Install and configure Docker and K8S on all other nodes
 
 - ```apt install docker-ce```
+- ```sudo gpasswd -a $USER docker```
 - configure docker ```/etc/systemd/system/docker.service.d/{http-proxy.conf,override.conf}``` # ```http-proxy.conf``` one enables ```docker pull``` behind a proxy and ```override.conf``` enables docker managed by ```systemd```. The samples are available in Appendix
 - ```systemctl daemon-reload; systemctl restart docker.service```
 
@@ -554,3 +555,9 @@ Reference > https://github.com/Azure/container-service-for-azure-china/tree/mast
   deb [arch=amd64] https://mirror.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu xenial stable
   EOF
   ```
+
+##### Check logs and use labels 
+
+```
+kubectl -n kube-system logs -l k8s-app=kube-dns
+```
