@@ -25,7 +25,7 @@
 
 - ```swapoff -a```
 
-#### Install and configure Docker and K8S on all other nodes
+#### Install and configure Docker and K8S on all nodes
 
 - ```apt install docker-ce```
 - ```sudo gpasswd -a $USER docker```
@@ -44,9 +44,11 @@
 
 ```
 kubeadm init —pod-network-cidr=10.244.0.0/16 \
-  —image-repository registry.cn-hangzhou.aliyuncs.com/google_containers \
+  —image-repository gcr.azk8s.cn/google_containers \
   —kubernetes-version “1.14.1"
 ```
+
+Alternative registry > https://github.com/Azure/container-service-for-azure-china/tree/master/aks
 
 #### Apply ```flannel.yaml``` network plugin manually
 
@@ -252,7 +254,7 @@ BUILD SUCCESSFUL in 7s
 2 actionable tasks: 2 executed
 ```
 
-##### Setup private helm for Vantiq (optional)
+##### (optional) Setup private helm for Vantiq to skip update from internet
 
 ```
 cp modified {build,settings}.gradle ~/k8sdeploy_tools/
@@ -535,15 +537,7 @@ Reference > https://github.com/Azure/container-service-for-azure-china/tree/mast
 - Ubuntu APT
   https://mirrors.aliyun.com/docker-ce/linux/ubuntu for https://download.docker.com/linux/ubuntu
   https://mirrors.aliyun.com/kubernetes/apt/ for https://apt.kubernetes.io/
-- docker registry mirrors
-  https://registry.docker-cn.com
-- k8s.gcr.io
-  registry.aliyuncs.com/google_containers
-- quay.io
 
-  ```
-  docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
-  ```
 
   Reference > https://www.ilanni.com/?p=14534
 
@@ -554,6 +548,19 @@ Reference > https://github.com/Azure/container-service-for-azure-china/tree/mast
   cat <<EOF >/etc/apt/sources.list.d/docker-ce.list
   deb [arch=amd64] https://mirror.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu xenial stable
   EOF
+  ```
+
+
+Alternative registry from ```azk8s.cn``` from https://github.com/Azure/container-service-for-azure-china/tree/master/aks
+  | global | proxy in China | format | example |
+  | ---- | ---- | ---- | ---- |
+  | [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/<repo-name>/<image-name>:<version>` | `dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61` `dockerhub.azk8s.cn/library/nginx:1.15` |
+  | gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.13.5` |
+  | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/<repo-name>/<image-name>:<version>` | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
+
+  Example
+  ```
+  docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
   ```
 
 ##### Check logs and use labels
@@ -573,4 +580,32 @@ kubectl -n knative-eventing get pod $POD -o json \
 
 ```
 docker inspect --format='{{index .RepoDigests 0}}' $IMAGE
+```
+
+##### K8S GUI
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
+```
+
+```
+ubuntu@vantiq2-test01:~/cluster_resource.yaml$ kubectl -n kubernetes-dashboard get all
+NAME                                              READY   STATUS    RESTARTS   AGE
+pod/kubernetes-dashboard-6f89577b77-4fldr         1/1     Running   0          8m6s
+pod/kubernetes-metrics-scraper-79c9985bc6-rg84m   1/1     Running   0          8m6s
+
+NAME                                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/dashboard-metrics-scraper   ClusterIP   10.96.32.200    <none>        8000/TCP   8m6s
+service/kubernetes-dashboard        ClusterIP   10.111.152.50   <none>        443/TCP    8m6s
+
+NAME                                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kubernetes-dashboard         1/1     1            1           8m6s
+deployment.apps/kubernetes-metrics-scraper   1/1     1            1           8m6s
+
+NAME                                                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/kubernetes-dashboard-6f89577b77         1         1         1       8m6s
+replicaset.apps/kubernetes-metrics-scraper-79c9985bc6   1         1         1       8m6s
+
+NAME                                                       READY   REASON   AGE
+clusterchannelprovisioner.eventing.knative.dev/in-memory   True             33d
 ```
