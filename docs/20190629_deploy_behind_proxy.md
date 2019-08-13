@@ -556,8 +556,21 @@ Reference > https://github.com/Azure/container-service-for-azure-china/tree/mast
   EOF
   ```
 
-##### Check logs and use labels 
+##### Check logs and use labels
 
 ```
 kubectl -n kube-system logs -l k8s-app=kube-dns
+```
+
+##### List K8S image sha256 digest
+
+```
+kubectl -n knative-eventing get pod $POD -o json \
+  | jq '.status.containerStatuses[] | { "image": .image, "imageID": .imageID }'
+```
+
+##### List Docker image sha256 digest
+
+```
+docker inspect --format='{{index .RepoDigests 0}}' $IMAGE
 ```
