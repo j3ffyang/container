@@ -14,8 +14,16 @@
 - [hans icmp/ ping tunneling](./docs/20171114_icmp_tunnel.md)
 - [PiVPN setup](./docs/20180912_pivpn.md)
 - [Post-install of Linode](./docs/20190120_linode_postinst.md)
+
+
+#### Container and Containerization
 - [Standard Kubernetes Base Deployment](./docs/20190326_ch_k8s_deploy.md)
+- [Install Kubernetes behind Firewall](./docs/20190629_deploy_behind_proxy.md)
 - [Ubuntu behind Firewall/ Proxy](./docs/20190702_proxy.md)
+- [Create custom docker image](./docs/20190522_docker_img.md)
+- [Install Nexus](./docs/20190619_nexus.md)
+- [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
+- [My thoughts on Kubernetes and DevOps](./docs/20190709_thought_on_k8s.md)
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
@@ -26,9 +34,6 @@
 - [OpenProject](./docs/20171025_openproj.md)
 - [Zabbix, monitoring of all components](./docs/20171028_zabbix.md)
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
-- [Create custom docker image](./docs/20190522_docker_img.md)
-- [Install Nexus](./docs/20190619_nexus.md)
-- [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
