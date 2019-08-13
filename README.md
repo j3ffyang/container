@@ -28,7 +28,7 @@
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
 - [Create custom docker image](./docs/20190522_docker_img.md)
 - [Install Nexus](./docs/20190619_nexus.md)
-- [Istio serviceMesh](./docs/20190705_istio.md)
+- [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
