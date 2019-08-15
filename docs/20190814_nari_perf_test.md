@@ -102,12 +102,20 @@ Docker 版本 | ```docker --version```
 -- | --
 Flannel配置 | ```cat /run/flannel/subnet.env```
 
-参照
 
 - https://blog.laputa.io/kubernetes-flannel-networking-6a1cb1f8ec7c
 - https://rancher.com/blog/2019/2019-03-21-comparing-kubernetes-cni-providers-flannel-calico-canal-and-weave/
 
-#### 性能
+#### 性能 (以100～ 1000个POD为例)
 
-- API call
-- Pod 起停时间
+- 集群数量和 Master数量
+- API 请求 (API-responsiveness)
+- Pod 起停时间 (startup)
+- Scheduler (etcd) throughput 性能 (CPU, memory, IO)
+
+参照
+- https://kubernetes.io/blog/2015/09/kubernetes-performance-measurements-and/
+- https://www.mirantis.com/blog/scale-performance-testing-kubernetes-answers-specific-applications/
+- https://coreos.com/blog/improving-kubernetes-scheduler-performance.html
+- https://solinea.com/blog/kubernetes-performance-testing
+- https://github.com/kubernetes/perf-tests
