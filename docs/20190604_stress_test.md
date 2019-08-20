@@ -14,12 +14,19 @@ To simulate several business scenarios to generate workload, in order to monitor
 ## Environment and Architecture
 
 - 6 VMs as K8S work nodes (-1 as of master)
-- 4vCPU, 16G memory, each node
+- __4vCPU, 16G memory__, each node
 - 3* MongoDB (1 arbitor, 1 primary, 1 secondary), standard disk
-- 3* Vantiq-server (1.25.13)
+- 3* Vantiq-server (__1.25.13__)
 - 3* Keycloak
 
 ## Configuration
+
+#### Product Edition
+
+```
+kubectl -n eda-dev describe pod/vantiq-eda-dev-0 | grep vantiq-server | grep Image:
+    Image:          vantiq/vantiq-server:1.25.13
+```
 
 #### System Env Setting
 
@@ -50,9 +57,7 @@ token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
 
 #### Configure Products
 
-To enable Modelo
-
-Operations > Administer > Organizations > Actions > Configure Products
+To enable Modelo in product: Operations > Administer > Organizations > Actions > Configure Products
 
 ```
 {
@@ -153,7 +158,7 @@ kubectl -n eda-dev scale --replicas=0 statefulset vantiq-eda-dev
 kubectl -n eda-dev scale --replicas=3 statefulset vantiq-eda-dev
 ```
 
-## Grafana dataSources Configuration 
+## Grafana dataSources Configuration
 
 Create the following dataSources
 
@@ -255,11 +260,15 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
 ###### Statistic from Grafana
 <center><img src="../imgs/20190618_vtq_resource.png"></center>
 
+Analysis Conclusion:
+
 - Reduced concurrent user from 1000 down to 500
 - Network ~450K/s input and output. Busy
 - Vantiq Resources reached to ~80%. Quite heavy
 
 <center><img src="../imgs/20190618_vtq_mongo.png"></center>
+
+Analysis Conclusion:
 
 - MongoDB: 49 connections and up to 4.5G memory usage (busy). Transaction per second:
   ```
@@ -273,6 +282,8 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
 
 ###### Statistic from Gatling
 <center><img src="../imgs/20190618_vtq_gatling.png"></center>
+
+Analysis Conclusion:
 
 - Total 822,825 requests completed 100% in success, including 500 token accesses, about 1,371 req/s (not bad)
 - Response-time: 99th pct = 132 ms (good enough for production. The less the better)
@@ -290,12 +301,12 @@ vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
 
 action | command
 -- | --
-log into mongo | kubectl -n eda-dev exec -it vantiq-eda-dev-mongodb-primary-0 /bin/bash
-log into database on primary | mongo ars02 -u ars -p ars
-list database | show dbs
-use database | use ars02
-list all tables | show collections
-query table | db.realtimeData_his__myfirstnamespace.count() = 105335
+log into mongo | ```kubectl -n eda-dev exec -it vantiq-eda-dev-mongodb-primary-0 /bin/bash```
+log into database on primary | ```mongo ars02 -u ars -p ars```
+list database | ```show dbs```
+use database | ```use ars02```
+list all tables | ```show collections```
+query table | ```db.realtimeData_his__myfirstnamespace.count() = 105335```
 
 <div style="page-break-after: always"></div>
 
