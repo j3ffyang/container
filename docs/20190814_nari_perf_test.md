@@ -77,7 +77,6 @@ Docker 版本 | ```docker --version```
 检查镜像列表 | ```kubeadm config images list```
 所有namespace的容器 | ```kubectl get pods --all-namespaces```
 所有namespace的容器（按镜像分类） | ```kubectl get pods --all-namespaces -o jsonpath="{..image}" | tr -s '[[:space:]]' '\n' | sort | uniq -c```
-所有namespace的容器（按镜像分类） | ```kubectl get pods --all-namespaces -o jsonpath="{..image}" | tr -s '[[:space:]]' '\n' | sort | uniq -c```
 所有运行的容器（按POD分类） | ```kubectl get pods --all-namespaces -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort```
 所有service列表 | ```kubectl get svc --all-namespaces```
 检查kube-system 命名空间 | ```kubectl -n kube-system get all```

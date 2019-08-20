@@ -22,6 +22,9 @@ To simulate several business scenarios to generate workload, in order to monitor
 ## Configuration
 
 #### System Env Setting
+
+To grant the access from Gatling to Vantiq system
+
 ```
 ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ cat ~/.vantiq/profile
  {
@@ -33,7 +36,21 @@ token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
 }
 ```
 
+#### How to config SSL for Nodes to ignore SSL challenge
+
+- In both "Deployment" and "Operations", Deploy -> Nodes
+- Create or Select one
+- Under [Client Options] add configure
+
+```
+{
+    "trustAll" : true
+}
+```
+
 #### Configure Products
+
+To enable Modelo
 
 Operations > Administer > Organizations > Actions > Configure Products
 
@@ -51,7 +68,8 @@ Operations > Administer > Organizations > Actions > Configure Products
 
 #### Modify Quota
 
-Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20) > update "receiveMessage": 30000 according to actual resource and "percentage": 100
+Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20) > update ```"receiveMessage": 30000``` according to actual resource and ```"percentage": 100```
+
 ```
 {
     "rates": {
@@ -67,7 +85,39 @@ Operations > Administer > Organizations > Actions > Edit Quotas (default: percen
 }
 ```
 
+Another sample from Paul
+```
+{​
+    “rates”: {​
+        “execution”: 1000,​
+        “stream” : 250000,​
+        “receiveMessage: 1000​
+    },​
+    “credit”: {​
+        “default”: {​
+            “percentage” : 20,​
+            “queueRatio”: 2​
+        }​
+    },​
+    “limits”: {​
+        “stackDepth”: 200,​
+        “errorBreaker”: {​
+            “sample”: 20,​
+            “failurePercent”: 20​,
+            “retrySample”: 2,​
+            “retryAfter: “1 minute”​
+        },​
+        “executionTime”: “2 minutes”,​
+        “reservedGroups”: 2048 * 10
+    }​,
+    “auditFrequency”: “10 minutes”,​
+    “errorReportingFrequency”: “30 minutes”​
+}
+```
+
 #### Update Vantiq ConfigMap
+
+Change to increase ```"executionCredit": 150```
 
 ```
 kubectl -n eda-dev edit cm vantiq-config
@@ -103,20 +153,7 @@ kubectl -n eda-dev scale --replicas=0 statefulset vantiq-eda-dev
 kubectl -n eda-dev scale --replicas=3 statefulset vantiq-eda-dev
 ```
 
-#### How to config SSL for Nodes to ignore SSL challenge
-
-- In both "Deployment" and "Operations", Deploy -> Nodes
-- Create or Select one
-- Under [Client Options] add configure
-
-```
-{
-    "trustAll" : true
-}
-```
-
-
-## Grafana dataSources
+## Grafana dataSources Configuration 
 
 Create the following dataSources
 
@@ -280,7 +317,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 
 #### Test Output
 
-```
+```bash
 ================================================================================
 ---- Global Information --------------------------------------------------------
 > request count                                       3823 (OK=3823   KO=0     )
@@ -307,6 +344,8 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 
 <img src="../imgs/20190619_dbinsert_vantiq_resource.png">
 
+Analysis Conclusion:
+
 - CPU up to 100% for Vantiq-servers (very busy)
 - Req 35 ops (operation/ second)
 
@@ -315,6 +354,8 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 #### Statistic of MongoDB
 
 <img src="../imgs/20190619_dbinsert_mongo.png">
+
+Analysis Conclusion:
 
 - Insert __3,150/sec__ and Query __2,150/sec__ (slower than on AWS)
 - 174 connections (looks good)
@@ -326,6 +367,8 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 #### Statistic of Vantiq Resource_Usage > API > VAIL
 
 <img src="../imgs/20190619_dbinsert_resource_uage_api_vail.png">
+
+Analysis Conclusion:
 
 - insert p99 avg = 50ms (very good)
 
@@ -339,21 +382,113 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 
 <img src="../imgs/20190619_dbinsert_gatling_response_time_percentile_over_time.png">
 
+Analysis Conclusion:
+
 - 95% of response completed within 20kms = 20 second, with avg 40 concurrent users!!! (__quite busy__)
 
 <div style="page-break-after: always;"></div>
 
 <img src="../imgs/20190619_dbinsert_gatling_number_of_req_per_second.png">
 
+Analysis Conclusion:
 - Avg ~= 10 req
 
 <img src="../imgs/20190619_dbinsert_gatling_number_of_response_per_sec.png">
 
+Analysis Conclusion:
+
 - Avg = 10 response/ second
+
+## Test-Case 3: DB_UpdateSim
+
+#### Description
+With Cho Lee on Tuesday, Aug 20, 2019, we executed this test-case 3: DB_UpdateSim.
+
+- 500 concurrent users update database in 1 minute
+
+#### Script
+
+```
+ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ ../gradlew \
+  --console=plain gatlingRun-DB_UpdateSim \
+  -Pvantiq.system=cptheat -Pgatling.users=500 -Pgatling.duration="1 minute" \
+  -Pvantiq.namespace.create=false -Pvantiq.namespace.save=true
+```
+
+#### Output
+
+```
+Simulation DB_UpdateSim completed in 60 seconds
+Parsing log file(s)...
+Parsing log file(s) done
+Generating reports...
+
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                        500 (OK=500    KO=0     )
+> min response time                                      3 (OK=3      KO=-     )
+> max response time                                  11154 (OK=11154  KO=-     )
+> mean response time                                  1184 (OK=1184   KO=-     )
+> std deviation                                       2935 (OK=2935   KO=-     )
+> response time 50th percentile                         16 (OK=16     KO=-     )
+> response time 75th percentile                        244 (OK=244    KO=-     )
+> response time 95th percentile                       9157 (OK=9157   KO=-     )
+> response time 99th percentile                      10268 (OK=10268  KO=-     )
+> mean requests/sec                                 41.667 (OK=41.667 KO=-     )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                           438 ( 88%)
+> 800 ms < t < 1200 ms                                   0 (  0%)
+> t > 1200 ms                                           62 ( 12%)
+> failed                                                 0 (  0%)
+================================================================================
+
+Reports generated in 0s.
+Please open the following file: /home/ubuntu/stress_test/gatlingTestInfra3/loadTest/build/reports/gatling/db-updatesim-20190820072604211/index.html
+
+BUILD SUCCESSFUL in 1m 21s
+4 actionable tasks: 1 executed, 3 up-to-date
+```
+
+We also tried 800 concurrent users and to keep this running up to 10 minutes. But both failed due to ```The organization wide request credit has been exceeded.``` Therefore we analyze what we got
+
+<img src="../imgs/20190820_gatling_db_updatesim.png">
+
+Analysis Conclusion:
+- All requests go through successfully
+- Total 438 reqs, 88%, completed within 0.8 sec, while the rest 62 (12%) taking longer than 12 sec
+
+<img src="../imgs/20190820_gatling_db_updatesim_response.png">
+
+Analysis Conclusion:
+
+- 500 concurrent/ active users are being set and it grows from zero up to 500 in 3~ 4 sec
+- Within 1 minute load, 90th percentile response time is close to 10 sec and finishes in 6 sec totally.
+
+<img src="../imgs/20190820_gatling_vtq_resource.png">
+
+Analysis Conclusion:
+
+- CPU goes up to 100% for 3 Vantiq servers, reaching its highest capacity, even Request Rate =~ 80 ops (operation per second)
+
+<img src="../imgs/20190820_gatling_org_act.png">
+
+Analysis Conclusion:
+
+- During total reqs being processed, "Global Credit Usage" reaches 100%.
+- Associating with the previous "Vantiq Resources" data, increasing "Global Credit" might not be able to give better performance, as Vantiq servers' CPU are already full.
+
+
+
+
+
+
+
+
+
 
 ## Appendix
 
-# Stress-test Strategy and Plan
+## Stress-test Strategy and Plan Proposal
 
 As my understanding of statistic collected at an elevator operation company, I can try the load-test simply simulated to it. The pattern of load, generally looks like
 * Event rate: 1 event per elevator per every 1~ 3 second (configurable in real case. Currently it's set 1 sec, but it might be too frequent)
