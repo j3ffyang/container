@@ -310,7 +310,7 @@ query table | ```db.realtimeData_his__myfirstnamespace.count() = 105335```
 
 <div style="page-break-after: always"></div>
 
-## Test-Case 2: DBInsertSim
+## Test-Case 2: DB_InsertSim
 
 #### Description:
 - 50 concurrent users
