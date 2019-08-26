@@ -609,3 +609,9 @@ replicaset.apps/kubernetes-metrics-scraper-79c9985bc6   1         1         1   
 NAME                                                       READY   REASON   AGE
 clusterchannelprovisioner.eventing.knative.dev/in-memory   True             33d
 ```
+
+#### Helm install private repo (contributed by Jun Zou)
+
+```
+helm install --name releasename local_path --debug --timeout 6000
+```
