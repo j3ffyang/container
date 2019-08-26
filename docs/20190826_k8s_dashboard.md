@@ -79,3 +79,10 @@ ca.crt:     1025 bytes
 namespace:  11 bytes
 token:      very-long-token-string
 ```
+
+Or in single command
+
+```
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | \
+  awk '/^deployment-controller-token-/{print $1}') | awk '$1=="token:"{print $2}'
+```
