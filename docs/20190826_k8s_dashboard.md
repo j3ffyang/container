@@ -1,6 +1,9 @@
 # Kubernetes Dashboard
 
-> Reference > https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+> Reference
+> - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+> - https://github.com/kubernetes/dashboard/wiki/Accessing-Dashboard---1.7.X-and-above
+> - https://stackoverflow.com/questions/53957413/how-to-access-kubernetes-dashboard-from-outside-network
 
 #### Install
 
