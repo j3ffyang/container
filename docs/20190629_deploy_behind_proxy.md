@@ -552,6 +552,9 @@ Reference > https://github.com/Azure/container-service-for-azure-china/tree/mast
 
 
 Alternative registry from ```azk8s.cn``` from https://github.com/Azure/container-service-for-azure-china/tree/master/aks
+
+> Reference > http://mirror.azure.cn/help/gcr-proxy-cache.html
+
   | global | proxy in China | format | example |
   | ---- | ---- | ---- | ---- |
   | [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/<repo-name>/<image-name>:<version>` | `dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61` `dockerhub.azk8s.cn/library/nginx:1.15` |

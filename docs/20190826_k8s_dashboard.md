@@ -33,7 +33,7 @@ clusterchannelprovisioner.eventing.knative.dev/in-memory   True             33d
 #### Change from ```ClusterIP``` to ```NodePort```
 
 ```
-kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
+kubectl -n kubernetes-dashboard edit service √
 ```
 
 Change ```type``` to ```NodePort```
@@ -49,7 +49,9 @@ sessionAffinity: None
 type: NodePort
 ```
 
-#### Allow incoming access through browser (not recommended on production)
+~~#### Allow incoming access through browser (not recommended on production)~~
+
+I couldn't make ```proxy``` work other than ```localhost``` and don't have chance to try dashboard from ```localhost```
 
 ```
 kubectl proxy --address 0.0.0.0 --accept-hosts '.*'
@@ -60,29 +62,31 @@ kubectl proxy --address 0.0.0.0 --accept-hosts '.*'
 > Reference > https://stackoverflow.com/questions/46664104/how-to-sign-in-kubernetes-dashboard
 
 ```
-kubectl -n kube-system get secret | grep deployment-controller-token
+kubectl -n kube-system describe secrets `kubectl -n kube-system get secrets | \
+  awk '/clusterrole-aggregation-controller/ {print $1}'` | awk '/token:/ {print $2}'
 ```
 
-```
-kubectl -n kube-system describe secret deployment-controller-token-prt7s
-Name:         deployment-controller-token-prt7s
-Namespace:    kube-system
-Labels:       <none>
-Annotations:  kubernetes.io/service-account.name: deployment-controller
-              kubernetes.io/service-account.uid: ed623717-7254-11e9-8731-fa163ec7191f
-
-Type:  kubernetes.io/service-account-token
-
-Data
-====
-ca.crt:     1025 bytes
-namespace:  11 bytes
-token:      very-long-token-string
-```
-
-Or in single command
+#### Access from Firefox browser
 
 ```
-kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | \
-  awk '/^deployment-controller-token-/{print $1}') | awk '$1=="token:"{print $2}'
+https://10.100.102.11:32535
+```
+
+where ```32535``` is ```nodePort``` configured in ```kubernetes-dashboard``` service
+
+#### ```--enable-skip-login```
+
+```
+kubectl -n kubernetes-dashboard edit deployment.apps/kubernetes-dashboard
+```
+
+Find and add
+
+```
+spec:
+  containers:
+  - args:
+    - --auto-generate-certificates
+    - --namespace=kubernetes-dashboard
+    - --enable-skip-login     # add this line
 ```
