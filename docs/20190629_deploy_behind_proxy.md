@@ -179,6 +179,8 @@ git config —global https.proxy $http_proxy
 ##### Install Tiller
 Manually install tiller, preventing from being init’d by helm through proxy
 
+> Reference > https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-init/
+
 ```
 cd ~/k8sdeploy_tools/
 ./helm init —dry-run —debug > /tmp/tiller.yaml

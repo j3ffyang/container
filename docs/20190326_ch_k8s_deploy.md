@@ -603,6 +603,8 @@ docker pull sapcc/tiller:v2.12.2
 docker tag sapcc/tiller:v2.12.2 gcr.io/kubernetes-helm/tiller:v2.12.2
 ```
 
+> Reference > https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-init/
+
 ```
 ./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 \
   --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
