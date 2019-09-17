@@ -108,7 +108,7 @@ git config —global https.proxy $http_proxy
   vantiq_system_release=1.1.5
   deployment=production
   vantiq.installation=eda    # used for namespace to hold Vantiq and the same as 1st part of FQDN!!!
-  excludeKeycloak=true    # this excludes KeyCloak install
+  excludeKeycloak=true       # this excludes KeyCloak install
   ```
 
   __Attention__ to setting of ```vantiq.installation```, which will be used as Vantiq namespace in K8S and must match the 1st part of FQDN, being used to sign SSL Key.
