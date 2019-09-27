@@ -4,25 +4,15 @@
 
 ## Deployment
 
-#### Environment and Security
-- [Environment Common Settings for Security, Docker, etc](./docs/20171010_sys_setup.md)
-- [Let's Encrypt](./docs/20170720_letsencrypt.md)
-- [OpenVPN Basic Setup](./docs/20171011_openvpn_details.md)
-- [OpenLDAP, with StartTLS Setup](./docs/20171012_openldap.md)
-- [OpenLDAP integration with OpenVPN](./docs/20171013_openvpn_openldap_int.md)
-- [Secure phpLDAPadmin with Apache2](./docs/20171126_secure_phpldapadm_by_apache2.md)
-- [hans icmp/ ping tunneling](./docs/20171114_icmp_tunnel.md)
-- [PiVPN setup](./docs/20180912_pivpn.md)
-- [Post-install of Linode](./docs/20190120_linode_postinst.md)
-
-
 #### Container and Containerization
 - [Standard Kubernetes Base Deployment](./docs/20190326_ch_k8s_deploy.md)
-- [Install Kubernetes behind Firewall](./docs/20190629_deploy_behind_proxy.md)
 - [Ubuntu behind Firewall/ Proxy](./docs/20190702_proxy.md)
+- [Install Kubernetes behind Firewall](./docs/20190629_deploy_behind_proxy.md)
 - [Create custom docker image](./docs/20190522_docker_img.md)
+- [Kubernetes Dashboard](./docs/20190826_k8s_dashboard.md)
 - [Install Nexus](./docs/20190619_nexus.md)
 - [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
+- [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s.md)
 - [My thoughts on Kubernetes and DevOps](./docs/20190709_thought_on_k8s.md)
 
 #### DevOps
@@ -34,6 +24,17 @@
 - [OpenProject](./docs/20171025_openproj.md)
 - [Zabbix, monitoring of all components](./docs/20171028_zabbix.md)
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
+
+#### Environment and Security
+- [Environment Common Settings for Security, Docker, etc](./docs/20171010_sys_setup.md)
+- [Let's Encrypt](./docs/20170720_letsencrypt.md)
+- [OpenVPN Basic Setup](./docs/20171011_openvpn_details.md)
+- [OpenLDAP, with StartTLS Setup](./docs/20171012_openldap.md)
+- [OpenLDAP integration with OpenVPN](./docs/20171013_openvpn_openldap_int.md)
+- [Secure phpLDAPadmin with Apache2](./docs/20171126_secure_phpldapadm_by_apache2.md)
+- [hans icmp/ ping tunneling](./docs/20171114_icmp_tunnel.md)
+- [PiVPN setup](./docs/20180912_pivpn.md)
+- [Post-install of Linode](./docs/20190120_linode_postinst.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
