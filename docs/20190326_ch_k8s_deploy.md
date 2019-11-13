@@ -42,7 +42,7 @@ CPU 核 | Memory (G) 内存 | OS Disk (G) | IP | External Disk (G) 外挂磁盘
 
 #### Operating System on Virtual Machine
 
-```
+```bash
 root@vantiq01:~# cat /etc/lsb-release
 DISTRIB_ID=Ubuntu
 DISTRIB_RELEASE=18.04
@@ -51,12 +51,12 @@ DISTRIB_DESCRIPTION="Ubuntu 18.04.1 LTS"
 ```
 
 #### Update Hostname
-```
+```bash
 hostnamectl set-hostname vantiq01
 ```
 
 #### Harden SSHd, then ```systemctl restart sshd.service```
-```
+```bash
 PermitRootLogin prohibit-password
 
 PubkeyAuthentication yes
@@ -70,7 +70,7 @@ ufw enable
 ```
 
 #### Modify ```ufw``` on 1st host which has access to the world
-```
+```bash
 sudo ufw status numbered
 Status: active
 
@@ -91,7 +91,7 @@ Relative port required by Kubernetes > https://kubernetes.io/docs/setup/producti
 
 
 #### Create a non-root user and grant it ```sudo``` permission
-```
+```bash
 adduser ubuntu
 usermod -aG sudo ubuntu
 ```
@@ -103,20 +103,20 @@ __IPv6 has been tested in production environment. So I decided to leave it enabl
 > Reference > https://www.configserverfirewall.com/ubuntu-linux/ubuntu-disable-ipv6/
 
 Open the ```/etc/default/grub```, Modify ```GRUB_CMDLINE_LINUX``` and  ```GRUB_CMDLINE_LINUX_DEFAULT``` to append ipv6.disable=1:
-```
+```bash
 GRUB_CMDLINE_LINUX="ipv6.disable=1"
 GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1"
 ```
 
 Then
-```
+```bash
 update-grub
 systemctl reboot
 ```
 
 or edit ```/etc/sysctl.conf```
 
-```
+```bash
 net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
 net.ipv6.conf.lo.disable_ipv6 = 1
@@ -125,12 +125,12 @@ net.ipv6.conf.eth0.disable_ipv6 = 1
 
 Note: ```eth0``` is the network interface. Then
 
-```
+```bash
 sysctl -p
 ```
 
 Check whether ipv6 disabled
-```
+```bash
 for i in {1..4}; do ssh root@vantiq0$i "cat /proc/sys/net/ipv6/conf/all/disable_ipv6"; done
 ```
 
@@ -146,7 +146,7 @@ We're given total 6 virtual machines and one of 6 has access to internet
 <img src="../imgs/20190327_cp_nw_top.png">
 
 #### Update ```/etc/hosts``` on 1st host
-```
+```bash
 10.100.100.11	vantiq01	vantiq01
 10.100.100.12	vantiq02	vantiq02
 10.100.100.13	vantiq03	vantiq03
@@ -158,11 +158,11 @@ We're given total 6 virtual machines and one of 6 has access to internet
 #### Setup all hostnames by using ```hostnamectl set-hostname```
 
 In Bash shell, run
-```
+```bash
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "hostnamectl set-hostname vantiq0$i"; done
 ```
 
-```
+```bash
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "hostname"; done
 ```
 
@@ -171,18 +171,18 @@ Since the 1st host is the only one allowed to access internet and others are off
 
 On the 1st host as ```gateway```, use ```POSTROUTING``` rule to ```MASQUERADE``` all traffic from ```10.100.100.0/24``` pass through ```10.100.100.11``` to reach outside. If ```ufw``` is on, need to define a rule for incoming traffic from ```10.100.100.0/24```
 
-```
+```bash
 iptables -t nat -A POSTROUTING -s 10.100.100.0/24 -j MASQUERADE
 ufw allow in on eth0 from 10.100.100.0/24
 ```
 
 Update 1st host's ```/etc/default/ufw``` configuration to allow forward, then ```systemctl restart ufw.service```
-```
+```bash
 DEFAULT_FORWARD_POLICY="ACCEPT"
 ```
 
 On other hosts
-```
+```bash
 ip r add default via 10.100.100.11 dev eth0
 ```
 
@@ -190,7 +190,7 @@ ip r add default via 10.100.100.11 dev eth0
 
 #### Block Device for Mount
 
-```
+```bash
 for i in {2..4}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; lsblk'; done
 vantiq02
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
@@ -217,7 +217,7 @@ vdg    252:96   0   20G  0 disk
 #### Install
 > Reference > https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
-```
+```bash
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -227,28 +227,28 @@ sudo apt install docker-ce
 
 #### (optional) Use China alternative image repo for performance purpose. Modify ```/etc/docker/daemon.json```
 > Reference > https://www.docker-cn.com/registry-mirror
-```
+```bash
 {
   "registry-mirrors": ["https://registry.docker-cn.com"]
 }
 ```
 
-#### Using ```systemd``` to control the Docker daemon
+#### Use ```systemd``` to control the Docker daemon
 Overriding Defaults for the Docker Daemon
 
-```
+```bash
 sudo systemctl edit docker
 ```
 
 The above command generates ```/etc/systemd/system/docker.service.d``` and ```override.conf``` under it
 
-```
+```bash
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 ```
 
-```
+```bash
 systemctl daemon-reload
 systemctl restart docker.service
 ```
@@ -258,7 +258,7 @@ Remember to do this on all other hosts
 Bonus: if you prefer ```vi``` as default editor on Ubuntu, run ```update-alternatives --config editor```
 
 #### Grant non-root to control Docker
-```
+```bash
 sudo gpasswd -a $USER docker
 ```
 
@@ -267,7 +267,7 @@ sudo gpasswd -a $USER docker
 > Reference > https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
 #### Using China alternative repo for workaround of ```gcr.io``` unaccessible
-```
+```bash
 sudo apt-get update && apt-get install -y apt-transport-https
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list \
@@ -278,7 +278,7 @@ sudo apt-get install -y kubelet kubeadm kubectl
 
 #### Pull Images by using alternative repo when ```gcr.io``` unavailable in China
 
-```
+```bash
 images=(
     kube-proxy:v1.14.1
     kube-apiserver:v1.14.1
@@ -307,37 +307,37 @@ and https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 Ensure you pass ```--pod-network-cidr``` param during ```kubeadm init```, which is required by ```flannel``` network
 
-```
+```bash
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
 To specify an alternative repo and binding IP
-```
+```shell
 kubeadm init --pod-network-cidr=10.244.0.0/16 \
   --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers \
   --apiserver-advertise-address 192.168.100.3
 ```
 
 #### Grant non-root user access to control K8S
-```
+```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 - ```kubectl``` AutoComplete
-```
+```bash
 source <(kubectl completion bash)
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
 
 #### Check the status by non-root user
-```
+```bash
 kubectl get pods -o wide --all-namespaces
 ```
 
 And the output looks like
-```
+```bash
 NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP              NODE       NOMINATED NODE   READINESS GATES
 kube-system   coredns-86c58d9df4-k9s4z           0/1     Pending   0          12m   <none>          <none>     <none>           <none>
 kube-system   coredns-86c58d9df4-nqs4d           0/1     Pending   0          12m   <none>          <none>     <none>           <none>
@@ -355,16 +355,16 @@ kube-system   kube-scheduler-vantiq01            1/1     Running   0          11
 	- For flannel to work correctly, you MUST pass ```--pod-network-cidr=10.244.0.0/16``` to ```kubeadm init```.
 	- Set ```/proc/sys/net/bridge/bridge-nf-call-iptables``` to ```1``` by running ```sysctl net.bridge.bridge-nf-call-iptables=1``` to pass bridged IPv4 traffic to iptables’ chains. ...
 
-```
+```bash
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 - After install, check status
-```
+```bash
 kubectl get pods --all-namespaces
 ```
 
-```
+```bash
 NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE
 kube-system   coredns-86c58d9df4-d56gz           1/1     Running   1          91m
 kube-system   coredns-86c58d9df4-vkshj           1/1     Running   1          91m
@@ -380,7 +380,7 @@ kube-system   kube-scheduler-vantiq01            1/1     Running   0          90
 
 #### Install Docker
 
-```
+```bash
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "apt install apt-transport-https ca-certificates curl software-properties-common"; done
 
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -"; done
@@ -394,19 +394,19 @@ for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; apt i
 
 - Check ```docker --version```
 
-```
+```bash
 for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; docker --version'; done
 ```
 
 - Copy ```/etc/docker/daemon.json``` (if using alternative docker repo) from host01 to all other hosts then restart docker
-```
+```bash
 for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem /etc/docker/daemon.json root@vantiq0$i:/etc/docker/; done
 for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; systemctl restart docker.service'; done
 ```
 
 > Example of ```/etc/docker/daemon.json```
 
-```
+```bash
 {
   "registry-mirrors": ["https://registry.docker-cn.com"]
 }
@@ -414,14 +414,14 @@ for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; syste
 
 - Update ```/etc/systemd/system/docker.service.d/override.conf```
 
-```
+```bash
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'mkdir -p /etc/systemd/system/docker.service.d/'; done
 for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem /etc/systemd/system/docker.service.d/override.conf root@vantiq0$i:/etc/systemd/system/docker.service.d/; done
 for i in {2..4}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'systemctl daemon-reload; systemctl restart docker.service'; done
 ```
 
 > Example of ```/etc/systemd/system/docker.service.d/override.conf```
-```
+```bash
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
@@ -430,20 +430,20 @@ ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 
 #### Install and Configure K8S on other Nodes
 - Copy ```/etc/apt/sources.list.d/kubernetes.list``` to other hosts
-```
+```bash
 for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem kubernetes.list root@vantiq0$i:/etc/apt/sources.list.d/; done
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -'; done
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'apt update'; done
 ```
 
 - Install K8S on other Nodes
-```
+```bash
 for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'apt install kubelet kubeadm kubectl'; done
 ```
 
 - Pull docker images on each of hosts, including ```flannel```
 
-```
+```bash
 images=(
     kube-apiserver:v1.14.0
     kube-controller-manager:v1.14.0
@@ -465,7 +465,7 @@ done
 
 Since I couldn't find ```flannel:v0.11.0``` at the time I create this document, I use ```flannel:v0.10.0``` instead. And this is the workaround to pull any images from alternative repo instead of ```quay.io``` when need through __GFW__
 
-```
+```bash
 docker pull registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
 docker tag  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
 docker rmi  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
@@ -473,18 +473,18 @@ docker rmi  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
 
 - Join K8S cluster
 
-```
+```bash
 kubeadm join 10.100.100.11:6443 --token 7li01q.z4d1rcdlowkr7m42     --discovery-token-ca-cert-hash sha256:bbad2c92df60b77d1bb91c5cc56c762b4a736ca942d4c5674eae8b8a634b91f8
 ```
 
 > Tips: in case you receive the following error message
-```
+```bash
 [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
 error execution phase preflight: unable to fetch the kubeadm-config ConfigMap: failed to get config map: Unauthorized
 ```
 
 It indicates the token expires already by checking
-```
+```bash
 date
 Sun Mar 31 20:17:58 CST 2019
 
@@ -494,13 +494,13 @@ TOKEN                     TTL         EXPIRES                     USAGES        
 ```
 
 Then create a new one
-```
+```bash
 kubeadm token create
 bgd6cx.2x0fxxqw6cx3l0q4
 ```
 
 Generate ```sha256 token-ca-cert-hash```
-```
+```bash
 openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
 ```
 
@@ -509,7 +509,7 @@ And re-join with the new token
 - Label Nodes in Cluster
 
 eg.
-```
+```bash
 ubuntu@vantiq01:~$ kubectl label node vantiq03 node-role.kubernetes.io/worker=worker
 ```
 
@@ -520,7 +520,7 @@ ubuntu@vantiq01:~$ kubectl label node vantiq03 node-role.kubernetes.io/worker=wo
 Cause: Network Configuration on Ubuntu 18.04
 
 Symptom:
-```
+```bash
 ubuntu@vantiq01:/etc$ kubectl get pods -n=kube-system
 NAME                               READY   STATUS             RESTARTS   AGE
 coredns-fb8b8dccf-5kz2v            0/1     CrashLoopBackOff   741        2d20h
@@ -543,12 +543,12 @@ https://stackoverflow.com/questions/53075796/coredns-pods-have-crashloopbackoff-
 - Update ```/run/systemd/resolve/resolv.conf``` with correct DNS on each of nodes
 
 - Restart ```systemd-resolved.service``` on each of nodes
-```
+```bash
 sudo systemctl restart systemd-resolved.service
 ```
 
 - Update softlink of ```/etc/resolv.conf``` on each of nodes
-```
+```bash
 ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 ```
 
@@ -562,13 +562,13 @@ kubectl -n kube-system edit configmap coredns
 
 - Delete and restart ```coredns``` pod to take the change effective, then check their status again (warning: make sure you know what you're doing)
 
-```
+```bash
 kubectl -n kube-system delete pod -l k8s-app=kube-dns
 ```
 
 #### Update ```dnsConfig``` in ```coredns```
 
-```
+```bash
 kubectl -n kube-system edit deployment.apps/coredns
 ```
 
@@ -576,7 +576,7 @@ Update the correct DNS
 
 > Reference > https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 
-```
+```bash
 dnsConfig:
   nameservers:
   - 172.16.51.100
@@ -592,27 +592,27 @@ dnsPolicy: Default
 
 You can search and use alternative image from dockerhub. For example
 
-```
+```bash
 docker search tiller
 ```
 
 Then pick one available from list
 
-```
+```bash
 docker pull sapcc/tiller:v2.12.2
 docker tag sapcc/tiller:v2.12.2 gcr.io/kubernetes-helm/tiller:v2.12.2
 ```
 
 > Reference > https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-init/
 
-```
+```bash
 ./helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.2 \
   --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
 ```
 
 (Optional) alternative stable repo update
 
-```
+```bash
 helm repo remove stable
 
 helm repo add stable http://mirror.azure.cn/kubernetes/charts/
@@ -621,7 +621,7 @@ helm repo add incubator http://mirror.azure.cn/kubernetes/charts-incubator/
 
 #### Connect Private Git Repo by using Personal Token
 
-```
+```bash
 ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cp config config.orig
 ubuntu@vantiq01:~/k8sdeploy_tools/.git$ git remote rm origin
 ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
@@ -652,7 +652,7 @@ ubuntu@vantiq01:~/k8sdeploy_tools/.git$ cat config
 
 - On node where an image resides, for example,
 
-```
+```bash
 root@vantiq05:~# docker image list | grep vantiq
 vantiq/vantiq-server                                             1.24.12             ab30f4dfd278        6 weeks ago         601MB
 vantiq/keycloak                                                  4.2.1.Final         0c41c64e19a4        6 weeks ago         801MB
@@ -661,13 +661,13 @@ root@vantiq05:~# docker save -o ./vantiq-server.tar  vantiq/vantiq-server:1.25.6
 
 - Copy the tar file to the target node. On node where to load the image,
 
-```
+```bash
 root@vantiq06:~# docker load -i ./vantiq-server.tar
 ```
 
 - After installing the required package, create new docker image
 
-```
+```bash
 docker commit -m "<MESSAGE>" -a "<AUTHOR>" [container_name] [image_name]
 ```
 
@@ -675,7 +675,7 @@ where image_name = ```j3ffyang/ubuntu-nslookup:v1```
 
 - Push new image to ducker hub
 
-```
+```bash
 docker push j3ffyang/ubuntu=nslookup:v1
 ```
 
@@ -683,7 +683,7 @@ docker push j3ffyang/ubuntu=nslookup:v1
 
 After running ```kubectl delete pv local-pv-324352d9```, received
 
-```
+```bash
 ubuntu@vantiq2-test01:~/k8sdeploy_tools$ kubectl get pv
 NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS        CLAIM                                                STORAGECLASS    REASON   AGE
 local-pv-324352d9   520Gi      RWO            Retain           Terminating   eda-dev/datadir-vantiq-eda-dev-mongodb-secondary-0   local-storage            2d2h
@@ -691,26 +691,26 @@ local-pv-37f6d898   520Gi      RWO            Retain           Terminating   eda
 ```
 
 This is because the PV is protected. Patch it with updating ```finalizers```
-```
+```bash
 kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
 
 #### SSL Keys in K8S
 
 - List in ```default``` namespace
-```
+```bash
 kubectl -n default get secrets
 ```
 
 - Describe the secret, named ```vantiq-cert``` in ```default``` namespace
 
-```
+```bash
 kubectl -n default get secret vantiq-cert -o yaml
 ```
 
 Re-generate secret by using new {cert,key}.pem files
 
-```
+```bash
 kubectl -n default create secret tls --cert cert.pem --key key.pem \
   vantiq-cert --dry-run -o yaml | kubectl apply -f -
 ```
@@ -718,22 +718,22 @@ kubectl -n default create secret tls --cert cert.pem --key key.pem \
 Reference > https://developer.ibm.com/recipes/tutorials/changing-the-tls-certificate-in-ingress-in-information-server-kubernetes-deployments/
 
 In case, you need to create a CSR
-```
+```bash
 openssl req -new -newkey rsa:2048 -nodes -keyout ingress.key -out ingress.csr
 ```
 
 Convert p12 to pem
-```
+```bash
 openssl pkcs7 -print_certs -in certificate.p7b -out ingress.pem  
 ```
 
 To inspect cert.pem
-```
+```bash
 openssl x509 -in ingress.pem -text -noout
 ```
 
 - How to check SSL certificate details in command line
-```
+```bash
 ubuntu@vantiq2-test02:~$ curl -v https://10.100.102.13:30753/auth -k
 *   Trying 10.100.102.13...
 * TCP_NODELAY set
@@ -785,7 +785,7 @@ ubuntu@vantiq2-test02:~$
 
 - edit terminating pv and delete
 
-  ```
+  ```bash
   finalizer:
   kubernetes.io/pv-protection
   ```
@@ -794,7 +794,7 @@ ubuntu@vantiq2-test02:~$
 
 LB IP = http://10.100.102.201:8081/
 
-```
+```bash
 kubectl -n default -l app=nexus-server get all
 NAME                        READY   STATUS    RESTARTS   AGE
 pod/nexus-dc775bbf7-2dm28   2/2     Running   0          2d12h
@@ -806,7 +806,7 @@ NAME                              DESIRED   CURRENT   READY   AGE
 replicaset.apps/nexus-dc775bbf7   1         1         1       2d12h
 ```
 
-```
+```bash
 kubectl -n default get all | grep NodePort | grep nexus
 
 service/nexus-service       NodePort    10.107.129.163   <none>        8081:32000/TCP               2d12h
