@@ -129,7 +129,7 @@ git config —global https.proxy $http_proxy
   cd /tmp/; git clone http://github.com/Vantiq/k8sdeploy_clusters.git
   ```
 
-- Then come back to ```~/k8sdeploy_tools/targetCluster```, keep running
+- Then come back to ```~/k8sdeploy_tools/```, keep running
 
   ```./gradlew -Pcluster=jd configureClient```
 
@@ -141,7 +141,7 @@ git config —global https.proxy $http_proxy
   ```
 
   ```bash
-  cd ~/k8sdeploy_tools/.gradle; du -ksh    # at least 561MB
+  cd ~/k8sdeploy_tools/.gradle; du -ksh    # about 561MB
   ```
 
 - Check helm repo. If it doesn't have ```vantiq``` repo, check "update helm repo" part in this doc

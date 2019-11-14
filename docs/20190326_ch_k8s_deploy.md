@@ -398,10 +398,10 @@ for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'hostname; apt install docker-
 
 > Note: you should NOT pass ```-y``` when installing to prevent automatically upgrade without your permission
 
-- Check ```docker --version```
+- Check ```docker version```
 
 ```bash
-for i in {1..6}; do ssh root@vantiq0$i -i key.pem 'hostname; docker --version'; done
+for i in {1..6}; do ssh root@vantiq0$i -i key.pem 'hostname; docker version'; done
 ```
 
 - Copy ```/etc/docker/daemon.json``` (if using alternative docker repo) from host01 to all other hosts then restart docker
@@ -460,7 +460,6 @@ images=(
     etcd:3.3.10
     coredns:1.3.1
     defaultbackend:1.4
-    flannel:v0.10.0
 )
 
 for imageName in ${images[@]} ; do
@@ -470,12 +469,10 @@ for imageName in ${images[@]} ; do
 done
 ```
 
-Since I couldn't find ```flannel:v0.11.0``` at the time I create this document, I use ```flannel:v0.10.0``` instead. And this is the workaround to pull any images from alternative repo instead of ```quay.io``` when need through __GFW__
+To get ```flannel``` image,
 
 ```bash
-docker pull registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
-docker tag  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
-docker rmi  registry.cn-hangzhou.aliyuncs.com/kuberimages/flannel:v0.10.0-amd64
+docker pull quay.io/coreos/flannel:v0.11.0-amd64
 ```
 
 - Join K8S cluster
