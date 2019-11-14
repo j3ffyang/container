@@ -240,7 +240,8 @@ Overriding Defaults for the Docker Daemon
 sudo systemctl edit docker
 ```
 
-The above command generates ```/etc/systemd/system/docker.service.d``` and ```override.conf``` under it
+~~The above command generates ```/etc/systemd/system/docker.service.d``` and ```override.conf``` under it~~
+Note: this step is not required when installing on Ubuntu 18.04.3 with Kernel 5.0.0
 
 ```bash
 [Service]
@@ -318,6 +319,14 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 \
   --apiserver-advertise-address 192.168.100.3
 ```
 
+Or use different repo
+
+```shell
+kubeadm init —pod-network-cidr=10.244.0.0/16 \
+  —image-repository gcr.azk8s.cn/google_containers \
+  —kubernetes-version “1.14.1"
+```
+
 #### Grant non-root user access to control K8S
 ```bash
 mkdir -p $HOME/.kube
@@ -381,13 +390,10 @@ kube-system   kube-scheduler-vantiq01            1/1     Running   0          90
 #### Install Docker
 
 ```bash
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "apt install apt-transport-https ca-certificates curl software-properties-common"; done
-
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -"; done
-
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'; done
-
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; apt install docker-ce'; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem "apt install apt-transport-https ca-certificates curl software-properties-common"; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -"; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'hostname; apt install docker-ce'; done
 ```
 
 > Note: you should NOT pass ```-y``` when installing to prevent automatically upgrade without your permission
@@ -395,13 +401,13 @@ for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; apt i
 - Check ```docker --version```
 
 ```bash
-for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; docker --version'; done
+for i in {1..6}; do ssh root@vantiq0$i -i key.pem 'hostname; docker --version'; done
 ```
 
 - Copy ```/etc/docker/daemon.json``` (if using alternative docker repo) from host01 to all other hosts then restart docker
 ```bash
-for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem /etc/docker/daemon.json root@vantiq0$i:/etc/docker/; done
-for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; systemctl restart docker.service'; done
+for i in {2..6}; do scp -i key.pem /etc/docker/daemon.json root@vantiq0$i:/etc/docker/; done
+for i in {1..6}; do ssh root@vantiq0$i -i key.pem 'hostname; systemctl restart docker.service'; done
 ```
 
 > Example of ```/etc/docker/daemon.json```
@@ -412,15 +418,16 @@ for i in {1..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'hostname; syste
 }
 ```
 
-- Update ```/etc/systemd/system/docker.service.d/override.conf```
+- ~~Update ```/etc/systemd/system/docker.service.d/override.conf```~~
+Note: this step is not required when installing on Ubuntu 18.04.3 with Kernel 5.0.0
 
 ```bash
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'mkdir -p /etc/systemd/system/docker.service.d/'; done
-for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem /etc/systemd/system/docker.service.d/override.conf root@vantiq0$i:/etc/systemd/system/docker.service.d/; done
-for i in {2..4}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'systemctl daemon-reload; systemctl restart docker.service'; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'mkdir -p /etc/systemd/system/docker.service.d/'; done
+for i in {2..6}; do scp -i key.pem /etc/systemd/system/docker.service.d/override.conf root@vantiq0$i:/etc/systemd/system/docker.service.d/; done
+for i in {2..4}; do ssh root@vantiq0$i -i key.pem 'systemctl daemon-reload; systemctl restart docker.service'; done
 ```
 
-> Example of ```/etc/systemd/system/docker.service.d/override.conf```
+> ~~Example of ```/etc/systemd/system/docker.service.d/override.conf```~~
 ```bash
 [Service]
 ExecStart=
@@ -431,14 +438,14 @@ ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 #### Install and Configure K8S on other Nodes
 - Copy ```/etc/apt/sources.list.d/kubernetes.list``` to other hosts
 ```bash
-for i in {2..6}; do scp -i ~/.ssh/Vantiq-key.pem kubernetes.list root@vantiq0$i:/etc/apt/sources.list.d/; done
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -'; done
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'apt update'; done
+for i in {2..6}; do scp -i key.pem kubernetes.list root@vantiq0$i:/etc/apt/sources.list.d/; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -'; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'apt update'; done
 ```
 
 - Install K8S on other Nodes
 ```bash
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem 'apt install kubelet kubeadm kubectl'; done
+for i in {2..6}; do ssh root@vantiq0$i -i key.pem 'apt install kubelet kubeadm kubectl'; done
 ```
 
 - Pull docker images on each of hosts, including ```flannel```

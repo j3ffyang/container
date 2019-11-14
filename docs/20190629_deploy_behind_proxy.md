@@ -42,7 +42,7 @@
 
 #### ```kubeadm init``` with specific ver of K8S
 
-```
+```bash
 kubeadm init —pod-network-cidr=10.244.0.0/16 \
   —image-repository gcr.azk8s.cn/google_containers \
   —kubernetes-version “1.14.1"
@@ -52,8 +52,8 @@ Alternative registry > https://github.com/Azure/container-service-for-azure-chin
 
 #### Apply ```flannel.yaml``` network plugin manually
 
-```
-kubectl apply -f flannel.yaml
+```bash
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 #### ```kubeadm join``` on all workers respectively
@@ -66,13 +66,13 @@ kubectl apply -f flannel.yaml
 
 ##### Install Java
 
-```
+```bash
 apt install opened-8-jre-headless
 ```
 
 ##### Configure ```git``` on Master, if there is a proxy
 
-```
+```bash
 http_proxy=http://ip:3128
 https_proxy=http://ip:3128
 git config —global http.proxy $http_proxy
@@ -83,7 +83,7 @@ git config —global https.proxy $http_proxy
 
 - Configure gradle proxy in ```~/k8sdeploy_tools/.gradle/gradle.properties``` # Sample is available in Appendix
 
-  ```
+  ```bash
   gitUsername=MY_GITHUB_ID
   gitPassword=MY_TOKEN
   ```
@@ -92,7 +92,7 @@ git config —global https.proxy $http_proxy
 
 - Run to create ```targetCluster``` and associated files # jd = -Pcluster's value as example
 
-  ```
+  ```bash
   ./gradlew -Pcluster=jd configureClient
   ```
 
@@ -102,7 +102,7 @@ git config —global https.proxy $http_proxy
 
 - Modify ```~/k8sdeploy_tools/targetCluster/cluster.properties```
 
-  ```
+  ```bash
   requireRemote=false
   provider=kubeadm
   vantiq_system_release=1.1.5
@@ -116,7 +116,7 @@ git config —global https.proxy $http_proxy
 
 - After modifying ```cluster.properties```, create a Git branch # important
 
-  ```
+  ```bash
   cd ~/k8sdeploy_tools/targetCluster/; git checkout -b jd    # jd = -Pcluster’s value
   ```
 
@@ -125,7 +125,7 @@ git config —global https.proxy $http_proxy
 
 - At this moment, the access to http://github.com/Vantiq/k8sdeploy_clusters.git is required to get granted in current shell session where to continue installation and configuration
 
-  ```
+  ```bash
   cd /tmp/; git clone http://github.com/Vantiq/k8sdeploy_clusters.git
   ```
 
@@ -135,18 +135,18 @@ git config —global https.proxy $http_proxy
 
   till the proc succeeds (download all dependencies of gradle). The expected output looks when configuring helm repo
 
-  ```
+  ```bash
   Adding stable repo with URL:
   ...
   ```
 
-  ```
+  ```bash
   cd ~/k8sdeploy_tools/.gradle; du -ksh    # at least 561MB
   ```
 
 - Check helm repo. If it doesn't have ```vantiq``` repo, check "update helm repo" part in this doc
 
-  ```
+  ```bash
   cd ~/k8sdeploy_tools/; ./helm repo list
   ```
 
@@ -156,7 +156,7 @@ git config —global https.proxy $http_proxy
 - ```kubectl apply -f rbac-config.yaml```
   Important or access-control err challenging later. You'd see
 
-  ```
+  ```bash
   kubectl apply -f rbac-config.yaml
   serviceaccount/tiller created
   clusterrolebinding.rbac.authorization.k8s.io/tiller created
@@ -166,13 +166,13 @@ git config —global https.proxy $http_proxy
 
 - At this time, ```local-volume-provisioner``` are running on all workers. If receiving ```ImagePullBackOff``` in status, go edit
 
-  ```
+  ```bash
   kubectl -n default edit daemonsets.apps local-volume-provisioner
   ```
 
   as the following (you'd need to manually download such docker image on each node before and image name = ```quay.io/external_storage/local-volume-provisioner```)
 
-  ```
+  ```bash
   imagePullPolicy: IfNotPresent
   ```
 
@@ -181,7 +181,7 @@ Manually install tiller, preventing from being init’d by helm through proxy
 
 > Reference > https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-init/
 
-```
+```bash
 cd ~/k8sdeploy_tools/
 ./helm init —dry-run —debug > /tmp/tiller.yaml
 kubectl apply -f tiller.yaml
@@ -191,7 +191,7 @@ kubectl apply -f tiller.yaml
 
 If receiving the error when running ```./gradlew -Pcluster=ins setupCluster```
 
-```
+```bash
 ./gradlew -Pcluster=ins setupCluster
 serviceaccount/tiller unchanged
 clusterrolebinding.rbac.authorization.k8s.io/tiller configured
@@ -225,7 +225,7 @@ BUILD FAILED in 4m 23s
 
 Run
 
-```
+```bash
 ./helm init —client-only —skip-refresh
 ```
 
@@ -235,7 +235,7 @@ Reference > https://whmzsu.github.io/helm-doc-zh-cn/quickstart/install_faq-zh_cn
 
 ##### Update ```vantiq``` repo in Helm
 
-```
+```bash
 ./helm repo list
 NAME    URL                                             
 stable	https://kubernetes-charts.storage.googleapis.com
@@ -245,7 +245,7 @@ vantiq	https://vantiq.github.io/k8sdeploy/charts
 
 If ```vantiq``` repo not existing, re-run
 
-```
+```bash
 ./gradlew -Pcluster=ins configureClient
 $HELM_HOME has been configured at /root/.helm.
 Not installing Tiller due to 'client-only' flag having been set
@@ -258,28 +258,28 @@ BUILD SUCCESSFUL in 7s
 
 ##### (optional) Setup private helm for Vantiq to skip update from internet
 
-```
+```bash
 cp modified {build,settings}.gradle ~/k8sdeploy_tools/
 ```
 
-```
+```bash
 mkdir -p ~/helm_local    # for the mounted path from the below, where private charts copied to
 ```
 
-```
+```bash
 docker run -it —rm vantiq/helm-kubectl:2.11.0 bash    # get into docker container
 
 ip route show | awk ‘/default/ {print $3}’    # the output = 172.17.0.1    # run inside the container
 ```
 
-```
+```bash
 docker run -d —name chart-repo -p 8879:8879 -v /home/ubuntu/helm_local/charts/:/charts \
   -h charts vantiq/helm-kubectl:2.11.0 helm serve \
   —address charts:8879 —repo-path /charts \
   —url http://172.17.0.1:8879
 ```
 
-```
+```bash
 docker logs chart-repo    # check logs
 ```
 
@@ -287,7 +287,7 @@ docker logs chart-repo    # check logs
 
 The purpose of doing this is to avoid time-out connection attempt to googleapis.com which is blocked by firewall
 
-```
+```bash
 k8s_master:~/k8sdeploy_tools$ ./helm repo list
 NAME  	URL                                             
 stable	https://kubernetes-charts.storage.googleapis.com
@@ -323,22 +323,22 @@ Update Complete. ⎈ Happy Helming!⎈
 
 ##### Generate ```key.pem``` and ```cert.pem```
 
-```
+```bash
 openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
 ```
 
-```
+```bash
 Org Name: fqdn.com
 Org Unit Name: fqdn.com
 Common Name (e.g. server FQDN): eda2.fqdn.com
 ```
 
-```
+```bash
 openssl req -new -x509 -nodes -out ingress.crt -keyout ingress.key -days 9999 \
   -subj /CN=hostname.fqdn.com
 ```
 
-```
+```bash
 cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/vantiq/certificates/
 cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/certificates/
 ```
@@ -351,7 +351,7 @@ cp {key,cert}.pem ~/k8sdeploy_tools/targetCluster/deploy/certificates/
 #### Start Install
 
 ###### ```deployNginx```, and ```deployShared```
-```
+```bash
 ./gradlew -Pcluster=jd repoUpdate
 ./gradlew -Pcluster=jd deployNginx
 ./gradlew -Pcluster=jd deployShared
@@ -369,7 +369,7 @@ The sequence to mount:
 * 50G for ```grafana```, on worker which perhaps needs to ```docker pull grafana/grafana:5.4.3```
 
 #####  ```deployVantiq```
-```
+```bash
 ./gradlew -Pcluster=jd deployVantiq
 ```
 * Find workers that have 2* 520G block disks  # at least 520G each
@@ -380,18 +380,18 @@ The sequence to mount:
 ## Appendix
 ##### ```/etc/apt/apt.conf.d/proxy```
 
-```
+```bash
 Acquire::http::Proxy "http://ip:3128"
 Acquire::https::Proxy "http://ip:3128"
 ```
 
 ##### ```~/.curlrc```
-```
+```bash
 proxy = ip:3128
 ```
 
 ##### ```/etc/systemd/system/docker.service.d/http-proxy.conf```
-```
+```bash
 [Service]
 Environment="HTTP_PROXY=http://up:3128/"
 ```
@@ -399,7 +399,7 @@ Environment="HTTP_PROXY=http://up:3128/"
 ##### ```/etc/systemd/system/docker.service.d/override.conf```
 
 This file is generated by ```systemctl edit docker``` automatically
-```
+```bash
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
@@ -407,7 +407,7 @@ ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 
 ##### ```~/k8sdeploy_tools/.gradle/gradle.properties```
 
-```
+```bash
 systemProp.http.proxyHost=ip
 systemProp.http.proxyPost=3128
 systemProp.https.proxyHost=ip
@@ -421,7 +421,7 @@ gitPassword=token
 
 Up to 20190717, the latest used images
 
-```
+```bash
 ubuntu@vantiq2-test01:~$ docker image ls | sort
 bitnami/mongodb                                                  4.0.3-debian-9      b0bfbf15c8ae        6 months ago        382MB
 gcr.io/kubernetes-helm/tiller                                    v2.11.0             ac5f7ee9ae7e        9 months ago        71.8MB
@@ -450,19 +450,19 @@ vantiq/vantiq-server                                             1.25.13        
 ##### SSL Keys in K8S
 
 - List in ```default``` namespace
-```
+```bash
 kubectl -n default get secrets
 ```
 
 - Describe the secret, named ```vantiq-cert``` in ```default``` namespace
 
-```
+```bash
 kubectl -n default get secret vantiq-cert -o yaml
 ```
 
 Re-generate secret by using new {cert,key}.pem files
 
-```
+```bash
 kubectl -n default create secret tls --cert cert.pem --key key.pem \
   vantiq-cert --dry-run -o yaml | kubectl apply -f -
 ```
@@ -470,29 +470,29 @@ kubectl -n default create secret tls --cert cert.pem --key key.pem \
 Reference > https://developer.ibm.com/recipes/tutorials/changing-the-tls-certificate-in-ingress-in-information-server-kubernetes-deployments/
 
 In case, you need to create a CSR
-```
+```bash
 openssl req -new -newkey rsa:2048 -nodes -keyout ingress.key -out ingress.csr
 ```
 
 Convert p12 to pem
-```
+```bash
 openssl pkcs7 -print_certs -in certificate.p7b -out ingress.pem  
 ```
 
 To inspect cert.pem
-```
+```bash
 openssl x509 -in ingress.pem -text -noout
 ```
 
 ##### Add a DNS entry in lb-nginx-ingress-controller
 
-```
+```bash
 kubectl -n default edit daemonsets.apps lb-nginx-ingress-controller
 ```
 
 Sample
 
-```
+```bash
 apiVersion: v1
 kind: Pod
 metadata:
@@ -544,7 +544,7 @@ Reference > https://github.com/Azure/container-service-for-azure-china/tree/mast
   Reference > https://www.ilanni.com/?p=14534
 
 - Install docker-ce
-  ```
+  ```bash
   apt-get update && apt-get install -y apt-transport-https ca-certificates curl
   curl -s http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | apt-key add -
   cat <<EOF >/etc/apt/sources.list.d/docker-ce.list
@@ -565,36 +565,36 @@ Alternative registry from ```azk8s.cn``` from https://github.com/Azure/container
   | https://kubernetes-charts.storage.googleapis.com | http://mirror.azure.cn/kubernetes/charts/ |  | `helm repo add stable http://mirror.azure.cn/kubernetes/charts/`
 
   Example
-  ```
+  ```bash
   docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
   ```
 
 ##### Check logs and use labels
 
-```
+```bash
 kubectl -n kube-system logs -l k8s-app=kube-dns
 ```
 
 ##### List K8S image sha256 digest
 
-```
+```bash
 kubectl -n knative-eventing get pod $POD -o json \
   | jq '.status.containerStatuses[] | { "image": .image, "imageID": .imageID }'
 ```
 
 ##### List Docker image sha256 digest
 
-```
+```bash
 docker inspect --format='{{index .RepoDigests 0}}' $IMAGE
 ```
 
 ##### K8S GUI
 
-```
+```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
 ```
 
-```
+```bash
 ubuntu@vantiq2-test01:~/cluster_resource.yaml$ kubectl -n kubernetes-dashboard get all
 NAME                                              READY   STATUS    RESTARTS   AGE
 pod/kubernetes-dashboard-6f89577b77-4fldr         1/1     Running   0          8m6s
@@ -618,6 +618,6 @@ clusterchannelprovisioner.eventing.knative.dev/in-memory   True             33d
 
 #### Helm install private repo (contributed by Jun Zou)
 
-```
+```bash
 helm install --name releasename local_path --debug --timeout 6000
 ```
