@@ -319,12 +319,12 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 \
   --apiserver-advertise-address 192.168.100.3
 ```
 
-Or use different repo
+Or use different repo, for example
 
 ```shell
-kubeadm init —pod-network-cidr=10.244.0.0/16 \
-  —image-repository gcr.azk8s.cn/google_containers \
-  —kubernetes-version “1.14.1"
+kubeadm init --pod-network-cidr=10.244.0.0/16 \
+  --image-repository gcr.azk8s.cn/google_containers \
+  --kubernetes-version "1.15.3"
 ```
 
 #### Grant non-root user access to control K8S
@@ -815,3 +815,15 @@ kubectl -n default get all | grep NodePort | grep nexus
 
 service/nexus-service       NodePort    10.107.129.163   <none>        8081:32000/TCP               2d12h
 ```
+
+#### Tear down a cluster
+```bash
+kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
+kubectl delete node <node name>
+```
+
+```bash
+kubeadm reset # on each node
+```
+
+> Ref > https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down

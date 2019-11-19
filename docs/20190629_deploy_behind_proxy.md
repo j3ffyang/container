@@ -38,7 +38,7 @@
 - rsync image.tar to all nodes then untar and extract ```docker load -i base.tar```
 
 #### Install K8S on all workers, with specific version K8S
-- ```apt install -qy {kubelet,kubectl,kubeadm}=1.14-00```
+- ```apt install -qy {kubelet,kubectl,kubeadm}=1.14.1-00```
 
 #### ```kubeadm init``` with specific ver of K8S
 
