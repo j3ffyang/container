@@ -699,6 +699,13 @@ This is because the PV is protected. Patch it with updating ```finalizers```
 kubectl patch pv local-pv-324352d9 -n ops -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
 
+#### List all pods by Node
+
+```bash
+kubectl get pod -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName \
+  --all-namespaces
+```
+
 #### SSL Keys in K8S
 
 - List in ```default``` namespace
