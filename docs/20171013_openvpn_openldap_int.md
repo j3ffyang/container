@@ -13,7 +13,7 @@
 - OpenLDAP is running on cm02 (in our environment, StartTLS is enabled)
 - From OpenVPN (as OpenLDAP client), connection can be established
 
-```
+```shell
 ubuntu@cm01:/etc/ssl/certs$ ldapsearch -H ldap://cm02.devops.org -x -b "dc=devops,dc=org" -LLL -Z dn
 dn: dc=devops,dc=org
 
@@ -24,22 +24,22 @@ dn: cn=jeff yang,dc=devops,dc=org
 - Install ```openvpn-auth-ldap``` on __OpenVPN box__
 
 ## Steps
-#### Make sure OpenLDAP ```ca_server.pem``` is on OpenVPN_box
+#### Make sure OpenLDAP server's ```ca_server.pem``` is on OpenVPN_box (as openLDAP client)
 
-```
-scp root@cm02.devops.org:/etc/ssl/certs/ca_server.pem ~/
+```shell
+scp root@cm02.devops.org:/etc/ssl/certs/ca_server.pem ~/  # cm02 is LDAP Server
 cat ~/ca_server.pem | sudo tee -a /etc/ldap/ca_certs.pem
 ```
 
 #### Specify ```ca_server.pem``` in ```/etc/ldap/ldap.conf```
 
-```
+```shell
 TLS_CACERT /etc/ldap/ca_certs.pem
 ```
 
 #### Add ```auth-ldap``` plugin in ```/etc/openvpn/server.conf```
 
-```
+```shell
 plugin /usr/lib/openvpn/openvpn-auth-ldap.so \
      /etc/openvpn/auth/auth-ldap.conf
 client-cert-not-required
@@ -47,7 +47,7 @@ client-cert-not-required
 
 ###### Sample of ```/etc/openvpn/auth/auth-ldap.conf```
 
-```
+```shell
 <LDAP>
 	# LDAP server URL
 	URL		ldap://cm02.devops.org
@@ -113,7 +113,7 @@ Restart ```systemctl restart openvpn@server```
 
 #### Edit ```~/client-configs/base.conf```
 
-```
+```shell
 ...
 ;mute 20
 
