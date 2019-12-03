@@ -29,12 +29,30 @@
 
 - ```apt install docker-ce```
 - Grant ```$USER``` to control docker ```sudo gpasswd -a $USER docker```
-- configure docker ```/etc/systemd/system/docker.service.d/{http-proxy.conf,override.conf}``` # ```http-proxy.conf``` one enables ```docker pull``` behind a proxy and ```override.conf``` enables docker managed by ```systemd```. The samples are available in Appendix
+- configure docker
+
+```bash
+  /etc/systemd/system/docker.service.d/{http-proxy.conf,override.conf}
+```
+
+- ```http-proxy.conf``` one enables ```docker pull``` behind a proxy and ```override.conf``` enables docker managed by ```systemd```. The samples are available in Appendix
 - ```systemctl daemon-reload; systemctl restart docker.service```
+- export and import an image
+
+```bash
+  docker export container8 | gzip > container8.tar.gz
+  zcat container8.tar.gz | docker import – container8
+```
 
 #### Distribute all images to all workers
 
-- ```docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o all_optimized.tar```
+- Save all images into one file
+
+```bash
+docker save $(docker images | sed '1d' | \
+  awk '{print $1 ":" $2 }') -o all_images.tar
+```
+
 - rsync image.tar to all nodes then untar and extract ```docker load -i base.tar```
 
 #### Install K8S on all workers, with specific version K8S
@@ -53,7 +71,8 @@ Alternative registry > https://github.com/Azure/container-service-for-azure-chin
 #### Apply ```flannel.yaml``` network plugin manually
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f \
+  https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 #### ```kubeadm join``` on all workers respectively

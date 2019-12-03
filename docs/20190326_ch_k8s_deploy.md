@@ -159,7 +159,8 @@ We're given total 6 virtual machines and one of 6 has access to internet
 
 In Bash shell, run
 ```bash
-for i in {2..6}; do ssh root@vantiq0$i -i ~/.ssh/Vantiq-key.pem "hostnamectl set-hostname vantiq0$i"; done
+for i in {2..6}; do ssh root@vantiq0$i \
+  -i ~/.ssh/Vantiq-key.pem "hostnamectl set-hostname vantiq0$i"; done
 ```
 
 ```bash
@@ -219,8 +220,12 @@ vdg    252:96   0   20G  0 disk
 
 ```bash
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
 sudo apt update
 sudo apt install docker-ce
 ```
@@ -271,8 +276,10 @@ sudo gpasswd -a $USER docker
 ```bash
 sudo apt-get update && apt-get install -y apt-transport-https
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add -
+
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list \
   deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main EOF
+
 sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl
 ```

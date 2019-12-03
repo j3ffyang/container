@@ -1,0 +1,13 @@
+@media print
+{
+    div{
+        break-inside: avoid;
+    }
+}
+
+img {
+    # page-break-before: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
+    # page-break-after: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
+    # page-break-inside: avoid; /* or 'auto' */
+    break-inside: avoid; /* or 'auto' */
+}

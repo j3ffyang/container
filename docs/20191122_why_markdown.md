@@ -1,3 +1,10 @@
+<!--
+created: %year%-%month%-%day% %time%
+author: %author%
+-->
+
+<link href="20191122_why_markdown.css" rel="stylesheet">
+
 <br>
 <br>
 <br>
@@ -30,19 +37,21 @@
 
 <font size=5>**Content**</font>
 
-<!-- TOC depthFrom:2 depthTo:4 withLinks:1 updateOnSave:1 orderedList:0 -->
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Introduction](#introduction)
 - [Standard, Simple and General](#standard-simple-and-general)
 - [Plugins and Examples](#plugins-and-examples)
 		- [Font control](#font-control)
 		- [Image](#image)
+		- [==Highlight==](#highlight)
 		- [Check-list](#check-list)
 		- [Table](#table)
 		- [Pagebreak](#pagebreak)
 		- [mscGen - message sequence chart](#mscgen-message-sequence-chart)
 		- [LaTeX](#latex)
 		- [Tutorial](#tutorial)
+		- [Bonus](#bonus)
 
 <!-- /TOC -->
 
@@ -109,17 +118,34 @@ We do have lots of chances to write documents and guideline books in our busines
 
 #### Image
 
-<td>
-	<div class=”no-break”>
+<div class=break-inside:avoid>
 		<center><img src="../imgs/20190729_docker_logo.png" alt="Docker"
 		title="We love container" width="550"></center>
-		![Docker](../imgs/20190729_docker_logo.png)
-	</div>
-</td>
+</div>
 
 <div class=”no-break”>
 ![Docker](../imgs/20190729_docker_logo.png)
 </div>
+
+#### ==Highlight==
+
+<style type="text/css" rel="stylesheet">
+	# * { color: darkblue; }
+img {
+	break-inside: avoid;
+	}
+	../imgs/20190729_docker_logo.png
+</style>
+
+
+
+<style>
+    table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid;
+    }
+</style>
+
+
 
 #### Check-list
 
@@ -129,12 +155,12 @@ We do have lots of chances to write documents and guideline books in our busines
 
 <br>
 
-&nbsp;&nbsp;&nbsp;Code:
+Code:
 
 ```shell
-   - [x] Write the press release
-   - [ ] Update the website
-   - [ ] Contact the media
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
 ```
 
 
@@ -145,22 +171,26 @@ We do have lots of chances to write documents and guideline books in our busines
   Monday Morning | We have a conference | Office
   Friday Afternoon | We go for drink :-D | A bar outside of office
 
-&nbsp;&nbsp;&nbsp;Code:
+Code:
 ```shell
-   item | content | location
-   -- | -- | --
-   Monday Morning | We have a conference | Office
-   Friday Afternoon | We go for drink :-D | A bar outside of office
+item | content | location
+-- | -- | --
+Monday Morning | We have a conference | Office
+Friday Afternoon | We go for drink :-D | A bar outside of office
 ```
 
 #### Pagebreak
 
 ```bash
-   <div class="pagebreak"></div>
+<div class="pagebreak"></div>
 ```
 #### mscGen - message sequence chart
 
 > Reference > http://www.mcternan.me.uk/mscgen/ and https://mscgen.js.org/
+
+<center><img src="../imgs/20191122_why_markdown2.svg"></center>
+
+Code:
 
 ```bash
 # fictional process
@@ -194,7 +224,7 @@ $$
 \sum_{n = 0}^{\infty}\frac{210,000*50}{2^n} = 210,000*50*\frac{1}{1-\frac{1}{2}} = 21,000,000
 $$
 
-&nbsp;&nbsp;&nbsp;Code:
+Code:
 ```shell
 $$
 \sum_{n = 0}^{\infty}\frac{210,000*50}{2^n} = 210,000*50*\frac{1}{1-\frac{1}{2}} = 21,000,000
@@ -206,3 +236,11 @@ $$
 
 > https://markdown-guide.readthedocs.io/en/latest/basics.html
 > https://commonmark.org/help/tutorial/
+
+#### Bonus
+
+- Image embedded in Base64
+
+![][img_ref_20191125]
+[img_ref_20191125]:
+data:image/svg;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAtMTk4Ljg3...
