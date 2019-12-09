@@ -218,7 +218,7 @@ vdg    252:96   0   20G  0 disk
 #### Install
 > Reference > https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
-```bash
+```bash {.line-numbers}
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -328,21 +328,21 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 \
 
 Or use different repo, for example
 
-```shell
+```shell {.line-numbers}
 kubeadm init --pod-network-cidr=10.244.0.0/16 \
   --image-repository gcr.azk8s.cn/google_containers \
   --kubernetes-version "1.15.3"
 ```
 
 #### Grant non-root user access to control K8S
-```bash
+```bash{.line-numbers}
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 - ```kubectl``` AutoComplete
-```bash
+```bash{.line-numbers}
 source <(kubectl completion bash)
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```

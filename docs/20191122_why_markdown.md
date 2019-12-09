@@ -84,7 +84,7 @@ We do have lots of chances to write documents and guideline books in our busines
 - <font size=3 color=darkorange>Font well-controlled</font>
 
 &nbsp;&nbsp;&nbsp;Code:
-```shell
+```python
    <font size=3 color=darkorange>Font well-controlled</font>
 ```
 
