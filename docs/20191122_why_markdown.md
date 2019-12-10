@@ -35,6 +35,8 @@ author: %author%
 <br>
 <br>
 
+---
+
 <font size=5>**Content**</font>
 
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->

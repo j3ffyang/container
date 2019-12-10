@@ -106,7 +106,7 @@ https://github.com/billimek/k8s-gitops/tree/master/monitoring
 
 - A pre-requisite step on __ALL__ nodes, if within GFW or air-gap env, before install starts and if adding new node, this is a must as well
 
-  ```bash
+  ```shell
 
   # Download the appropriate release
   wget https://github.com/rancher/k3s/releases/download/v0.9.0/k3s-airgap-images-amd64.tar
