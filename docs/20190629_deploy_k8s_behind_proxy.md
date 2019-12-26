@@ -640,3 +640,7 @@ clusterchannelprovisioner.eventing.knative.dev/in-memory   True             33d
 ```bash
 helm install --name releasename local_path --debug --timeout 6000
 ```
+
+#### Default Credential
+
+```system/fxtrt$1492```
