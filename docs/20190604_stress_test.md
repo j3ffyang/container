@@ -23,7 +23,7 @@ To simulate several business scenarios to generate workload, in order to monitor
 
 #### Product Edition
 
-```
+```shell
 kubectl -n eda-dev describe pod/vantiq-eda-dev-0 | grep vantiq-server | grep Image:
     Image:          vantiq/vantiq-server:1.25.13
 ```
@@ -32,7 +32,7 @@ kubectl -n eda-dev describe pod/vantiq-eda-dev-0 | grep vantiq-server | grep Ima
 
 To grant the access from Gatling to Vantiq system
 
-```
+```shell
 ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ cat ~/.vantiq/profile
  {
 // url = 'http://eda-dev.profile_name.com:8080'
@@ -49,7 +49,7 @@ token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
 - Create or Select one
 - Under [Client Options] add configure
 
-```
+```js
 {
     "trustAll" : true
 }
@@ -59,7 +59,7 @@ token = 'kxJDu_UDE7pHHGmBsdW6mMk7YOVL5ZneRs4ZqRU9TvA='
 
 To enable Modelo in product: Operations > Administer > Organizations > Actions > Configure Products
 
-```
+```js
 {
     "Pronto": {
         "enabled": true,
@@ -75,7 +75,7 @@ To enable Modelo in product: Operations > Administer > Organizations > Actions >
 
 Operations > Administer > Organizations > Actions > Edit Quotas (default: percentage = 20) > update ```"receiveMessage": 30000``` according to actual resource and ```"percentage": 100```
 
-```
+```js
 {
     "rates": {
         "execution": 20010,
@@ -91,7 +91,7 @@ Operations > Administer > Organizations > Actions > Edit Quotas (default: percen
 ```
 
 Another sample from Paul
-```
+```js
 {​
     “rates”: {​
         “execution”: 1000,​
@@ -124,11 +124,11 @@ Another sample from Paul
 
 Change to increase ```"executionCredit": 150```
 
-```
+```bash
 kubectl -n eda-dev edit cm vantiq-config
 ```
 
-```
+```yaml
 apiVersion: v1
 data:
   io.vantiq.monitoring.MonitoringManager.json: |-
@@ -153,7 +153,7 @@ data:
 ```
 
 Then re-scale to take the above change effective
-```
+```sh
 kubectl -n eda-dev scale --replicas=0 statefulset vantiq-eda-dev
 kubectl -n eda-dev scale --replicas=3 statefulset vantiq-eda-dev
 ```
@@ -203,11 +203,11 @@ After finishing, the home dashboard looks like
 
 #### Script
 
-```
+```sh
 cat ~/.vantiq/profile
 ```
 
-```
+```sh
 XXX {
 // url = 'http://eda-dev.cptheat.com:8080'
 url = 'https://eda-dev.cptheat.com'
@@ -219,11 +219,11 @@ token = 'olog2XOpHW5eMa52mwjinLVHjBQKVFVviG-mSoy_MZU='
 
 Simulation code is located
 
-```
+```sh
 ~/stress_test/gatlingTestInfra3/loadTest/src/gatling/resources/namespaces
 ```
 
-```
+```sh
 cd ~/stress_test/gatlingTestInfra3/loadTest
 
 ../gradlew --console=plain gatlingRun-LimitLiftsSim -Pvantiq.system=XXX \
@@ -234,7 +234,7 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
 <div style="page-break-after: always;"></div>
 
 #### Test Output
-```
+```sh
 ================================================================================
 ---- Global Information --------------------------------------------------------
 > request count                                     822825 (OK=822825 KO=0     )
@@ -271,7 +271,7 @@ Analysis Conclusion:
 Analysis Conclusion:
 
 - MongoDB: 49 connections and up to 4.5G memory usage (busy). Transaction per second:
-  ```
+  ```sh
   query= 369
   insert= 39
   update= 83
@@ -292,7 +292,7 @@ Analysis Conclusion:
 
 ###### Statistic from MongoDB
 
-```
+```sh
 vantiq:PRIMARY> db.realtimeData_his__myfirstnamespace.count()
 105335
 ```
@@ -318,7 +318,7 @@ query table | ```db.realtimeData_his__myfirstnamespace.count() = 105335```
 - 10 minutes running
 
 #### Script
-```
+```sh
 ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 /home/ubuntu/stress_test/gatlingTestInfra3/loadTest
 
@@ -419,7 +419,7 @@ With Cho Lee on Tuesday, Aug 20, 2019, we executed this test-case 3: DB_UpdateSi
 
 #### Script
 
-```
+```sh
 ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ ../gradlew \
   --console=plain gatlingRun-DB_UpdateSim \
   -Pvantiq.system=cptheat -Pgatling.users=500 -Pgatling.duration="1 minute" \
@@ -428,7 +428,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ ../gradlew \
 
 #### Output
 
-```
+```sh
 Simulation DB_UpdateSim completed in 60 seconds
 Parsing log file(s)...
 Parsing log file(s) done
