@@ -35,6 +35,7 @@
 - [hans icmp/ ping tunneling](./docs/20171114_icmp_tunnel.md)
 - [PiVPN setup](./docs/20180912_pivpn.md)
 - [Post-install of Linode](./docs/20190120_linode_postinst.md)
+- [WireGuard](./docs/20200207_wireguard.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)

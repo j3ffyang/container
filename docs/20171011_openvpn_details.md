@@ -37,7 +37,7 @@ Move into the newly created directory to begin configuring the CA:
 
 To configure the values our CA will use, we need to edit the vars file within the directory. Open that file now in your text editor:
 
-    nano ~/openvpn-ca/vars
+    vi ~/openvpn-ca/vars
 
 Inside, you will find some variables that can be adjusted to determine how your certificates will be created. We only need to worry about a few of these.
 
@@ -45,7 +45,7 @@ Towards the bottom of the file, find the settings that set field defaults for ne
 
 While we are here, we will also edit the KEY_NAME value just below this section, which populates the subject field. To keep this simple, we'll call it server in this guide:
 
-```
+```sh
 export KEY_NAME="server"
 ```
 When you are finished, save and close the file.
@@ -62,7 +62,7 @@ Ensure you are in your CA directory, and then source the vars file you just edit
 You should see the following if it was sourced correctly:
 
 Output
-```
+```sh
 NOTE: If you run ./clean-all, I will be doing a rm -rf on /home/sammy/openvpn-ca/keys
 ```
 Make sure we're operating in a clean environment by typing:
@@ -76,7 +76,7 @@ Now, we can build our root CA by typing:
 This will initiate the process of creating the root certificate authority key and certificate. Since we filled out the vars file, all of the values should be populated automatically. Just press ENTER through the prompts to confirm the selections:
 
 Output
-```
+```sh
 Generating a 2048 bit RSA private key
 ..........................................................................................+++
 ...............................+++
@@ -117,7 +117,7 @@ Feel free to accept the default values by pressing __ENTER__. Do not enter a cha
 
 Output
 
-```
+```sh
 Certificate is to be certified until May  1 17:51:16 2026 GMT (3650 days)
 Sign the certificate? [y/n]:y
 
@@ -179,13 +179,13 @@ Next, we need to copy and unzip a sample OpenVPN configuration file into configu
 
 Now that our files are in place, we can modify the server configuration file:
 
-    sudo nano /etc/openvpn/server.conf
+    sudo vi /etc/openvpn/server.conf
 
 Basic Configuration of ```/etc/openvpn/server.conf```
 
 First, find the HMAC section by looking for the ```tls-auth``` directive. Remove the ";" to uncomment the ```tls-auth``` line. Below this, add the ```key-direction``` parameter set to "0":
 
-```
+```sh
 tls-auth ta.key 0 # This file is secret
 ```
 
@@ -194,19 +194,19 @@ tls-auth ta.key 0 # This file is secret
 
 Next, find the section on cryptographic ciphers by looking for the commented out ```cipher``` lines. The ```AES-128-CBC``` cipher offers a good level of encryption and is well supported. Remove the ";" to uncomment the ```cipher AES-128-CBC``` line:
 
-```
+```sh
 cipher AES-128-CBC
 ```
 
 Below this, add an ```auth``` line to select the HMAC message digest algorithm. For this, ```SHA256``` is a good choice:
 
-```
+```sh
 auth SHA256
 ```
 
 Finally, find the user and group settings and remove the ";" at the beginning of to uncomment those lines:
 
-```
+```sh
 user nobody
 group nogroup
 ```
@@ -217,13 +217,13 @@ The settings above will create the VPN connection between the two machines, but 
 
 You can do this, uncomment a few directives that will configure client machines to redirect all web traffic through the VPN. Find the ```redirect-gateway``` section and remove the semicolon ";" from the beginning of the ```redirect-gateway``` line to uncomment it:
 
-```
+```sh
 push "redirect-gateway def1 bypass-dhcp"
 ```
 
 Just below this, find the ```dhcp-option``` section. Again, remove the ";" from in front of both of the lines to uncomment them:
 
-```
+```sh
 push "dhcp-option DNS 208.67.222.222"
 push "dhcp-option DNS 208.67.220.220"
 ```
@@ -234,7 +234,7 @@ __Added by Jeff which is missed in DigitalOcean's doc__
 
 Add ```push route``` into ```/etc/openvpn/server.conf```
 
-```
+```sh
 push "route 172.29.167.0 255.255.255.0"
 ```
 
@@ -244,7 +244,7 @@ Then ```sudo systemctl restart openvpn@server```
 
 The following at client machine is equivalent to ```push "route 172.29.167.128 255.255.255.128"```
 
-```
+```sh
 ip r add 172.29.167.128/25 via 10.8.0.17 dev tun0
 ```
 
@@ -254,14 +254,14 @@ where ```10.8.0.17``` is IP of ```tun0``` on client
 
 By default, the OpenVPN server uses port 1194 and the UDP protocol to accept client connections. If you need to use a different port because of restrictive network environments that your clients might be in, you can change the ```port``` option. If you are not hosting web content your OpenVPN server, port 443 is a popular choice since this is usually allowed through firewall rules.
 
-```
+```sh
 # Optional!
 port 443
 ```
 
 Often if the protocol will be restricted to that port as well. If so, change ```proto``` from UDP to TCP:
 
-```
+```sh
 # Optional!
 proto tcp
 ```
@@ -272,7 +272,7 @@ If you have no need to use a different port, it is best to leave these two setti
 
 If you selected a different name during the ```./build-key-server``` command earlier, modify the ```cert``` and key lines that you see to point to the appropriate ```.crt``` and ```.key``` files. If you used the default ```server```, this should already be set correctly:
 
-```
+```sh
 cert server.crt
 key server.key
 ```
@@ -288,11 +288,11 @@ First, we need to allow the server to forward traffic. This is fairly essential 
 
 We can adjust this setting by modifying the ```/etc/sysctl.conf``` file:
 
-    sudo nano /etc/sysctl.conf
+    sudo vi /etc/sysctl.conf
 
 Inside, look for the line that sets ```net.ipv4.ip_forward```. Remove the "#" character from the beginning of the line to uncomment that setting:
 
-```
+```sh
 net.ipv4.ip_forward=1
 ```
 
@@ -312,23 +312,23 @@ Before we open the firewall configuration file to add masquerading, we need to f
 
 Your public interface should follow the word "dev". For example, this result shows the interface named ```wlp11s0```, which is highlighted below:
 
-```
+```sh
 default via 203.0.113.1 dev wlp11s0  proto static  metric 600
 ```
 
 When you have the interface associated with your default route, open the ```/etc/ufw/before.rules``` file to add the relevant configuration:
 
-    sudo nano /etc/ufw/before.rules
+    sudo vi /etc/ufw/before.rules
 
 This file handles configuration that should be put into place before the conventional UFW rules are loaded. Towards the top of the file, add the highlighted lines below. This will set the default policy for the ```POSTROUTING``` chain in the ```nat``` table and masquerade any traffic coming from the VPN:
 
 > Note: Remember to replace __```wlp11s0```__ in the ```-A POSTROUTING``` line below with the interface you found in the above command.
 
-```
+```sh
 /etc/ufw/before.rules
 ```
 
-```
+```sh
 #
 # rules.before
 #
@@ -356,15 +356,15 @@ Save and close the file when you are finished.
 
 We need to tell UFW to allow forwarded packets by default as well. To do this, we will open the ```/etc/default/ufw``` file:
 
-    sudo nano /etc/default/ufw
+    sudo vi /etc/default/ufw
 
 Inside, find the ```DEFAULT_FORWARD_POLICY``` directive. We will change the value from ```DROP``` to ```ACCEPT```:
 
-```
+```sh
 /etc/default/ufw
 ```
 
-```
+```sh
 DEFAULT_FORWARD_POLICY="ACCEPT"
 ```
 
@@ -402,7 +402,7 @@ Double-check that the service has started successfully by typing:
 
 If everything went well, your output should look something that looks like this:
 
-```
+```sh
 ● openvpn@server.service - OpenVPN connection to server
    Loaded: loaded (/lib/systemd/system/openvpn@.service; disabled; vendor preset: enabled)
    Active: active (running) since Tue 2016-05-03 15:30:05 EDT; 47s ago
@@ -433,7 +433,7 @@ You can also check that the OpenVPN ```tun0``` interface is available by typing:
 
 You should see a configured interface:
 
-```
+```sh
 4: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 100
     link/none
     inet 10.8.0.1 peer 10.8.0.2/32 scope global tun0
@@ -465,17 +465,17 @@ Next, let's copy an example client configuration into our directory to use as ou
 
 Open this new file in your text editor:
 
-    nano ~/client-configs/base.conf
+    vi ~/client-configs/base.conf
 
 Inside, we need to make a few adjustments.
 
 First, locate the ```remote``` directive. This points the client to our OpenVPN server address. This should be the public IP address of your OpenVPN server. If you changed the port that the OpenVPN server is listening on, change ```1194``` to the port you selected:
 
-```
+```sh
 ~/client-configs/base.conf
 ```
 
-```
+```sh
 # The hostname/IP and port of the server.
 # You can have multiple remote entries
 # to load balance between the servers.
@@ -484,13 +484,13 @@ remote server_IP_address 1194
 
 Be sure that the protocol matches the value you are using in the server configuration:
 
-```
+```sh
 proto udp
 ```
 
 Next, uncomment the user and group directives by removing the ";":
 
-```
+```sh
 # Downgrade privileges after initialization (non-Windows only)
 user nobody
 group nogroup
@@ -498,7 +498,7 @@ group nogroup
 
 Find the directives that set the ```ca```, ```cert```, and ```key```. Comment out these directives since we will be adding the certs and keys within the file itself:
 
-```
+```sh
 # SSL/TLS parms.
 # See the server config file for more
 # description.  It's best to use
@@ -512,7 +512,7 @@ Find the directives that set the ```ca```, ```cert```, and ```key```. Comment ou
 
 Mirror the ```cipher``` and ```auth``` settings that we set in the ```/etc/openvpn/server.conf``` file:
 
-```
+```sh
 cipher AES-128-CBC
 auth SHA256
 ```
@@ -522,13 +522,13 @@ Next, add the ```key-direction``` directive somewhere in the file. ~~This __must
 ~~```key-direction 1```~~
 
 Uncomment
-```
+```sh
 tls-auth ta.key 1
 ```
 
 Finally, add a few commented out lines. We want to include these with every config, but should only enable them for Linux clients that ship with a ```/etc/openvpn/update-resolv-conf``` file. This script uses the ```resolvconf``` utility to update DNS information for Linux clients.
 
-```
+```sh
 # script-security 2
 # up /etc/openvpn/update-resolv-conf
 # down /etc/openvpn/update-resolv-conf
@@ -544,14 +544,14 @@ Next, we will create a simple script to compile our base configuration with the 
 
 Create and open a file called ```make_config.sh``` within the ```~/client-configs``` directory:
 
-    nano ~/client-configs/make_config.sh
+    vi ~/client-configs/make_config.sh
 
 Inside, paste the following script:
-```
+```sh
 ~/client-configs/make_config.sh
 ```
 
-```
+```sh
 #!/bin/bash
 
 # First argument: Client identifier
@@ -592,7 +592,7 @@ If everything went well, we should have a ```client1.ovpn``` file in our ```~/cl
 
     ls ~/client-configs/files
 
-```
+```sh
 client1.ovpn
 ```
 
@@ -622,7 +622,7 @@ The OpenVPN client application for Windows can be found on OpenVPN's Downloads p
 
 After installing OpenVPN, copy the .ovpn file to:
 
-```
+```sh
 C:\Program Files\OpenVPN\config
 ```
 
@@ -675,21 +675,21 @@ Configuring
 
 Check to see if your distribution includes a ```/etc/openvpn/update-resolv-conf``` script:
 
-```
+```sh
 ls /etc/openvpn
 ```
 
-```
+```sh
 update-resolve-conf
 ```
 
 Next, edit the OpenVPN client configuration file you transferred:
 
-    nano client1.ovpn
+    vi client1.ovpn
 
 Uncomment the three lines we placed in to adjust the DNS settings if you were able to find an ```update-resolv-conf``` file:
 
-```
+```sh
 script-security 2
 up /etc/openvpn/update-resolv-conf
 down /etc/openvpn/update-resolv-conf
@@ -697,7 +697,7 @@ down /etc/openvpn/update-resolv-conf
 
 If you are using CentOS, change the ```group``` from ```nogroup``` to ```nobody``` to match the distribution's available groups:
 
-```
+```sh
 group nobody
 ```
 
@@ -705,7 +705,7 @@ Save and close the file.
 
 Now, you can connect to the VPN by just pointing the ```openvpn``` command to the client configuration file:
 
-```
+```sh
 sudo openvpn --config client1.ovpn
 ```
 
@@ -715,13 +715,13 @@ This should connect you to your server.
 
 - Adding the following in ```/etc/openvpn/server.conf```
 
-```
+```sh
 username-as-common-name
 ```
 
 to give details of ```Common Name``` in ```/etc/openvpn/openvpn-status.log```
 
-```
+```sh
 jeff@cm01:~$ sudo cat /etc/openvpn/openvpn-status.log
 OpenVPN CLIENT LIST
 Updated,Wed Nov 22 09:25:07 2017
