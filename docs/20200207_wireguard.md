@@ -80,3 +80,4 @@ wg-quick up wg0
 > Reference
 > https://www.linode.com/docs/networking/vpn/set-up-wireguard-vpn-on-ubuntu/
 https://wiki.debian.org/Wireguard
+https://github.com/angristan/wireguard-install
