@@ -71,6 +71,9 @@ wg-quick down wg0
 
 wg-quick up wg0
 ```
+
+`wg0` = `/etc/wireguard/wg0.conf`
+
 #### When Adding Client
 
 - On server, add `client_publickey` in peer and assign a unique IP. `server_privatekey` keeps the same
@@ -79,5 +82,5 @@ wg-quick up wg0
 
 > Reference
 > https://www.linode.com/docs/networking/vpn/set-up-wireguard-vpn-on-ubuntu/
-https://wiki.debian.org/Wireguard
-https://github.com/angristan/wireguard-install
+> https://wiki.debian.org/Wireguard
+> https://github.com/angristan/wireguard-install
