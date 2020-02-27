@@ -90,19 +90,19 @@ wg-quick up wg0
 
 In Apple's AppStore _somewhere_, we're unlocky to not have __wireguard__ GUI, but thank to command line tool. Here's the absolute solution on macOS (of course, it's working on other OS) if you can't find a GUI one or you really love command line which is telling the truth.
 
-- If you don't have `brew`, go to https://brew.sh and do this
+0. If you don't have `brew`, go to https://brew.sh and do this
 
 ```sh
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-- Download by `brew`
+1. Download by `brew`
 
 ```sh
 brew install wireguard-tools
 ```
 
-- Move your configuration file to `/usr/local/etc/wireguard/`
+2. Move your configuration file to `/usr/local/etc/wireguard/`
 
 ```sh
 mkdir -p mkdir /usr/local/etc/wireguard
@@ -110,7 +110,7 @@ mkdir -p mkdir /usr/local/etc/wireguard
 cp YOUR_WIREGUARD.conf /usr/local/etc/wireguard/
 ```
 
-- Start
+3. Start
 
 ```sh
 wg-quick up YOUR_WIREGUARD
@@ -118,7 +118,7 @@ wg-quick up YOUR_WIREGUARD
 
 > Notice: it's `YOUR_WIREGUARD`, not `YOUR_WIREGUARD.conf` in command
 
-- Stop
+4. Stop
 
 ```sh
 wg-quick down YOUR_WIREGUARD
