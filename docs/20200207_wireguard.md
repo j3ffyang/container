@@ -121,5 +121,5 @@ wg-quick up YOUR_WIREGUARD
 - Stop
 
 ```sh
-wg-quick up YOUR_WIREGUARD
+wg-quick down YOUR_WIREGUARD
 ```
