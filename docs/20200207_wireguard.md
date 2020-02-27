@@ -84,3 +84,42 @@ wg-quick up wg0
 > https://www.linode.com/docs/networking/vpn/set-up-wireguard-vpn-on-ubuntu/
 > https://wiki.debian.org/Wireguard
 > https://github.com/angristan/wireguard-install
+
+
+## An Absolute Solution for macOS
+
+In Apple's AppStore _somewhere_, we're unlocky to not have __wireguard__ GUI, but thank to command line tool. Here's the absolute solution on macOS (of course, it's working on other OS) if you can't find a GUI one or you really love command line which is telling the truth.
+
+- If you don't have `brew`, go to https://brew.sh and do this
+
+```sh
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+- Download by `brew`
+
+```sh
+brew install wireguard-tools
+```
+
+- Move your configuration file to `/usr/local/etc/wireguard/`
+
+```sh
+mkdir -p mkdir /usr/local/etc/wireguard
+
+cp YOUR_WIREGUARD.conf /usr/local/etc/wireguard/
+```
+
+- Start
+
+```sh
+wg-quick up YOUR_WIREGUARD
+```
+
+> Notice: it's `YOUR_WIREGUARD`, not `YOUR_WIREGUARD.conf` in command
+
+- Stop
+
+```sh
+wg-quick up YOUR_WIREGUARD
+```
