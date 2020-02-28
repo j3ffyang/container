@@ -1,0 +1,10 @@
+﻿{
+    "Physical Memory Information":  [
+                                        {
+                                            "Device Locator":  "RAM slot #0",
+                                            "Manufacturer":  null,
+                                            "Speed":  null,
+                                            "Capacity (GB)":  2
+                                        }
+                                    ]
+}
