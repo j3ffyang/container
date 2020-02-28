@@ -1,0 +1,20 @@
+{
+  "name": "Physical Memory Information",
+  "children": [
+   {
+    "name": "analytics",
+    "children": [
+     {
+      "name": "cluster",
+      "children": [
+       {"name": "Device Locator", "value": "RAM slot #0"},
+       {"name": "Manufacturer", "value": null},
+       {"name": "Speed", "value": null},
+       {"name": "Capacity (GB)", "value": 2}
+      ]
+     }
+    ]
+   }
+  ]
+ }
+ 
