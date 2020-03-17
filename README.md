@@ -24,6 +24,7 @@
 - [OpenProject](./docs/20171025_openproj.md)
 - [Zabbix, monitoring of all components](./docs/20171028_zabbix.md)
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
+- [PlantUML Editor in Atom](./docs/20200317_plantuml.md)
 
 #### Environment and Security
 - [Environment Common Settings for Security, Docker, etc](./docs/20171010_sys_setup.md)
