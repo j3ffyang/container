@@ -5,7 +5,7 @@
 ## Deployment
 
 #### Container and Containerization
-- [Standard Kubernetes Base Deployment](./docs/20190326_ch_k8s_deploy.md)
+- [Standard Kubernetes Base Deployment](./docs/20190326_k8s_deploy.md)
 - [Ubuntu behind Firewall/ Proxy](./docs/20190702_ubuntu_behind_proxy.md)
 - [Install Kubernetes behind Firewall](./docs/20190629_deploy_k8s_behind_proxy.md)
 - [Create custom docker image](./docs/20190522_docker_img.md)
