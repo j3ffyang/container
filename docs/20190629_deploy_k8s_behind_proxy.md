@@ -641,6 +641,6 @@ clusterchannelprovisioner.eventing.knative.dev/in-memory   True             33d
 helm install --name releasename local_path --debug --timeout 6000
 ```
 
-#### Default Credential
+#### Default System Credential
 
-```system/fxtrt$1492```
+```system/fxtrt$1492```   # system credential | syscrediential | systemcredential
