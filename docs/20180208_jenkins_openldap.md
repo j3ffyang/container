@@ -21,7 +21,7 @@
 
 - docker-compose.yaml
 
-```
+```yml
 version: "3.3"
 
 services:
