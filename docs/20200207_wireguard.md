@@ -123,3 +123,52 @@ wg-quick up YOUR_WIREGUARD
 ```sh
 wg-quick down YOUR_WIREGUARD
 ```
+
+## Install on CentOS as server
+
+#### Install package
+
+```sh
+sudo dnf install kmod-wireguard wireguard-tools
+```
+
+#### gen key for server
+```sh
+wg genkey | sudo tee /etc/wireguard/privatekey | wg pubkey | sudo tee /etc/wireguard/publickey
+```
+
+#### create `/etc/wireguard/wg0.conf`
+```sh
+cd /etc/wireguard/
+
+[ubuntu@vultrguest wireguard]$ sudo cat wg0.conf
+[Interface]
+SaveConfig = true
+PostUp = firewall-cmd --zone=public --add-port 12345/udp && firewall-cmd --zone=public --add-masquerade
+PostDown = firewall-cmd --zone=public --remove-port 12345/udp && firewall-cmd --zone=public --remove-masquerade
+ListenPort = 12345
+PrivateKey = SERVER_PRIVATEKEY
+
+[Peer]
+PublicKey = CLIENT_PUBLICKEY
+AllowedIPs = 10.10.0.2/32
+```
+
+#### add client key to server
+```sh
+sudo wg set wg0 peer CLIENT_PUBLICKEY allowed-ips 10.10.0.X
+```
+
+#### show status
+
+```sh
+[ubuntu@vultrguest wireguard]$ sudo wg show wg0
+[sudo] password for ubuntu:
+interface: wg0
+  public key: SERVER_PUBLICKEY
+  private key: (hidden)
+  listening port: 12345
+
+peer: CLIENT_PUBLICKEY
+  allowed ips: 10.10.0.2/32
+```
