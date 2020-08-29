@@ -63,7 +63,7 @@ docker save $(docker images | sed '1d' | \
 ```bash
 kubeadm init —pod-network-cidr=10.244.0.0/16 \
   —image-repository gcr.azk8s.cn/google_containers \
-  —kubernetes-version “1.14.1"
+  —kubernetes-version "1.15.11"
 ```
 
 Alternative registry > https://github.com/Azure/container-service-for-azure-china/tree/master/aks
