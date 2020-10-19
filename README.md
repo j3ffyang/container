@@ -28,6 +28,7 @@
 - [PlantUML Editor in Atom](./docs/20200317_plantuml.md)
 
 #### Environment and Security
+- [Linux Kernel](./docs/20201019_linux_kernel.md)
 - [Environment Common Settings for Security, Docker, etc](./docs/20171010_sys_setup.md)
 - [Let's Encrypt](./docs/20170720_letsencrypt.md)
 - [OpenVPN Basic Setup](./docs/20171011_openvpn_details.md)
