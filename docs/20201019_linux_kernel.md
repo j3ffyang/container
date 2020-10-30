@@ -56,3 +56,12 @@ It is recommended to set the SHMMAX value to be equal to the amount of physical 
 
 > Reference >
 https://www.ibm.com/support/knowledgecenter/en/SSEPGG_10.5.0/com.ibm.db2.luw.qb.server.doc/doc/t0008238.html
+
+#### `ulimit`
+
+```sh
+cat /etc/security/limits.conf
+cat /etc/security/limits.d/*
+```
+
+#### `selinux`
