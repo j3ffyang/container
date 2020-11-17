@@ -27,6 +27,7 @@
 - [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
 - [PlantUML Editor in Atom](./docs/20200317_plantuml.md)
 - [DNS](./docs/20201108_dns.md)
+- [Gitlab on K8S](./docs/20201115_k8s_gitlab.md)
 
 #### Environment and Security
 - [Linux Kernel Tuning](./docs/20201019_linux_kernel.md)
