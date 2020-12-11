@@ -15,6 +15,7 @@
 - [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s_raspberry_pi.md)
 - [My thoughts on Kubernetes and DevOps](./docs/20190709_thought_on_k8s.md)
 - [Rotate Kubernetes Client Cert/ Key](./docs/20200330_k8s_rotate_client_cert_key.md)
+- [Kubernetes Capacity & Workload Consideration](./docs/20201211_capacity_consideration.md)
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
