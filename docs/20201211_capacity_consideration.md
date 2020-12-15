@@ -14,6 +14,8 @@
     - [View the usage, requests and limits](#view-the-usage-requests-and-limits)
     - [Top CPU Usage](#top-cpu-usage)
     - [Top Memory Usage](#top-memory-usage)
+    - [Sum CPU Usage](#sum-cpu-usage)
+    - [Sum Memory Usage](#sum-memory-usage)
 
 <!-- /code_chunk_output -->
 
@@ -24,9 +26,9 @@ Understand the workload to calculate and plan the capacity required for producti
 ## Executive Summary
 
 
-Since all compute has been designed and allocated running on Kubernetes, therefore in term of compute (pod), storage (nfs), network (ingress-controller), security (image and registry) and so on, the environment is quite standard and it's easy to measure the workload
+Since all compute workload has been designed and allocated running on Kubernetes, therefore in term of compute (pod), storage (nfs), network (ingress-controller), security (image and registry) and so on, the environment is quite standard and it's easy to measure the workload
 
-When the resources are deployed in this environment, the install follows standard `helm chart` from community. We don't tune the parameter in chart unless otherwise we highlight in document. It means the resource allocation comes from open source community without specifically changed
+When the resources are deployed in this environment, the install follows standard `helm chart` from community. We don't tune the parameter in `chart` unless otherwise we highlight in document. It means the resource allocation comes from open source community without specifically changed
 
 One of event driven application integrated in this solution has a pre-requisite of running on Kubernetes up to `1.15.11`.
 
@@ -271,6 +273,7 @@ aiops-dev           kangpaas-job-854b594c8f-pslcg                            92m
 
 ```sh
 kubectl top pods --all-namespaces | sort --key 4 --numeric --reverse
+
 aiops-system        kangpaas-monitormgnt-7595b58dc5-gqn4k                    28m          4821Mi          
 tidb-aiops          tidb-cluster-tikv-2                                      299m         4425Mi          
 tidb-aiops          tidb-cluster-tikv-0                                      126m         3556Mi          
@@ -289,3 +292,23 @@ elastic             logstash-logstash-0                                      15m
 istio-system        prometheus-56fc7774c-6vz2j                               61m          1124Mi          
 aiops-system        kangpaas-gate-778888c5b7-bbb8x                           3m           1075Mi          
 ```
+
+#### Sum CPU Usage
+
+```sh
+kubectl top pods --all-namespaces | sort --key 3 --numeric | awk '{print $3}' | sed 's/m//g' | awk -F',' '{sum+=$1;}END{print sum;}'
+
+3561
+```
+
+Unit in miliCPU, therefore 3561 means 3.56 cores
+
+#### Sum Memory Usage
+
+```sh
+kubectl top pods --all-namespaces | sort --key 4 --numeric  | awk '{print $4}' | sed 's/Mi//g' | awk -F',' '{sum+=$1;}END{print sum;}'
+
+52518
+```
+
+In Gigabyte
