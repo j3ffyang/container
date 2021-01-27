@@ -260,7 +260,7 @@ cd ~/stress_test/gatlingTestInfra3/loadTest
 ###### Statistic from Grafana
 <center><img src="../imgs/20190618_vtq_resource.png"></center>
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - Reduced concurrent user from 1000 down to 500
 - Network ~450K/s input and output. Busy
@@ -268,7 +268,7 @@ Analysis Conclusion:
 
 <center><img src="../imgs/20190618_vtq_mongo.png"></center>
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - MongoDB: 49 connections and up to 4.5G memory usage (busy). Transaction per second:
   ```sh
@@ -283,7 +283,7 @@ Analysis Conclusion:
 ###### Statistic from Gatling
 <center><img src="../imgs/20190618_vtq_gatling.png"></center>
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - Total 822,825 requests completed 100% in success, including 500 token accesses, about 1,371 req/s (not bad)
 - Response-time: 99th pct = 132 ms (good enough for production. The less the better)
@@ -355,7 +355,7 @@ ubuntu@vantiq2-test01:~/stress_test/gatlingTestInfra3/loadTest$ pwd
 
 <img src="../imgs/20190619_dbinsert_vantiq_resource.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - CPU up to 100% for Vantiq-servers (very busy)
 - Req 35 ops (operation/ second)
@@ -366,7 +366,7 @@ Analysis Conclusion:
 
 <img src="../imgs/20190619_dbinsert_mongo.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - Insert __3,150/sec__ and Query __2,150/sec__ (slower than on AWS)
 - 174 connections (looks good)
@@ -379,7 +379,7 @@ Analysis Conclusion:
 
 <img src="../imgs/20190619_dbinsert_resource_uage_api_vail.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - insert p99 avg = 50ms (very good)
 
@@ -393,7 +393,7 @@ Analysis Conclusion:
 
 <img src="../imgs/20190619_dbinsert_gatling_response_time_percentile_over_time.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - 95% of response completed within 20kms = 20 second, with avg 40 concurrent users!!! (__quite busy__)
 
@@ -401,12 +401,12 @@ Analysis Conclusion:
 
 <img src="../imgs/20190619_dbinsert_gatling_number_of_req_per_second.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 - Avg ~= 10 req
 
 <img src="../imgs/20190619_dbinsert_gatling_number_of_response_per_sec.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - Avg = 10 response/ second
 
@@ -464,26 +464,26 @@ We also tried 800 concurrent users and to keep this running up to 10 minutes. Bu
 
 <img src="../imgs/20190820_gatling_db_updatesim.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 - All requests go through successfully
 - Total 438 reqs, 88%, completed within 0.8 sec, while the rest 62 (12%) taking longer than 12 sec
 
 <img src="../imgs/20190820_gatling_db_updatesim_response.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - 500 concurrent/ active users are being set and it grows from zero up to 500 in 3~ 4 sec
 - Within 1 minute load, 90th percentile response time is close to 10 sec and finishes in 6 sec totally.
 
 <img src="../imgs/20190820_gatling_vtq_resource.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - CPU goes up to 100% for 3 Vantiq servers, reaching its highest capacity, even Request Rate =~ 80 ops (operation per second)
 
 <img src="../imgs/20190820_gatling_org_act.png">
 
-Analysis Conclusion:
+#### Analysis Conclusion:
 
 - During total reqs being processed, "Global Credit Usage" reaches 100%.
 - Associating with the previous "Vantiq Resources" data, increasing "Global Credit" might not be able to give better performance, as Vantiq servers' CPU are already full.
