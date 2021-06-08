@@ -12,7 +12,7 @@
 - [Kubernetes Dashboard](./docs/20190826_k8s_dashboard.md)
 - [Install Nexus](./docs/20190619_nexus.md)
 - [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
-- [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s_raspberry_pi.md)
+- [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s_raspberry_pi.md) and [K3S again](./docs/20210520_k3s_again.md)
 - [My thoughts on Kubernetes and DevOps](./docs/20190709_thought_on_k8s.md)
 - [Rotate Kubernetes Client Cert/ Key](./docs/20200330_k8s_rotate_client_cert_key.md)
 - [argoCD](./docs/20201213_argocd.md)
