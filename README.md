@@ -1,6 +1,6 @@
 ## Document Objective
 - Document the environment built for our development and production
-- Everything is in docker
+- Everything is in container 
 
 ## Deployment
 
