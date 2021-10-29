@@ -17,6 +17,7 @@
 - [Rotate Kubernetes Client Cert/ Key](./docs/20200330_k8s_rotate_client_cert_key.md)
 - [argoCD](./docs/20201213_argocd.md)
 - [Kubernetes Capacity & Workload Consideration](./docs/20201211_capacity_consideration.md)
+- [K3S for raspberryPi](./docs/20210520_k3s_again.md)
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
@@ -30,6 +31,7 @@
 - [PlantUML Editor in Atom](./docs/20200317_plantuml.md)
 - [DNS](./docs/20201108_dns.md)
 - [Gitlab on K8S](./docs/20201115_k8s_gitlab.md)
+- [Ansible Deployment Workflow](./docs/20210600_ansible.md)
 
 #### Environment and Security
 - [Linux Kernel Tuning](./docs/20201019_linux_kernel.md)
