@@ -130,6 +130,14 @@ cp /etc/letsencrypt/live/webgame.example.com/fullchain.pem /usr/local/etc/xray/f
 cp /etc/letsencrypt/live/webgame.example.com/privkey.pem /usr/local/etc/xray/privkey.pem
 ```
 
+Check certificate expiration
+
+```sh
+openssl x509 -dates -noout < /path/fullchain.pem
+notBefore=Nov 14 08:49:01 2021 GMT
+notAfter=Feb 12 08:49:00 2022 GMT
+```
+
 ## Configure Xray
 
 - Generate a UUID for key
