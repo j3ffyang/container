@@ -3,7 +3,7 @@
 
 #### Objective
 
-I don't want to list all of them and just pick some of the most important parameters used in production Linux server.
+If we understand a Linux machine, what information would we need to pull? Usually this kind of information would be used to asset management.
 
 #### Important Parameters
 
