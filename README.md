@@ -1,6 +1,6 @@
 ## Document Objective
 - Document the environment built for our development and production
-- Everything is in container 
+- Everything is in container
 
 ## Deployment
 
@@ -32,6 +32,7 @@
 - [DNS](./docs/20201108_dns.md)
 - [Gitlab on K8S](./docs/20201115_k8s_gitlab.md)
 - [Ansible Deployment Workflow](./docs/20210600_ansible.md)
+- [Kubernetes Production Cluster Build and Operation](./docs/20211115_k8s_practice.md)
 
 #### Environment and Security
 - [Linux Kernel Tuning](./docs/20201019_linux_kernel.md)
@@ -47,6 +48,7 @@
 - [Post-install of Linode](./docs/20190120_linode_postinst.md)
 - [WireGuard](./docs/20200207_wireguard.md)
 - [Xray with VLess](./docs/20210507_xray_vless.md)
+- [OpenSSL with Kubernetes](./docs/20211115_openssl.md)
 
 #### Database
 - [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
