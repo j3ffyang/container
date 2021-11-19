@@ -1008,7 +1008,7 @@ vdb    252:16   0  40G  0 disk
 ubuntu@node1:~$ k get pv
 NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                             STORAGECLASS    REASON   AGE
 ...
-local-pv-80492a6c   39Gi       RWO            Retain           Bound       tdd/mongodump                     local-storage            4d23h
+local-pv-80492a6c   39Gi       RWO            Retain           Bound       sampleNamespace/mongodump                     local-storage            4d23h
 ```
 
 - Create `persistentVolumeClaim` and bind to `persistentVolume`
@@ -1018,7 +1018,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongodump
-  namespace: tdd
+  namespace: sampleNamespace
 spec:
   volumeMode: Filesystem
   volumeName: local-pv-80492a6c
@@ -1037,7 +1037,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: mongodump-backup
-  namespace: tdd
+  namespace: sampleNamespace
 spec:
   schedule: '@daily'
   concurrencyPolicy: Forbid
@@ -1054,7 +1054,7 @@ spec:
               image: bitnami/mongodb
               imagePullPolicy: "IfNotPresent"
               command : ["/bin/sh", "-c"]
-              args: ["mongodump -u $mongodb_user -p $mongodb_passwd --host=sample-sub-mongodb-client.tdd.svc.cluster.local --port=27017 --authenticationDatabase=admin -o /tmp/mongodump/$(date +\"%Y_%m_%d_%H:%M\")"]
+              args: ["mongodump -u $mongodb_user -p $mongodb_passwd --host=sample-sub-mongodb-client.sampleNamespace.svc.cluster.local --port=27017 --authenticationDatabase=admin -o /tmp/mongodump/$(date +\"%Y_%m_%d_%H:%M\")"]
               env:
               - name: mongodb_user
                 valueFrom:
@@ -1080,7 +1080,7 @@ spec:
 `env`:`valueFrom`:`secretKeyRef` (with `yq`)
 
 ```yml
-k -n tdd get secrets mongodb -oyaml | yq eval 'del(.metadata.managedFields, .metadata.creationTimestamp, .metadata.resourceVersion, .metadata.uid)' -
+k -n sampleNamespace get secrets mongodb -oyaml | yq eval 'del(.metadata.managedFields, .metadata.creationTimestamp, .metadata.resourceVersion, .metadata.uid)' -
 
 apiVersion: v1
 data:
@@ -1090,9 +1090,9 @@ kind: Secret
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"password":"cGFzc3cwcmQ=","user":"cm9vdA=="},"kind":"Secret","metadata":{"annotations":{},"name":"mongodb","namespace":"tdd"},"type":"Opaque"}
+      {"apiVersion":"v1","data":{"password":"cGFzc3cwcmQ=","user":"cm9vdA=="},"kind":"Secret","metadata":{"annotations":{},"name":"mongodb","namespace":"sampleNamespace"},"type":"Opaque"}
   name: mongodb
-  namespace: tdd
+  namespace: sampleNamespace
 type: Opaque
 ```
 
@@ -1124,7 +1124,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: mongodump-backup-rm-oldfile
-  namespace: tdd
+  namespace: sampleNamespace
 spec:
   schedule: '@daily'
   jobTemplate:
@@ -1159,7 +1159,7 @@ Command `cd /tmp/mongodump/; find . -type d -mtime +3 -exec rm -fr {} \;`
 The pre-requisite is to enable a service port-forward in Kubernetes
 
 ```sh
-kubectl -n tdd port-forward svc/sample-sub-mongodb 27017:27017 &
+kubectl -n sampleNamespace port-forward svc/sampleNamespace-sub-mongodb 27017:27017 &
 ```
 
 For example, to export `addVisitor_KE` collection in `DEV_KE_GROUP` namespace
@@ -1195,7 +1195,7 @@ When we want to schedule an existing pod to a reserved worker node
 - Check the pod `nodeAffinity`
 
 ```sh
-kubectl -n tdd get statefulsets.apps metrics-collector -o yaml | grep -v "f:node" | grep "nodeAffinity" -A7
+kubectl -n sampleNamespace get statefulsets.apps metrics-collector -o yaml | grep -v "f:node" | grep "nodeAffinity" -A7
 
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -1223,7 +1223,7 @@ node7    Ready    <none>        13d   v1.20.10   beta.kubernetes.io/arch=amd64,b
 
 ```sh
 kubectl get pods --all-namespaces -o wide --sort-by="{.spec.nodeName}" | grep metrics
-tdd           metrics-collector-0       1/1     Running   0          36m     10.233.95.23    node7    <none>           <none>
+sampleNamespace           metrics-collector-0       1/1     Running   0          36m     10.233.95.23    node7    <none>           <none>
 ```
 
 > Reference > https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
@@ -1231,7 +1231,7 @@ tdd           metrics-collector-0       1/1     Running   0          36m     10.
 #### List all selected resource per worker node in Kubernetes cluster
 
 ```sh
-kubectl describe nodes|egrep "^Name:|instance|mongo|userdb|sample|metrics|vision|influx|grafana|coredns|keycloak|nginx|telegraf|domain|Taint|role|cpu|memory"
+kubectl describe nodes|egrep "^Name:|instance|mongo|userdb|sampleApp|metrics|vision|influx|grafana|coredns|keycloak|nginx|telegraf|domain|Taint|role|cpu|memory"
 
 Name:               node1
                     node-role.kubernetes.io/control-plane=
@@ -1441,11 +1441,11 @@ ubuntu@node1:~$ k -n shared logs -f telegraf-prom-f6fb967d7-s4krm
 - Figure out MongoDB's root passwd
 
 ```sh
-kubectl -n tdd get secret mongodb -o jsonpath="{.data.password}" | base64 --decode
+kubectl -n sampleNamespace get secret mongodb -o jsonpath="{.data.password}" | base64 --decode
 ```
 
 ```sh
-export MONGODB_ROOT_PASSWORD=$(kubectl -n tdd get secret mongodb -o \
+export MONGODB_ROOT_PASSWORD=$(kubectl -n sampleNamespace get secret mongodb -o \
   jsonpath="{.data.password}" | base64 --decode)
 
 echo $MONGODB_ROOT_PASSWORD
@@ -1454,9 +1454,9 @@ echo $MONGODB_ROOT_PASSWORD
 - Export MongoDB's service port
 
 ```sh
-kubectl -n tdd get svc
+kubectl -n sampleNamespace get svc
 
-kubectl -n tdd port-forward svc/sample-sub-mongodb 27017:27017 &
+kubectl -n sampleNamespace port-forward svc/sample-sub-mongodb 27017:27017 &
 ```
 
 - Create mongoDB backup directory
