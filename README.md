@@ -33,6 +33,7 @@
 - [Gitlab on K8S](./docs/20201115_k8s_gitlab.md)
 - [Ansible Deployment Workflow](./docs/20210600_ansible.md)
 - [Kubernetes Production Cluster Build and Operation](./docs/20211115_k8s_practice.md)
+- [Nginx HA & LB with KeepAlived](./docs/20211122_nginx_ha_lb.md)
 
 #### Environment and Security
 - [Linux Kernel Tuning](./docs/20201019_linux_kernel.md)
