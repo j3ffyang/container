@@ -12,12 +12,12 @@
 - [Kubernetes Dashboard](./docs/20190826_k8s_dashboard.md)
 - [Install Nexus](./docs/20190619_nexus.md)
 - [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
-- [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s_raspberry_pi.md) and [K3S again](./docs/20210520_k3s_again.md)
 - [My thoughts on Kubernetes and DevOps](./docs/20190709_thought_on_k8s.md)
 - [Rotate Kubernetes Client Cert/ Key](./docs/20200330_k8s_rotate_client_cert_key.md)
-- [argoCD](./docs/20201213_argocd.md)
 - [Kubernetes Capacity & Workload Consideration](./docs/20201211_capacity_consideration.md)
-- [K3S for raspberryPi](./docs/20210520_k3s_again.md)
+- [Kubernetes Production Cluster Build and Operation](./docs/20211115_k8s_practice.md)
+- [Nginx HA & LB with KeepAlived](./docs/20211122_nginx_ha_lb.md)
+- [HAproxy and keepAlived with Kubespray](./docs/20211128_haproxy_keepalived_kubespray.md)
 
 #### DevOps
 - [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
@@ -32,8 +32,11 @@
 - [DNS](./docs/20201108_dns.md)
 - [Gitlab on K8S](./docs/20201115_k8s_gitlab.md)
 - [Ansible Deployment Workflow](./docs/20210600_ansible.md)
-- [Kubernetes Production Cluster Build and Operation](./docs/20211115_k8s_practice.md)
-- [Nginx HA & LB with KeepAlived](./docs/20211122_nginx_ha_lb.md)
+- [argoCD](./docs/20201213_argocd.md)
+
+#### edgeComputing
+- [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s_raspberry_pi.md) and [K3S again](./docs/20210520_k3s_again.md)
+- [K3S for raspberryPi](./docs/20210520_k3s_again.md)
 
 #### Environment and Security
 - [Linux Kernel Tuning](./docs/20201019_linux_kernel.md)
