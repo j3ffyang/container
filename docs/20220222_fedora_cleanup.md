@@ -2,7 +2,7 @@
 
 #### Background
 
-Recently I installed Fedora 35 on a MacBookPro 16,2 and want to specifically manage the update and installed packages
+Recently I installed Fedora 35 on a MacBookPro 16,2 and want to specifically manage the update and installed packages with this customized kernel 
 
 ![20220224_neofetch_mbp-fedora](/assets/20220224_neofetch_mbp-fedora.png)
 
