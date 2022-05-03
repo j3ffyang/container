@@ -26,7 +26,7 @@ System Information
 
 ## Configuration
 
-1. Download and place the certificate for `MSCHAPv2` encryption. In theory, the certificate must be placed anywhere system-wide readable and avoid being placed under `~/` which has protection tag. Or `wpa_supplicant` daemon won't be able to read
+- Download and place the certificate for `MSCHAPv2` encryption. In theory, the certificate must be placed anywhere system-wide readable and avoid being placed under `~/` which has protection tag. Or `wpa_supplicant` daemon won't be able to read
 
 ```sh
 [jeff@mbp anchors]$ pwd
@@ -35,7 +35,7 @@ System Information
 wireless_rootca.crt
 ```
 
-2. Create a network through Gnome Settings > Wi-Fi. Here's an example
+- Create a network through Gnome Settings > Wi-Fi. Here's an example
 Note: the company's wireless SSID is `XXXXX_WLAN(5GHz)` specifically, created on Windows :-(
 
 ```sh
@@ -61,10 +61,10 @@ auth-alg=open
 key-mgmt=wpa-eap
 
 [802-1x]
-ca-cert=/etc/pki/ca-trust/source/anchors/20220411_XX_rootca.crt
+ca-cert=/etc/pki/ca-trust/source/anchors/wireless_rootca.crt
 eap=peap;
-identity=userId
-password=passwordSecret
+identity=<userId>
+password=<passwordSecret>
 phase2-auth=mschapv2
 
 [ipv4]
@@ -80,7 +80,7 @@ method=auto
 [jeff@mbp system-connections]$
 ```
 
-3. Disable `iwd`
+- Disable `iwd`
 I switched to `iwd` which is recommended to manage wireless. Since my company's networkID contains special character, such as `XXXXX_WLAN(5GHz)`, I guess `iwd` doesn't like `()`. I decided to switch back to `wpa_supplicant`. I'll try to use `iwd` still instead of `wpa_supplicant`, then write another solution
 
 ```sh
@@ -88,13 +88,13 @@ systemctl stop iwd.service
 systemctl disable iwd.service
 ```
 
-4. Enable `wpa_supplicant`
+- Enable `wpa_supplicant`
 
 ```sh
 systemctl restart wpa_supplicant
 ```
 
-5. Modify `/etc/NetworkManager/NetworkManager.conf`. Disable `iwd` backend and leave `NetworkManager` being managed by `wpa_supplicant` by default. Then `systemctl restart NetworkManager`
+- Modify `/etc/NetworkManager/NetworkManager.conf`. Disable `iwd` backend and leave `NetworkManager` being managed by `wpa_supplicant` by default. Then `systemctl restart NetworkManager`
 
 ```sh
 [device]

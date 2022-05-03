@@ -66,10 +66,15 @@ We do have lots of chances to write documents and guideline books in our busines
 ## Standard, Simple and General
 - Managing everything in code
 - WYSIWYG
-- Used for everything: document, book, presentation (marp, https://marp.app/), email and web
+- Used for everything: document, book, presentation (`markdown-preview-enhanced`), email and web
 - OS independent
 - Portable, like at Github, Stackoverflow, and Reddit etc
 - Available for collobration work at Gitbook
+
+## Editor
+
+- atom.io
+- sublimetext.com
 
 ## Plugins and Examples
 
