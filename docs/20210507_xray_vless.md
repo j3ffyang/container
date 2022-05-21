@@ -14,6 +14,8 @@
     - [Ignore `nextcloud` Part](#ignore-nextcloud-part)
     - [Test Run](#test-run)
 - [Client](#client)
+- [Troubleshooting](#troubleshooting)
+    - [`xray` doesn't start properly](#xray-doesnt-start-properly)
 
 <!-- /code_chunk_output -->
 
@@ -236,7 +238,48 @@ param | value
 Host | webgame.example.com
 Port | 443
 Type | VLESS
-UUID | the one in config.json
-Flow | xtls-rprx-direct
+UUID | the one in `config.json`
+Flow | `xtls-rprx-direct`
 Transport Protocal | tcp
 Security Type | XTLS
+
+## Troubleshooting
+
+#### `xray` doesn't start properly
+
+- `/var/log/nginx/error.log` shows
+
+```sh
+2022/05/21 10:36:46 [error] 250480#250480: *8 connect() failed (111: Connection refused) while connecting to upstream, client: 114.253.110.206, server: 0.0.0.0:443, upstream: "127.0.0.1:20001", bytes from/to client:0/0, bytes from/to upstream:0/0
+```
+
+- And `systemctl status xray` has not started properly
+
+```sh
+● xray.service - Xray Service
+     Loaded: loaded (/etc/systemd/system/xray.service; enabled; vendor preset: enabled)
+    Drop-In: /etc/systemd/system/xray.service.d
+             └─10-donot_touch_single_conf.conf
+     Active: failed (Result: exit-code) since Sat 2022-05-21 10:40:12 CST; 4s ago
+       Docs: https://github.com/xtls
+    Process: 251119 ExecStart=/usr/local/bin/xray run -config /usr/local/etc/xray/config.json (code=exited, status=23)
+   Main PID: 251119 (code=exited, status=23)
+
+May 21 10:40:12 VM-4-15-ubuntu systemd[1]: Started Xray Service.
+May 21 10:40:12 VM-4-15-ubuntu xray[251119]: Xray 1.5.5 (Xray, Penetrates Everything.) Custom (go1.18.1 linux/amd64)
+May 21 10:40:12 VM-4-15-ubuntu xray[251119]: A unified platform for anti-censorship.
+May 21 10:40:12 VM-4-15-ubuntu xray[251119]: 2022/05/21 10:40:12 [Info] infra/conf/serial: Reading config: /usr/local/etc/xray/config.json
+May 21 10:40:12 VM-4-15-ubuntu xray[251119]: Failed to start: main: failed to load config files: [/usr/local/etc/xray/config.json] > infra/conf: Failed to build XTLS config. > infra/conf: failed to parse key > open /usr/local/etc/xray/privkey.pem: permission denied
+```
+
+- Check `privkey.pem` permission
+
+```sh
+jeff@VM-4-15-ubuntu:/usr/local/etc/xray$ ls -la
+total 28
+drwxr-xr-x 2 root root 4096 May 21 10:39 .
+drwxr-xr-x 3 root root 4096 May 20 11:00 ..
+-rw-r--r-- 1 root root 1501 May 21 10:39 config.json
+-rw-r--r-- 1 root root 5604 May 21 10:16 fullchain.pem
+-rw------- 1 root root 1704 May 21 10:16 privkey.pem
+```
