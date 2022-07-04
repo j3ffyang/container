@@ -1317,8 +1317,7 @@ kubectl -n shared get statefulsets.apps keycloak -o yaml | neat > keycloak-sts.y
 - Another option to generate a clean output yaml
 
 ```sh
-kubectl -n shared get sts keycloak -o yaml | \
-  yq eval 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.selfLink, .metadata.managedFields, .status)' -
+k -n iam get sts keycloak -oyaml | yq --yaml-roundtrip 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.selfLink, .metadata.managedFields, .status)' -
 ```
 
 ##### Generate `overlay`patch YAML for `kustomize`
