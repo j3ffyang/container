@@ -14,6 +14,9 @@
     - [Ignore `nextcloud` Part](#ignore-nextcloud-part)
     - [Test Run](#test-run)
 - [Client](#client)
+    - [`v2ray-core`](#v2ray-core)
+    - [A GUI `qv2ray`](#a-gui-qv2ray)
+    - [Android `v2rayNG`](#android-v2rayng)
 - [Troubleshooting](#troubleshooting)
     - [`xray` doesn't start properly](#xray-doesnt-start-properly)
 
@@ -230,6 +233,18 @@ systemctl restart nginx xray
 
 
 ## Client
+
+#### `v2ray-core`
+
+> Reference > https://github.com/v2ray/v2ray-core
+
+#### A GUI `qv2ray`
+
+> Reference > https://github.com/Qv2ray/Qv2ray
+
+After install, Check V2Ray Core Settings - `Preferences` > `Kernel Settings` > `Check V2Ray Core Settings`.
+
+#### Android `v2rayNG`
 
 > Reference > https://github.com/2dust/v2rayNG
 
