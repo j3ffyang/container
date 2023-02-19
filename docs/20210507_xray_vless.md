@@ -20,7 +20,6 @@
 - [Troubleshooting](#-troubleshooting)
     - [`xray` doesn't start properly](#-xray-doesnt-start-properly)
     - [Troubleshooting](#-troubleshooting-1)
-    - [IP Assignment](#-ip-assignment)
 
 <!-- /code_chunk_output -->
 
