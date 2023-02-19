@@ -3,22 +3,24 @@
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=4 orderedList=false} -->
 <!-- code_chunk_output -->
 
-- [Objective](#objective)
-- [CentOS](#centos)
-    - [`firewall-cmd`](#firewall-cmd)
-- [Debian/ Ubuntu](#debian-ubuntu)
-    - [Install](#install)
-    - [Configure `nginx` and `/etc/nginx/nginx.conf.d/`](#configure-nginx-and-etcnginxnginxconfd)
-    - [Configure SSL](#configure-ssl)
-- [Configure Xray](#configure-xray)
-    - [Ignore `nextcloud` Part](#ignore-nextcloud-part)
-    - [Test Run](#test-run)
-- [Client](#client)
-    - [`v2ray-core`](#v2ray-core)
-    - [A GUI `qv2ray`](#a-gui-qv2ray)
-    - [Android `v2rayNG`](#android-v2rayng)
-- [Troubleshooting](#troubleshooting)
-    - [`xray` doesn't start properly](#xray-doesnt-start-properly)
+- [Objective](#-objective)
+- [CentOS](#-centos)
+    - [`firewall-cmd`](#-firewall-cmd)
+- [Debian/ Ubuntu](#-debian-ubuntu)
+    - [Install](#-install)
+    - [Configure `nginx` and `/etc/nginx/nginx.conf.d/`](#-configure-nginx-and-etcnginxnginxconfd)
+    - [Configure SSL](#-configure-ssl)
+- [Configure Xray](#-configure-xray)
+    - [Ignore `nextcloud` Part](#-ignore-nextcloud-part)
+    - [Test Run](#-test-run)
+- [Client](#-client)
+    - [`v2ray-core`](#-v2ray-core)
+    - [A GUI `qv2ray`](#-a-gui-qv2ray)
+    - [Android `v2rayNG`](#-android-v2rayng)
+- [Troubleshooting](#-troubleshooting)
+    - [`xray` doesn't start properly](#-xray-doesnt-start-properly)
+    - [Troubleshooting](#-troubleshooting-1)
+    - [IP Assignment](#-ip-assignment)
 
 <!-- /code_chunk_output -->
 
@@ -298,3 +300,23 @@ drwxr-xr-x 3 root root 4096 May 20 11:00 ..
 -rw-r--r-- 1 root root 5604 May 21 10:16 fullchain.pem
 -rw------- 1 root root 1704 May 21 10:16 privkey.pem
 ```
+
+#### Troubleshooting
+
+- `nginx` can't start after default install on Debian
+
+> Reference > https://bugs.launchpad.net/ubuntu/+source/nginx/+bug/1581864
+
+- `fullchain.pem: permission denied` on Debian, even the ownership of `fullchain.pem` and `privkey.pem` is `www-data`, which owns `nginx worker` process
+
+```sh
+Feb 08 04:20:47 localhost xray[17384]: Failed to start: main: failed to load config files: [/usr/local/etc/xray/config.json] > infra/conf: Failed to build XTLS config. > infra/conf: failed to parse certificate > open /etc/letsencrypt/live/domainName/fullchain.pem: permission denied
+```
+
+Another possible solution is to 
+
+```sh
+chown -R www-data /usr/local/etc/xray/
+chown 644 /usr/local/etc/xray/*.pem     # just a workaround, not recommended if there are multiple users on system
+```
+
