@@ -19,7 +19,7 @@ If we look at some of Kubernetes, we'd get some insights
 
 - Everything in Kubernetes is called _resource_
 - _Service_ manages network
-- _Secrete_ manages SSL/ TLS keys as configMap
+- _Secrete_ manages SSL/ TLS keys as secret
 - _statefulSet_ manages stateful data. And _deployment_ manages stateless data, such as _reverse proxy_ with Nginx. So before this you would need to understand the data logic
 
 One of my ex-IBMer colleges who left IBM and joined an insurance company (1 of top 5 in China). He is supposedly in charge of "application architecture". I mentioned the above points to him and asked him whether he noticed the compute-behavior with Kubernetes and container is so different from traditional 3 layers architecture (web - middleWare - database) and even VM virtualization (OpenStack and VMware). He unwillingly responded that he has to respect the existing framework in enterprise. I emphasized that we're not trying to change the existing framework in enterprise, not even define it wrong or right. We just want to highlight the difference of Kubernetes.
