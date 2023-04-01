@@ -3,38 +3,54 @@
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=4 orderedList=false} -->
 <!-- code_chunk_output -->
 
-- [Objective](#-objective)
-- [CentOS](#-centos)
-    - [`firewall-cmd`](#-firewall-cmd)
-- [Debian/ Ubuntu](#-debian-ubuntu)
-    - [Install](#-install)
-    - [Configure `nginx` and `/etc/nginx/nginx.conf.d/`](#-configure-nginx-and-etcnginxnginxconfd)
-    - [Configure SSL](#-configure-ssl)
-- [Configure Xray](#-configure-xray)
-    - [Ignore `nextcloud` Part](#-ignore-nextcloud-part)
-    - [Test Run](#-test-run)
-- [Client](#-client)
-    - [`v2ray-core`](#-v2ray-core)
-    - [A GUI `qv2ray`](#-a-gui-qv2ray)
-    - [Android `v2rayNG`](#-android-v2rayng)
-- [Troubleshooting](#-troubleshooting)
-    - [`xray` doesn't start properly](#-xray-doesnt-start-properly)
-    - [Troubleshooting](#-troubleshooting-1)
+- [Objective](#objective)
+- [Install `certbot` for `letsEncrypt`](#install-certbot-for-letsencrypt)
+    - [(option I) Install plain `certbot`](#option-i-install-plain-certbot)
+    - [Generate certificate](#generate-certificate)
+    - [(option II) If using domain registration at CloudFlare](#option-ii-if-using-domain-registration-at-cloudflare)
+    - [Generate certificate](#generate-certificate-1)
+    - [Check certificate expiration](#check-certificate-expiration)
+- [`nginx`](#nginx)
+    - [`/etc/nginx/nginx.conf`](#etcnginxnginxconf)
+    - [Configure `fallback`](#configure-fallback)
+- [`xray`](#xray)
+    - [Install](#install)
+    - [Configure](#configure)
+    - [Test Run](#test-run)
+- [Client](#client)
+    - [`v2ray-core`](#v2ray-core)
+    - [A GUI `qv2ray`](#a-gui-qv2ray)
+    - [Android `v2rayNG`](#android-v2rayng)
+- [Troubleshooting](#troubleshooting)
+    - [`xray` doesn't start properly](#xray-doesnt-start-properly)
+    - [Troubleshooting](#troubleshooting-1)
 
 <!-- /code_chunk_output -->
 
 ## Objective
 
+Get rid of unexpected firewall
+
+
 > Reference > https://henrywithu.com/coexistence-of-web-applications-and-vless-tcp-xtls/
 
-## CentOS
+## Install `certbot` for `letsEncrypt`
+
+#### (option I) Install plain `certbot`
+
+- Debian/ Ubunt
+```sh
+apt -y install curl git nginx libnginx-mod-stream python3-certbot-nginx
+``` 
+
+- CentOS
+
+Install the very latest Nginx > http://nginx.org/en/linux_packages.html#RHEL-CentOS
 
 ```sh
 sudo yum install epel-release
 sudo dnf install curl git nginx nginx-mod-stream python3-certbot-nginx
 ```
-
-Install the very latest Nginx > http://nginx.org/en/linux_packages.html#RHEL-CentOS
 
 ```sh
 [root@vultrguest ~]# chown nginx:nginx /usr/local/etc/xray/fullchain.pem
@@ -43,35 +59,52 @@ Install the very latest Nginx > http://nginx.org/en/linux_packages.html#RHEL-Cen
 
 Disable SELinux
 
-#### `firewall-cmd`
-
-## Debian/ Ubuntu
-
-> Reference > https://henrywithu.com/coexistence-of-web-applications-and-vless-tcp-xtls/
-
-#### Install
-
-Install Dependencies
+#### Generate certificate
 
 ```sh
-apt -y install curl git nginx libnginx-mod-stream python3-certbot-nginx
+certbot certonly --nginx
 ```
 
-Install Xray
+#### (option II) If using domain registration at CloudFlare
+
+- DNS > Records > add `subdomain` with type `CNAME`
+- SSL/TLS > Your SSL/TLS encryption mode is Full
+
+> Reference > https://developers.cloudflare.com/dns/manage-dns-records/reference/proxied-dns-records/
+
+- `certbot` with LetsEncrypt and CloudFlare
+
+- Install `certbot` with cloudFlare plugin with `snapd`
+
+> Reference > https://certbot.eff.org/instructions?ws=nginx&os=debianbuster&tab=wildcard
+
+- Create `dns_cloudflare_api_key` for CloudFlare
+
+> Reference > https://certbot-dns-cloudflare.readthedocs.io/en/stable/
+
+#### Generate certificate
 
 ```sh
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /home/jeff/cloudflare/.secrets/cloudflare.ini \
+  -d yourDomain.org \
+  -d www.yourDomain.org
 ```
 
-Uninstall Xray
+#### Check certificate expiration
 
 ```sh
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove
+openssl x509 -dates -noout < /path/fullchain.pem
+notBefore=Nov 14 08:49:01 2021 GMT
+notAfter=Feb 12 08:49:00 2022 GMT
 ```
 
-#### Configure `nginx` and `/etc/nginx/nginx.conf.d/`
+---
 
-- `/etc/nginx/nginx.conf`
+## `nginx`
+
+#### `/etc/nginx/nginx.conf`
 
 Place the following content outside of `http {}` block
 
@@ -98,12 +131,16 @@ stream {
 
 Replace `example.com` with your actual domain name
 
-- Configure `fallback` and `/etc/nginx/conf.d/fallback.conf`
+#### Configure `fallback` 
+
+- Pull a cute site
 
 ```sh
 cd /var/www/html
 git clone https://github.com/gd4Ark/2048.git 2048
 ```
+
+- Edit `/etc/nginx/conf.d/fallback.conf`
 
 ```sh
 server {
@@ -127,24 +164,21 @@ server {
 }
 ```
 
-#### Configure SSL
+## `xray`
+
+#### Install 
 
 ```sh
-certbot certonly --nginx
-
-cp /etc/letsencrypt/live/webgame.example.com/fullchain.pem /usr/local/etc/xray/fullchain.pem
-cp /etc/letsencrypt/live/webgame.example.com/privkey.pem /usr/local/etc/xray/privkey.pem
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 ```
 
-Check certificate expiration
+- Uninstall Xray
 
 ```sh
-openssl x509 -dates -noout < /path/fullchain.pem
-notBefore=Nov 14 08:49:01 2021 GMT
-notAfter=Feb 12 08:49:00 2022 GMT
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove
 ```
 
-## Configure Xray
+#### Configure
 
 - Generate a UUID for key
 
@@ -210,7 +244,7 @@ Replace the value of `id` with the output
 }
 ```
 
-#### Ignore `nextcloud` Part
+- Ignore `nextcloud` Part
 
 #### Test Run
 
@@ -300,6 +334,8 @@ drwxr-xr-x 3 root root 4096 May 20 11:00 ..
 -rw------- 1 root root 1704 May 21 10:16 privkey.pem
 ```
 
+You may want to grant `nobody`:`www-data` permission to access both `fullchain.pem` and `privkey.pem`
+
 #### Troubleshooting
 
 - `nginx` can't start after default install on Debian
@@ -312,10 +348,4 @@ drwxr-xr-x 3 root root 4096 May 20 11:00 ..
 Feb 08 04:20:47 localhost xray[17384]: Failed to start: main: failed to load config files: [/usr/local/etc/xray/config.json] > infra/conf: Failed to build XTLS config. > infra/conf: failed to parse certificate > open /etc/letsencrypt/live/domainName/fullchain.pem: permission denied
 ```
 
-Another possible solution is to 
-
-```sh
-chown -R www-data /usr/local/etc/xray/
-chown 644 /usr/local/etc/xray/*.pem     # just a workaround, not recommended if there are multiple users on system
-```
-
+You may want to grant `nobody`:`www-data` permission to access both `fullchain.pem` and `privkey.pem`
