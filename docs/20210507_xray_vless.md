@@ -23,7 +23,7 @@
     - [Android `v2rayNG`](#android-v2rayng)
 - [Troubleshooting](#troubleshooting)
     - [`xray` doesn't start properly](#xray-doesnt-start-properly)
-    - [Troubleshooting](#troubleshooting-1)
+    - [`nginx` can't start after default install on Debian](#nginx-cant-start-after-default-install-on-debian)
 
 <!-- /code_chunk_output -->
 
@@ -357,9 +357,7 @@ drwxr-xr-x 3 root root 4096 May 20 11:00 ..
 
 You may want to grant `nobody`:`www-data` permission to access both `fullchain.pem` and `privkey.pem`
 
-#### Troubleshooting
-
-- `nginx` can't start after default install on Debian
+#### `nginx` can't start after default install on Debian
 
 > Reference > https://bugs.launchpad.net/ubuntu/+source/nginx/+bug/1581864
 
