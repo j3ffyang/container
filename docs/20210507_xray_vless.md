@@ -78,9 +78,26 @@ certbot certonly --nginx
 
 > Reference > https://certbot.eff.org/instructions?ws=nginx&os=debianbuster&tab=wildcard
 
+```sh
+apt install snapd
+snap install core
+snap install --classic certbot
+
+ln -s /snap/bin/certbot /usr/bin/certbot
+
+snap install certbot-dns-cloudflare
+```
+
 - Create `dns_cloudflare_api_key` for CloudFlare
 
 > Reference > https://certbot-dns-cloudflare.readthedocs.io/en/stable/
+
+```sh
+cat ~/cloudflare/.secrets/cloudflare.ini
+
+dns_cloudflare_email 	= "myEmail@Address"
+dns_cloudflare_api_key	= "~~37digits~~"
+```
 
 #### Generate certificate
 
@@ -105,6 +122,10 @@ notAfter=Feb 12 08:49:00 2022 GMT
 ## `nginx`
 
 #### `/etc/nginx/nginx.conf`
+
+```sh
+apt -y install curl git nginx libnginx-mod-stream
+```
 
 Place the following content outside of `http {}` block
 
