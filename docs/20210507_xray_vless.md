@@ -82,8 +82,9 @@ certbot certonly --nginx
 apt install snapd
 snap install core
 snap install --classic certbot
-
 ln -s /snap/bin/certbot /usr/bin/certbot
+
+snap set certbot trust-plugin-with-root=ok
 
 snap install certbot-dns-cloudflare
 ```
@@ -157,8 +158,7 @@ Replace `example.com` with your actual domain name
 - Pull a cute site
 
 ```sh
-cd /var/www/html
-git clone https://github.com/gd4Ark/2048.git 2048
+cd /var/www/html; git clone https://github.com/gd4Ark/2048.git 2048
 ```
 
 - Edit `/etc/nginx/conf.d/fallback.conf`

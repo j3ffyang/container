@@ -84,6 +84,8 @@ conda install cudatoolkit=11.3 -c nvidia
 demo.queue().launch(share=True, inbrowser=True)
 ```
 
+![](imgs/2023-04-22-19-03-06.png)
+
 ## Troubleshooting
 
 - Error message > `RuntimeError: Library cudart is not initialized`
