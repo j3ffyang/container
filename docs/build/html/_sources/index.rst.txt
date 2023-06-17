@@ -12,6 +12,7 @@ Welcome to Container and Relatives's documentation!
 
    20230510_v2ray_vmess.md
    20230422_gpt4all_on_laptop.md
+   20230617_sphinx.md
 
 
 Indices and tables
