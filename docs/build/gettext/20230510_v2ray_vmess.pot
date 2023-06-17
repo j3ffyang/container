@@ -1,0 +1,223 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, @j3ffyang
+# This file is distributed under the same license as the Container and Relatives package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Container and Relatives \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-17 20:41+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/20230510_v2ray_vmess.md:1
+msgid "# V2Ray + vmess + CloudFlare"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:3
+msgid "## Install `v2ray`"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:5
+msgid "> https://github.com/v2fly/fhs-install-v2ray"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:7
+msgid "## Configure `nginx`"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:9
+msgid "> Reference >https://gist.github.com/megrxu/1ad492eac2d343b4dbd4bb964ca37670"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:11
+msgid "```sh root@vultr:/etc/nginx/conf.d# cat v2ray.conf server {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:14
+msgid "listen 80; server_name    everbox.io;"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:17
+msgid "index index.html; root /usr/share/nginx/html/;"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:20
+msgid "access_log /var/log/nginx/v2ray.access; error_log /var/log/nginx/v2ray.error;"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:34
+msgid "location /ray { # Consistent with the path of V2Ray configuration"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:24
+msgid "if ($http_upgrade != \"websocket\") { # Return 404 error when WebSocket upgrading negotiate failed"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:25
+msgid "return 404;"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:26
+msgid "} proxy_redirect off; proxy_pass http://127.0.0.1:10000; # Assume WebSocket is listening at localhost on port of 10000 proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection \"upgrade\"; proxy_set_header Host $host; # Show real IP in v2ray access.log proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:36
+#: ../../source/20230510_v2ray_vmess.md:38
+#: ../../source/20230510_v2ray_vmess.md:60
+#: ../../source/20230510_v2ray_vmess.md:68
+#: ../../source/20230510_v2ray_vmess.md:69
+#: ../../source/20230510_v2ray_vmess.md:75
+#: ../../source/20230510_v2ray_vmess.md:78
+#: ../../source/20230510_v2ray_vmess.md:97
+#: ../../source/20230510_v2ray_vmess.md:98
+#: ../../source/20230510_v2ray_vmess.md:112
+#: ../../source/20230510_v2ray_vmess.md:114
+#: ../../source/20230510_v2ray_vmess.md:122
+#: ../../source/20230510_v2ray_vmess.md:123
+#: ../../source/20230510_v2ray_vmess.md:124
+#: ../../source/20230510_v2ray_vmess.md:127
+msgid "}"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:40
+msgid "## Configure `v2ray` with `nginx`"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:42
+msgid "```json root@vultr:/etc/nginx# cat /usr/local/etc/v2ray/config.json {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:47
+msgid "\"log\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:46
+msgid "\"loglevel\": \"warning\", \"access\": \"/var/log/v2ray/access.log\", \"error\": \"/var/log/v2ray/error.log\""
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:49
+msgid "}, \"inbounds\": ["
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:58
+#: ../../source/20230510_v2ray_vmess.md:67
+#: ../../source/20230510_v2ray_vmess.md:73
+#: ../../source/20230510_v2ray_vmess.md:96
+#: ../../source/20230510_v2ray_vmess.md:110
+#: ../../source/20230510_v2ray_vmess.md:112
+#: ../../source/20230510_v2ray_vmess.md:122
+msgid "{"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:52
+msgid "\"port\": 10000, \"listen\":\"127.0.0.1\", \"protocol\": \"vmess\", \"settings\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:59
+msgid "\"clients\": ["
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:58
+msgid "\"id\": \"bxxxxxx7-abcd-xxxx-xxxx-xxxxxxxxxxxx\", \"alterId\": 64"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:61
+#: ../../source/20230510_v2ray_vmess.md:76
+#: ../../source/20230510_v2ray_vmess.md:113
+#: ../../source/20230510_v2ray_vmess.md:115
+#: ../../source/20230510_v2ray_vmess.md:125
+msgid "]"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:62
+#: ../../source/20230510_v2ray_vmess.md:116
+msgid "}, \"streamSettings\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:64
+msgid "\"network\": \"ws\", \"wsSettings\": { \"path\": \"/ray\" }"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:70
+#: ../../source/20230510_v2ray_vmess.md:99
+msgid "], \"outbounds\": ["
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:73
+msgid "\"protocol\": \"freedom\", \"settings\": {}"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:80
+msgid "## Configure `v2ray` for client"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:82
+msgid "```sh (base) [jeff@fedora v2ray]$ cat config.json {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:97
+msgid "\"inbounds\": ["
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:87
+msgid "\"port\": 8889, \"listen\": \"127.0.0.1\", \"protocol\": \"socks\", \"sniffing\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:91
+msgid "\"enabled\": true, \"destOverride\": [\"http\", \"tls\"]"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:93
+msgid "}, \"settings\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:95
+msgid "\"auth\": \"noauth\", \"udp\": false"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:102
+msgid "\"protocol\": \"vmess\", \"settings\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:113
+msgid "\"vnext\": ["
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:106
+msgid "\"address\": \"everbox.io\", \"port\": 443, \"users\": ["
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:110
+msgid "\"id\": \"bxxxxxx7-abcd-xxxx-xxxx-xxxxxxxxxxxx\", \"alterId\": 0"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:118
+msgid "\"network\": \"ws\", \"security\": \"tls\", \"wsSettings\": {"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:121
+msgid "\"path\": \"/ray\""
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:129
+msgid "## Create `certificate` with `letsencrypt`"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:131
+msgid "## Configure domainName `proxied` with CloudFlare"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:133
+msgid "## Reference"
+msgstr ""
+
+#: ../../source/20230510_v2ray_vmess.md:135
+msgid "https://hxp.plus/2020/02/07/v2ray/"
+msgstr ""

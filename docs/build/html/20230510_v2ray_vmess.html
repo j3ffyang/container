@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>V2Ray + vmess + CloudFlare &#8212; Container and Relatives 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Container and Relatives’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="v2ray-vmess-cloudflare">
+<h1>V2Ray + vmess + CloudFlare<a class="headerlink" href="#v2ray-vmess-cloudflare" title="Permalink to this heading">¶</a></h1>
+<section id="install-v2ray">
+<h2>Install <code class="docutils literal notranslate"><span class="pre">v2ray</span></code><a class="headerlink" href="#install-v2ray" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p>https://github.com/v2fly/fhs-install-v2ray</p>
+</div></blockquote>
+</section>
+<section id="configure-nginx">
+<h2>Configure <code class="docutils literal notranslate"><span class="pre">nginx</span></code><a class="headerlink" href="#configure-nginx" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p>Reference &gt;https://gist.github.com/megrxu/1ad492eac2d343b4dbd4bb964ca37670</p>
+</div></blockquote>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>root@vultr:/etc/nginx/conf.d#<span class="w"> </span>cat<span class="w"> </span>v2ray.conf<span class="w"> </span>
+server<span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>listen<span class="w"> </span><span class="m">80</span><span class="p">;</span>
+<span class="w">  </span>server_name<span class="w">    </span>everbox.io<span class="p">;</span>
+
+<span class="w">  </span>index<span class="w"> </span>index.html<span class="p">;</span>
+<span class="w">  </span>root<span class="w"> </span>/usr/share/nginx/html/<span class="p">;</span>
+
+<span class="w">  </span>access_log<span class="w"> </span>/var/log/nginx/v2ray.access<span class="p">;</span>
+<span class="w">  </span>error_log<span class="w"> </span>/var/log/nginx/v2ray.error<span class="p">;</span>
+
+<span class="w">    </span>location<span class="w"> </span>/ray<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1"># Consistent with the path of V2Ray configuration</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="nv">$http_upgrade</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;websocket&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="c1"># Return 404 error when WebSocket upgrading negotiate failed</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="m">404</span><span class="p">;</span>
+<span class="w">      </span><span class="o">}</span>
+<span class="w">      </span>proxy_redirect<span class="w"> </span>off<span class="p">;</span>
+<span class="w">      </span>proxy_pass<span class="w"> </span>http://127.0.0.1:10000<span class="p">;</span><span class="w"> </span><span class="c1"># Assume WebSocket is listening at localhost on port of 10000</span>
+<span class="w">      </span>proxy_http_version<span class="w"> </span><span class="m">1</span>.1<span class="p">;</span>
+<span class="w">      </span>proxy_set_header<span class="w"> </span>Upgrade<span class="w"> </span><span class="nv">$http_upgrade</span><span class="p">;</span>
+<span class="w">      </span>proxy_set_header<span class="w"> </span>Connection<span class="w"> </span><span class="s2">&quot;upgrade&quot;</span><span class="p">;</span>
+<span class="w">      </span>proxy_set_header<span class="w"> </span>Host<span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">      </span><span class="c1"># Show real IP in v2ray access.log</span>
+<span class="w">      </span>proxy_set_header<span class="w"> </span>X-Real-IP<span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">      </span>proxy_set_header<span class="w"> </span>X-Forwarded-For<span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="configure-v2ray-with-nginx">
+<h2>Configure <code class="docutils literal notranslate"><span class="pre">v2ray</span></code> with <code class="docutils literal notranslate"><span class="pre">nginx</span></code><a class="headerlink" href="#configure-v2ray-with-nginx" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>root@vultr:/etc/nginx# cat /usr/local/etc/v2ray/config.json 
+{
+  &quot;log&quot;: {
+    &quot;loglevel&quot;: &quot;warning&quot;,
+    &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,
+    &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;
+  },
+  &quot;inbounds&quot;: [
+    {
+      &quot;port&quot;: 10000,
+      &quot;listen&quot;:&quot;127.0.0.1&quot;,
+      &quot;protocol&quot;: &quot;vmess&quot;,
+      &quot;settings&quot;: {
+        &quot;clients&quot;: [
+          {
+	    &quot;id&quot;: &quot;bxxxxxx7-abcd-xxxx-xxxx-xxxxxxxxxxxx&quot;,
+            &quot;alterId&quot;: 64
+          }
+        ]
+      },
+      &quot;streamSettings&quot;: {
+        &quot;network&quot;: &quot;ws&quot;,
+        &quot;wsSettings&quot;: {
+        &quot;path&quot;: &quot;/ray&quot;
+        }
+      }
+    }
+  ],
+  &quot;outbounds&quot;: [
+    {
+      &quot;protocol&quot;: &quot;freedom&quot;,
+      &quot;settings&quot;: {}
+    }
+  ]
+}
+</pre></div>
+</div>
+</section>
+<section id="configure-v2ray-for-client">
+<h2>Configure <code class="docutils literal notranslate"><span class="pre">v2ray</span></code> for client<a class="headerlink" href="#configure-v2ray-for-client" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>base<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@fedora<span class="w"> </span>v2ray<span class="o">]</span>$<span class="w"> </span>cat<span class="w"> </span>config.json<span class="w"> </span>
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;inbounds&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;port&quot;</span>:<span class="w"> </span><span class="m">8889</span>,
+<span class="w">      </span><span class="s2">&quot;listen&quot;</span>:<span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;protocol&quot;</span>:<span class="w"> </span><span class="s2">&quot;socks&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;sniffing&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;enabled&quot;</span>:<span class="w"> </span>true,
+<span class="w">        </span><span class="s2">&quot;destOverride&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;http&quot;</span>,<span class="w"> </span><span class="s2">&quot;tls&quot;</span><span class="o">]</span>
+<span class="w">      </span><span class="o">}</span>,
+<span class="w">      </span><span class="s2">&quot;settings&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;auth&quot;</span>:<span class="w"> </span><span class="s2">&quot;noauth&quot;</span>,
+<span class="w">        </span><span class="s2">&quot;udp&quot;</span>:<span class="w"> </span><span class="nb">false</span>
+<span class="w">      </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">]</span>,
+<span class="w">  </span><span class="s2">&quot;outbounds&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;protocol&quot;</span>:<span class="w"> </span><span class="s2">&quot;vmess&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;settings&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;vnext&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">          </span><span class="o">{</span>
+<span class="w">            </span><span class="s2">&quot;address&quot;</span>:<span class="w"> </span><span class="s2">&quot;everbox.io&quot;</span>,
+<span class="w">            </span><span class="s2">&quot;port&quot;</span>:<span class="w"> </span><span class="m">443</span>,
+<span class="w">            </span><span class="s2">&quot;users&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">              </span><span class="o">{</span>
+<span class="w">                </span><span class="s2">&quot;id&quot;</span>:<span class="w"> </span><span class="s2">&quot;bxxxxxx7-abcd-xxxx-xxxx-xxxxxxxxxxxx&quot;</span>,
+<span class="w">                </span><span class="s2">&quot;alterId&quot;</span>:<span class="w"> </span><span class="m">0</span>
+<span class="w">              </span><span class="o">}</span>
+<span class="w">            </span><span class="o">]</span>
+<span class="w">          </span><span class="o">}</span>
+<span class="w">        </span><span class="o">]</span>
+<span class="w">      </span><span class="o">}</span>,
+<span class="w">      </span><span class="s2">&quot;streamSettings&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;network&quot;</span>:<span class="w"> </span><span class="s2">&quot;ws&quot;</span>,
+<span class="w">        </span><span class="s2">&quot;security&quot;</span>:<span class="w"> </span><span class="s2">&quot;tls&quot;</span>,
+<span class="w">        </span><span class="s2">&quot;wsSettings&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">          </span><span class="s2">&quot;path&quot;</span>:<span class="w"> </span><span class="s2">&quot;/ray&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">      </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="create-certificate-with-letsencrypt">
+<h2>Create <code class="docutils literal notranslate"><span class="pre">certificate</span></code> with <code class="docutils literal notranslate"><span class="pre">letsencrypt</span></code><a class="headerlink" href="#create-certificate-with-letsencrypt" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="configure-domainname-proxied-with-cloudflare">
+<h2>Configure domainName <code class="docutils literal notranslate"><span class="pre">proxied</span></code> with CloudFlare<a class="headerlink" href="#configure-domainname-proxied-with-cloudflare" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h2>
+<p>https://hxp.plus/2020/02/07/v2ray/</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Container and Relatives</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">V2Ray + vmess + CloudFlare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-v2ray">Install <code class="docutils literal notranslate"><span class="pre">v2ray</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-nginx">Configure <code class="docutils literal notranslate"><span class="pre">nginx</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-v2ray-with-nginx">Configure <code class="docutils literal notranslate"><span class="pre">v2ray</span></code> with <code class="docutils literal notranslate"><span class="pre">nginx</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-v2ray-for-client">Configure <code class="docutils literal notranslate"><span class="pre">v2ray</span></code> for client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-certificate-with-letsencrypt">Create <code class="docutils literal notranslate"><span class="pre">certificate</span></code> with <code class="docutils literal notranslate"><span class="pre">letsencrypt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-domainname-proxied-with-cloudflare">Configure domainName <code class="docutils literal notranslate"><span class="pre">proxied</span></code> with CloudFlare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Container and Relatives’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, @j3ffyang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/20230510_v2ray_vmess.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

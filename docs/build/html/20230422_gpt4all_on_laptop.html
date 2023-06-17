@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Install GPT LLaMa Model on Laptop &#8212; Container and Relatives 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="V2Ray + vmess + CloudFlare" href="20230510_v2ray_vmess.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="install-gpt-llama-model-on-laptop">
+<h1>Install GPT LLaMa Model on Laptop<a class="headerlink" href="#install-gpt-llama-model-on-laptop" title="Permalink to this heading">¶</a></h1>
+<section id="objective">
+<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this heading">¶</a></h2>
+<p>To run a simple GPT model on a Linux laptop and become familiar with the GPT model’s capabilities.</p>
+<blockquote>
+<div><p>Reference &gt; https://github.com/nomic-ai/gpt4all and the original GPT4All Model (based on GPL Licensed LLaMa)</p>
+</div></blockquote>
+</section>
+<section id="hardware-pre-requisite">
+<h2>Hardware Pre-requisite<a class="headerlink" href="#hardware-pre-requisite" title="Permalink to this heading">¶</a></h2>
+<p>I tried this with Fedora 36 on MacBook Pro 16,2 machine <strong>without GPU</strong></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gpt<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@mbp<span class="w"> </span>~<span class="o">]</span>$<span class="w"> </span>uname<span class="w"> </span>-a
+Linux<span class="w"> </span>mbp<span class="w"> </span><span class="m">5</span>.18.6-200.mbp.fc34.x86_64<span class="w"> </span><span class="c1">#1 SMP PREEMPT_DYNAMIC Mon Jun 27 16:08:52 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux</span>
+</pre></div>
+</div>
+<p>The CPU spec and quantity of processors</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gpt<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@mbp<span class="w"> </span>~<span class="o">]</span>$<span class="w"> </span>cat<span class="w"> </span>/proc/cpuinfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;model name&quot;</span>
+model<span class="w"> </span>name<span class="w">	</span>:<span class="w"> </span>Intel<span class="o">(</span>R<span class="o">)</span><span class="w"> </span>Core<span class="o">(</span>TM<span class="o">)</span><span class="w"> </span>i5-1038NG7<span class="w"> </span>CPU<span class="w"> </span>@<span class="w"> </span><span class="m">2</span>.00GHz
+<span class="o">(</span>gpt<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@mbp<span class="w"> </span>~<span class="o">]</span>$<span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>^processor<span class="w"> </span>/proc/cpuinfo
+<span class="m">8</span>
+</pre></div>
+</div>
+<p>The memory</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gpt<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@mbp<span class="w"> </span>~<span class="o">]</span>$<span class="w"> </span>cat<span class="w"> </span>/proc/meminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>MemTotal
+MemTotal:<span class="w">       </span><span class="m">16178188</span><span class="w"> </span>kB
+</pre></div>
+</div>
+</section>
+<section id="software-pre-requisite">
+<h2>Software Pre-requisite<a class="headerlink" href="#software-pre-requisite" title="Permalink to this heading">¶</a></h2>
+<p>I use <code class="docutils literal notranslate"><span class="pre">miniconda3</span></code> as my Python environment</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gpt<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@mbp<span class="w"> </span>~<span class="o">]</span>$<span class="w"> </span>conda<span class="w"> </span>--version
+conda<span class="w"> </span><span class="m">23</span>.1.0
+
+<span class="o">(</span>gpt<span class="o">)</span><span class="w"> </span><span class="o">[</span>jeff@mbp<span class="w"> </span>~<span class="o">]</span>$<span class="w"> </span>which<span class="w"> </span>python<span class="p">;</span><span class="w"> </span>python<span class="w"> </span>--version
+~/miniconda3/envs/gpt/bin/python
+Python<span class="w"> </span><span class="m">3</span>.10.10
+</pre></div>
+</div>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h2>
+<ul>
+<li><p>Download <code class="docutils literal notranslate"><span class="pre">gpt4all-lora-quantized.bin</span></code> model from https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-quantized.bin</p>
+<p>Or you can find unfiltered model at https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-unfiltered-quantized.bin</p>
+</li>
+<li><p>Clone the code and install dependencies</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nomic-ai/gpt4all.git
+<span class="nb">cd</span><span class="w"> </span>gpt4all
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>The output looks like</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>Successfully<span class="w"> </span>built<span class="w"> </span>deepspeed<span class="w"> </span>nomic<span class="w"> </span>pathtools
+Installing<span class="w"> </span>collected<span class="w"> </span>packages:<span class="w"> </span>py-cpuinfo,<span class="w"> </span>pathtools,<span class="w"> </span>ninja,<span class="w"> </span>hjson,<span class="w"> </span>
+xxhash,<span class="w"> </span>wonderwords,<span class="w"> </span>smmap,<span class="w"> </span>setproctitle,<span class="w"> </span>sentry-sdk,<span class="w"> </span>pyarrow,<span class="w"> </span>psutil,<span class="w"> </span>
+protobuf,<span class="w"> </span>nodelist-inflator,<span class="w"> </span>loguru,<span class="w"> </span>jsonlines,<span class="w"> </span>docker-pycreds,<span class="w"> </span>
+dill,<span class="w"> </span>responses,<span class="w"> </span>multiprocess,<span class="w"> </span>gitdb,<span class="w"> </span>transformers,<span class="w"> </span>GitPython,<span class="w"> </span>cohere,<span class="w"> </span>
+wandb,<span class="w"> </span>nomic,<span class="w"> </span>datasets,<span class="w"> </span>evaluate,<span class="w"> </span>accelerate,<span class="w"> </span>torchmetrics,<span class="w"> </span>peft,<span class="w"> </span>deepspeed
+</pre></div>
+</div>
+</li>
+<li><p>Move the model bin file into <code class="docutils literal notranslate"><span class="pre">chat</span></code> directory</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mv<span class="w"> </span>gpt4all-lora-quantized.bin<span class="w"> </span>~/chat/
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="execute">
+<h2>Execute<a class="headerlink" href="#execute" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>(gpt) [jeff@mbp chat]$ ./gpt4all-lora-quantized-linux-x86 
+main: seed = 1682149819
+llama_model_load: loading model from &#39;gpt4all-lora-quantized.bin&#39; - please wait ...
+llama_model_load: ggml ctx size = 6065.35 MB
+llama_model_load: memory_size =  2048.00 MB, n_mem = 65536
+llama_model_load: loading model part 1/1 from &#39;gpt4all-lora-quantized.bin&#39;
+llama_model_load: .................................... done
+llama_model_load: model size =  4017.27 MB / num tensors = 291
+
+system_info: n_threads = 4 / 8 | AVX = 1 | AVX2 = 1 | AVX512 = 0 | FMA = 1 | NEON = 0 | ARM_FMA = 0 | F16C = 1 | FP16_VA = 0 | WASM_SIMD = 0 | BLAS = 0 | SSE3 = 1 | VSX = 0 | 
+main: interactive mode on.
+sampling parameters: temp = 0.100000, top_k = 40, top_p = 0.950000, repeat_last_n = 64, repeat_penalty = 1.300000
+
+
+== Running in chat mode. ==
+ - Press Ctrl+C to interject at any time.
+ - Press Return to return control to LLaMA.
+ - If you want to submit another line, end your input in &#39;\&#39;.
+
+&gt; Please explain me the meaning of life
+Life has no single, fixed definition; it means different things to each 
+person who experiences it. For some people, life is about achieving ersonal 
+goals and fulfilling dreams while for others, it&#39;s all about family or 
+community involvement. Regardless of what you believe the meaning of your 
+own life should be, one thing remains constant: You are responsible for 
+making decisions that will affect how you experience this precious gift 
+we call &quot;life.&quot;
+&gt; 
+
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Container and Relatives</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="20230510_v2ray_vmess.html">V2Ray + vmess + CloudFlare</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Install GPT LLaMa Model on Laptop</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objective">Objective</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-pre-requisite">Hardware Pre-requisite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-pre-requisite">Software Pre-requisite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#execute">Execute</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="20230510_v2ray_vmess.html" title="previous chapter">V2Ray + vmess + CloudFlare</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, @j3ffyang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/20230422_gpt4all_on_laptop.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
