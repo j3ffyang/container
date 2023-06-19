@@ -2,7 +2,7 @@
 
 TL;DR
 
-Convert markdown `.md` files with Sphinx, like `readthedocs.io`. Generally there are 2 simple steps
+Convert markdown `.md` files into `html` with Sphinx, like [https://readthedocs.org](https://readthedocs.org). Generally there are 2 simple steps
 
 1. Build a project with Sphinx
 2. Move markdown files into `source` dir and render `html`
@@ -15,11 +15,11 @@ python -m pip install sphinx myst-parser
 
 #### Create the doc layout
 
-`docs` is commonly used to store _all_ `*.md` files
+I choose document `root` as project `root`
 
 ```sh
-sphinx-quickstart docs
-sphinx-build -b html docs/source/ docs/build/html
+sphinx-quickstart ./
+sphinx-build -b html source/ build/html
 ```
 
 #### Edit `source/conf.py`
@@ -35,7 +35,7 @@ source_suffix = {
 }
 ```
 
-#### Add your own `*.md` in `source/index.rst`
+#### Copy your own `*.md` in `source/` and edit `source/index.rst`
 
 ```py
 .. toctree::
@@ -54,5 +54,5 @@ make html
 ```
 
 #### Reference   
-- https://www.sphinx-doc.org/en/master/tutorial/getting-started.html
-- https://www.sphinx-doc.org/en/master/usage/markdown.html
+- [https://www.sphinx-doc.org/en/master/tutorial/getting-started.html](https://www.sphinx-doc.org/en/master/tutorial/getting-started.html)
+- [https://www.sphinx-doc.org/en/master/usage/markdown.html](https://www.sphinx-doc.org/en/master/usage/markdown.html)

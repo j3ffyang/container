@@ -14,6 +14,7 @@ Welcome to Container and GPT2's documentation!
    20230422_gpt4all_on_laptop.md
    20230617_sphinx.md
    20230422_chatGLM_6b_onGPU.md
+   20220222_fedora_cleanup.md
 
 Indices and tables
 ==================

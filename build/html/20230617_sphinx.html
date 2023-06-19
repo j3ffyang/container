@@ -35,7 +35,7 @@
   <section id="sphinx-with-markdown">
 <h1>Sphinx with Markdown<a class="headerlink" href="#sphinx-with-markdown" title="Permalink to this heading">¶</a></h1>
 <p>TL;DR</p>
-<p>Convert markdown <code class="docutils literal notranslate"><span class="pre">.md</span></code> files with Sphinx, like <code class="docutils literal notranslate"><span class="pre">readthedocs.io</span></code>. Generally there are 2 simple steps</p>
+<p>Convert markdown <code class="docutils literal notranslate"><span class="pre">.md</span></code> files into <code class="docutils literal notranslate"><span class="pre">html</span></code> with Sphinx, like <a class="reference external" href="https://readthedocs.org">https://readthedocs.org</a>. Generally there are 2 simple steps</p>
 <ol class="arabic simple">
 <li><p>Build a project with Sphinx</p></li>
 <li><p>Move markdown files into <code class="docutils literal notranslate"><span class="pre">source</span></code> dir and render <code class="docutils literal notranslate"><span class="pre">html</span></code></p></li>
@@ -48,9 +48,9 @@
 </section>
 <section id="create-the-doc-layout">
 <h2>Create the doc layout<a class="headerlink" href="#create-the-doc-layout" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">docs</span></code> is commonly used to store <em>all</em> <code class="docutils literal notranslate"><span class="pre">*.md</span></code> files</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sphinx-quickstart<span class="w"> </span>docs
-sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs/source/<span class="w"> </span>docs/build/html
+<p>I choose document <code class="docutils literal notranslate"><span class="pre">root</span></code> as project <code class="docutils literal notranslate"><span class="pre">root</span></code></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sphinx-quickstart<span class="w"> </span>./
+sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>source/<span class="w"> </span>build/html
 </pre></div>
 </div>
 </section>
@@ -67,8 +67,8 @@ sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w
 </pre></div>
 </div>
 </section>
-<section id="add-your-own-md-in-source-index-rst">
-<h2>Add your own <code class="docutils literal notranslate"><span class="pre">*.md</span></code> in <code class="docutils literal notranslate"><span class="pre">source/index.rst</span></code><a class="headerlink" href="#add-your-own-md-in-source-index-rst" title="Permalink to this heading">¶</a></h2>
+<section id="copy-your-own-md-in-source-and-edit-source-index-rst">
+<h2>Copy your own <code class="docutils literal notranslate"><span class="pre">*.md</span></code> in <code class="docutils literal notranslate"><span class="pre">source/</span></code> and edit <code class="docutils literal notranslate"><span class="pre">source/index.rst</span></code><a class="headerlink" href="#copy-your-own-md-in-source-and-edit-source-index-rst" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">toctree</span><span class="p">::</span>
    <span class="p">:</span><span class="n">maxdepth</span><span class="p">:</span> <span class="mi">2</span>
    <span class="p">:</span><span class="n">caption</span><span class="p">:</span> <span class="n">Contents</span><span class="p">:</span>
@@ -88,8 +88,8 @@ make<span class="w"> </span>html
 <section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>https://www.sphinx-doc.org/en/master/tutorial/getting-started.html</p></li>
-<li><p>https://www.sphinx-doc.org/en/master/usage/markdown.html</p></li>
+<li><p><a class="reference external" href="https://www.sphinx-doc.org/en/master/tutorial/getting-started.html">https://www.sphinx-doc.org/en/master/tutorial/getting-started.html</a></p></li>
+<li><p><a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/markdown.html">https://www.sphinx-doc.org/en/master/usage/markdown.html</a></p></li>
 </ul>
 </section>
 </section>
@@ -119,7 +119,7 @@ make<span class="w"> </span>html
 <li class="toctree-l2"><a class="reference internal" href="#pre-requisite">Pre-requisite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-the-doc-layout">Create the doc layout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#edit-source-conf-py">Edit <code class="docutils literal notranslate"><span class="pre">source/conf.py</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#add-your-own-md-in-source-index-rst">Add your own <code class="docutils literal notranslate"><span class="pre">*.md</span></code> in <code class="docutils literal notranslate"><span class="pre">source/index.rst</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copy-your-own-md-in-source-and-edit-source-index-rst">Copy your own <code class="docutils literal notranslate"><span class="pre">*.md</span></code> in <code class="docutils literal notranslate"><span class="pre">source/</span></code> and edit <code class="docutils literal notranslate"><span class="pre">source/index.rst</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#render-your-beautiful-doc">Render your beautiful doc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
