@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Container and Relatives'
+project = 'Container and GPT2'
 copyright = '2023, @j3ffyang'
 author = '@j3ffyang'
 release = '1.0'

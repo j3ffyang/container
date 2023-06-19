@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Install ChatGLM-6B on Single GPU-Linux &#8212; Container and GPT2 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Sphinx with Markdown" href="20230617_sphinx.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="install-chatglm-6b-on-single-gpu-linux">
+<h1>Install ChatGLM-6B on Single GPU-Linux<a class="headerlink" href="#install-chatglm-6b-on-single-gpu-linux" title="Permalink to this heading">¶</a></h1>
+<section id="objective">
+<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this heading">¶</a></h2>
+<p>To develop a language model for English and Chinese based on ChatGLM with 6B parameters (1 trillion tokens training data), and fine-tune it for LoRA (Low Resource Applications).</p>
+<p>Get familiar with the capabilities of the model, especially for LoRA fine-tuning.</p>
+<blockquote>
+<div><p>Reference: ChatGLM-6B is an open bilingual language model based on General Language Model (GLM) framework, with 6.2 billion parameters. With the quantization technique, users can deploy locally on consumer-grade graphics cards (only 6GB of GPU memory is required at the INT4 quantization level).</p>
+</div></blockquote>
+</section>
+<section id="hardware-spec">
+<h2>Hardware Spec<a class="headerlink" href="#hardware-spec" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gpt2<span class="o">)</span><span class="w"> </span>jeff@gamer:~/miniconda3/envs$<span class="w"> </span>nvidia-smi<span class="w"> </span>
+Sat<span class="w"> </span>Apr<span class="w"> </span><span class="m">22</span><span class="w"> </span><span class="m">17</span>:36:11<span class="w"> </span><span class="m">2023</span><span class="w">       </span>
++-----------------------------------------------------------------------------+
+<span class="p">|</span><span class="w"> </span>NVIDIA-SMI<span class="w"> </span><span class="m">470</span>.161.03<span class="w">   </span>Driver<span class="w"> </span>Version:<span class="w"> </span><span class="m">470</span>.161.03<span class="w">   </span>CUDA<span class="w"> </span>Version:<span class="w"> </span><span class="m">11</span>.4<span class="w">     </span><span class="p">|</span>
+<span class="p">|</span>-------------------------------+----------------------+----------------------+
+<span class="p">|</span><span class="w"> </span>GPU<span class="w">  </span>Name<span class="w">        </span>Persistence-M<span class="p">|</span><span class="w"> </span>Bus-Id<span class="w">        </span>Disp.A<span class="w"> </span><span class="p">|</span><span class="w"> </span>Volatile<span class="w"> </span>Uncorr.<span class="w"> </span>ECC<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w"> </span>Fan<span class="w">  </span>Temp<span class="w">  </span>Perf<span class="w">  </span>Pwr:Usage/Cap<span class="p">|</span><span class="w">         </span>Memory-Usage<span class="w"> </span><span class="p">|</span><span class="w"> </span>GPU-Util<span class="w">  </span>Compute<span class="w"> </span>M.<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w">                               </span><span class="p">|</span><span class="w">                      </span><span class="p">|</span><span class="w">               </span>MIG<span class="w"> </span>M.<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="o">===============================</span>+<span class="o">======================</span>+<span class="o">======================</span><span class="p">|</span>
+<span class="p">|</span><span class="w">   </span><span class="m">0</span><span class="w">  </span>NVIDIA<span class="w"> </span>GeForce<span class="w"> </span>...<span class="w">  </span>On<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="m">00000000</span>:01:00.0<span class="w"> </span>Off<span class="w"> </span><span class="p">|</span><span class="w">                  </span>N/A<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w">  </span><span class="m">0</span>%<span class="w">   </span>34C<span class="w">    </span>P8<span class="w">    </span>15W<span class="w"> </span>/<span class="w"> </span>220W<span class="w"> </span><span class="p">|</span><span class="w">   </span>6744MiB<span class="w"> </span>/<span class="w">  </span>7979MiB<span class="w"> </span><span class="p">|</span><span class="w">      </span><span class="m">0</span>%<span class="w">      </span>Default<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w">                               </span><span class="p">|</span><span class="w">                      </span><span class="p">|</span><span class="w">                  </span>N/A<span class="w"> </span><span class="p">|</span>
++-------------------------------+----------------------+----------------------+
+<span class="w">                                                                               </span>
++-----------------------------------------------------------------------------+
+<span class="p">|</span><span class="w"> </span>Processes:<span class="w">                                                                  </span><span class="p">|</span>
+<span class="p">|</span><span class="w">  </span>GPU<span class="w">   </span>GI<span class="w">   </span>CI<span class="w">        </span>PID<span class="w">   </span>Type<span class="w">   </span>Process<span class="w"> </span>name<span class="w">                  </span>GPU<span class="w"> </span>Memory<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w">        </span>ID<span class="w">   </span>ID<span class="w">                                                   </span>Usage<span class="w">      </span><span class="p">|</span>
+<span class="p">|</span><span class="o">=============================================================================</span><span class="p">|</span>
+<span class="p">|</span><span class="w">    </span><span class="m">0</span><span class="w">   </span>N/A<span class="w">  </span>N/A<span class="w">       </span><span class="m">885</span><span class="w">      </span>G<span class="w">   </span>/usr/lib/xorg/Xorg<span class="w">                 </span>86MiB<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w">    </span><span class="m">0</span><span class="w">   </span>N/A<span class="w">  </span>N/A<span class="w">      </span><span class="m">1036</span><span class="w">      </span>G<span class="w">   </span>/usr/bin/gnome-shell<span class="w">               </span>12MiB<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w">    </span><span class="m">0</span><span class="w">   </span>N/A<span class="w">  </span>N/A<span class="w">      </span><span class="m">4165</span><span class="w">      </span>C<span class="w">   </span>python<span class="w">                           </span>6641MiB<span class="w"> </span><span class="p">|</span>
++-----------------------------------------------------------------------------+
+</pre></div>
+</div>
+</section>
+<section id="software-env-in-miniconda-on-debian-11">
+<h2>Software Env in <code class="docutils literal notranslate"><span class="pre">miniconda</span></code> on Debian 11<a class="headerlink" href="#software-env-in-miniconda-on-debian-11" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">E</span> <span class="s1">&#39;torch|transformers|nvidia&#39;</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cublas</span><span class="o">-</span><span class="n">cu11</span>        <span class="mf">11.10.3.66</span>               <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cuda</span><span class="o">-</span><span class="n">cupti</span><span class="o">-</span><span class="n">cu11</span>    <span class="mf">11.7.101</span>                 <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cuda</span><span class="o">-</span><span class="n">nvrtc</span><span class="o">-</span><span class="n">cu11</span>    <span class="mf">11.7.99</span>                  <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cuda</span><span class="o">-</span><span class="n">runtime</span><span class="o">-</span><span class="n">cu11</span>  <span class="mf">11.7.99</span>                  <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cudnn</span><span class="o">-</span><span class="n">cu11</span>         <span class="mf">8.5.0.96</span>                 <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cufft</span><span class="o">-</span><span class="n">cu11</span>         <span class="mf">10.9.0.58</span>                <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">curand</span><span class="o">-</span><span class="n">cu11</span>        <span class="mf">10.2.10.91</span>               <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cusolver</span><span class="o">-</span><span class="n">cu11</span>      <span class="mf">11.4.0.1</span>                 <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">cusparse</span><span class="o">-</span><span class="n">cu11</span>      <span class="mf">11.7.4.91</span>                <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">nccl</span><span class="o">-</span><span class="n">cu11</span>          <span class="mf">2.14.3</span>                   <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">nvidia</span><span class="o">-</span><span class="n">nvtx</span><span class="o">-</span><span class="n">cu11</span>          <span class="mf">11.7.91</span>                  <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">torch</span>                     <span class="mf">2.0.0</span>                    <span class="n">pypi_0</span>    <span class="n">pypi</span>
+<span class="n">transformers</span>              <span class="mf">4.27.1</span>                   <span class="n">pypi_0</span>    <span class="n">pypi</span>
+</pre></div>
+</div>
+</section>
+<section id="clone-the-code-and-download-the-model">
+<h2>Clone the code and download the model<a class="headerlink" href="#clone-the-code-and-download-the-model" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/THUDM/ChatGLM-6B
+<span class="nb">cd</span><span class="w"> </span>ChatGLM-6B
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>After model is downloaded, the sharded bin files go to</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gpt2<span class="o">)</span><span class="w"> </span>jeff@gamer:~/miniconda3/envs/gpt2$<span class="w"> </span><span class="nb">pwd</span>
+/home/jeff/miniconda3/envs/gpt2
+<span class="o">(</span>gpt2<span class="o">)</span><span class="w"> </span>jeff@gamer:~/miniconda3/envs/gpt2$<span class="w"> </span>du<span class="w"> </span>-ksh
+<span class="m">6</span>.3G<span class="w">	</span>.
+</pre></div>
+</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span><span class="nv">cudatoolkit</span><span class="o">=</span><span class="m">11</span>.3<span class="w"> </span>-c<span class="w"> </span>nvidia
+</pre></div>
+</div>
+</section>
+<section id="launch">
+<h2>Launch<a class="headerlink" href="#launch" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Turn on <code class="docutils literal notranslate"><span class="pre">gradio</span></code> on webUI, edit <code class="docutils literal notranslate"><span class="pre">web_demp.py</span></code> and update <code class="docutils literal notranslate"><span class="pre">share=true</span></code></p></li>
+</ul>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">demo</span><span class="o">.</span><span class="n">queue</span><span class="p">()</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">share</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inbrowser</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="imgs/2023-04-22-19-03-06.png" /></p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<ul>
+<li><p>Error message &gt; <code class="docutils literal notranslate"><span class="pre">RuntimeError:</span> <span class="pre">Library</span> <span class="pre">cudart</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">initialized</span></code></p>
+<p>The recommended solution: to install <code class="docutils literal notranslate"><span class="pre">cudatoolkit</span></code>, as described earlier</p>
+</li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Container and GPT2</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="20230510_v2ray_vmess.html">V2Ray + vmess + CloudFlare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20230422_gpt4all_on_laptop.html">Install GPT LLaMa Model on Laptop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="20230617_sphinx.html">Sphinx with Markdown</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Install ChatGLM-6B on Single GPU-Linux</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objective">Objective</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-spec">Hardware Spec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-env-in-miniconda-on-debian-11">Software Env in <code class="docutils literal notranslate"><span class="pre">miniconda</span></code> on Debian 11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clone-the-code-and-download-the-model">Clone the code and download the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#launch">Launch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="20230617_sphinx.html" title="previous chapter">Sphinx with Markdown</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, @j3ffyang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/20230422_chatGLM_6b_onGPU.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
