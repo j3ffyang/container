@@ -4,6 +4,10 @@
 <!-- code_chunk_output -->
 
 - [Objective](#objective)
+- [Pre-requisites](#pre-requisites)
+    - [You have a valid domain name](#you-have-a-valid-domain-name)
+    - [CloudFlare (optional)](#cloudflare-optional)
+    - [Domain Name Hosting Service Provider](#domain-name-hosting-service-provider)
 - [Install `certbot` for `letsEncrypt`](#install-certbot-for-letsencrypt)
     - [(option I) Install plain `certbot`](#option-i-install-plain-certbot)
     - [Generate certificate](#generate-certificate)
@@ -33,6 +37,21 @@ Get rid of unexpected firewall
 
 
 > Reference > https://henrywithu.com/coexistence-of-web-applications-and-vless-tcp-xtls/
+
+## Pre-requisites
+
+#### You have a valid domain name
+
+#### CloudFlare (optional)
+- Use CloudFlare proxy to protect (hide/ conseal) your domain name
+- In CloudFlare, create a web (with your domain name) and define your public IP address
+
+#### Domain Name Hosting Service Provider
+
+Eg. In Namecheap.com, under your domain name, select Custom DNS, then define DNS (pointing to CloudFlare's DNS)
+
+- izabella.ns.cloudflare.com
+- will.ns.cloudflare.com
 
 ## Install `certbot` for `letsEncrypt`
 
