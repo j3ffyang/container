@@ -12,20 +12,40 @@ Setting > Privacy & Security > File History > disable
 terminator
 veracrypt & veracrypt-console-bin (for UI)
 oh-my-zsh
-vim
+vim 
 openssh
 jdk11-openjdk
 graphviz
 firewalld
-neofetch
-docker
+fastfetch
 chromium
-vlc
+vlc vlc-plugins-all
 geeqie
 gnome-screenshot
-fcitx-googlepinyin fcitx-im  fcitx-configtool
-adobe-source-han-sans-otc-fonts adobe-source-han-serif-otc-fonts
 base-devel
+yay
+ibus-libpinyin  # requires relogin to take effective
+darktable
+# fcitx-googlepinyin fcitx-im  fcitx-configtool
+adobe-source-han-sans-otc-fonts adobe-source-han-serif-otc-fonts
+```
+
+#### Uninstall packages of Gnome games
+
+```sh
+pacman -Rns gnome-chess gnome-mines quadrapassel iagno 
+```
+
+#### ibus > edit /etc/porfile
+```
+# GTK_IM_MODULE=ibus
+# QT_IM_MODULE=ibus
+# XMODIFIERS=@im=ibus
+```
+
+```
+pacman -Syu ibus-libpinyin	# reboot
+ibus-daemon -rxRd               # autostart daemon
 ```
 
 #### Configuring Nvidia
@@ -65,6 +85,10 @@ pamac build google-chrome
 ```sh
 sudo pacman -S nvm
 echo 'source /usr/share/nvm/init-nvm.sh' >> ~/.zshrc
+
+nvm install node
+nvm install --lts   # install lts npm
+# sudo pacman -Syu nodejs npm # no need npm if already have nvm
 ```
 
 ~~#### Installing `honkit`~~
