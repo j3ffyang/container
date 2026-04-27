@@ -1,70 +1,40 @@
-## Document Objective
-- Document the environment built for our development and production
-- Everything is in container
+# ⚠️ Repository Archived
 
-## Deployment
+This repository has been **merged into** [`opensource_devops`](https://github.com/j3ffyang/opensource_devops).
 
-#### Container and Containerization
-- [Standard Kubernetes Base Deployment](./docs/20190326_k8s_deploy.md)
-- [Ubuntu behind Firewall/ Proxy](./docs/20190702_ubuntu_behind_proxy.md)
-- [Install Kubernetes behind Firewall](./docs/20190629_deploy_k8s_behind_proxy.md)
-- [Create custom docker image](./docs/20190522_docker_img.md)
-- [Kubernetes Dashboard](./docs/20190826_k8s_dashboard.md)
-- [Install Nexus](./docs/20190619_nexus.md)
-- [Istio serviceMesh and alternative registry to gcr.io](./docs/20190705_istio.md)
-- [My thoughts on Kubernetes and DevOps](./docs/20190709_thought_on_k8s.md)
-- [Rotate Kubernetes Client Cert/ Key](./docs/20200330_k8s_rotate_client_cert_key.md)
-- [Kubernetes Capacity & Workload Consideration](./docs/20201211_capacity_consideration.md)
-- [Kubernetes Production Cluster Build and Operation](./docs/20211115_k8s_practice.md)
-- [Nginx HA & LB with KeepAlived](./docs/20211122_nginx_ha_lb.md)
-- [HAproxy and keepAlived with Kubespray](./docs/20211128_haproxy_keepalived_kubespray.md)
+## Redirect
 
-#### DevOps
-- [Docker Swarm cluster](./docs/20171014_docker_swarm.md)
-- [Gitlab integration with OpenLDAP](./docs/20171020_gitlab.md)
-- [Gerrit integration with Gitlab and OpenLDAP](./docs/20171022_gerrit.md)
-- [Jenkins integration with OpenLDAP](./docs/20180208_jenkins_openldap.md)
-- [Portainer, monitoring of docker cluster](./docs/20171022_portainer.md)
-- [OpenProject](./docs/20171025_openproj.md)
-- [Zabbix, monitoring of all components](./docs/20171028_zabbix.md)
-- [Grafana, a UI of Zabbix](./docs/20171030_grafana.md)
-- [PlantUML Editor in Atom](./docs/20200317_plantuml.md)
-- [DNS](./docs/20201108_dns.md)
-- [Gitlab on K8S](./docs/20201115_k8s_gitlab.md)
-- [Ansible Deployment Workflow](./docs/20210600_ansible.md)
-- [argoCD](./docs/20201213_argocd.md)
+All content from this repository is now available in the `opensource_devops` repo under the `docs/` directory, better organized by topic:
 
-#### edgeComputing
-- [K3S and GitOps with Raspberry-Pi](./docs/20190909_k3s_raspberry_pi.md) and [K3S again](./docs/20210520_k3s_again.md)
-- [K3S for raspberryPi](./docs/20210520_k3s_again.md)
+- **Kubernetes guides** → [`opensource_devops/docs/kubernetes/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/kubernetes)
+- **Security guides** (VPN, LDAP, etc.) → [`opensource_devops/docs/security/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/security)
+- **Networking guides** → [`opensource_devops/docs/networking/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/networking)
+- **CI/CD guides** → [`opensource_devops/docs/cicd/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/cicd)
+- **Database guides** → [`opensource_devops/docs/databases/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/databases)
+- **Container guides** → [`opensource_devops/docs/containers/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/containers)
+- **Linux guides** → [`opensource_devops/docs/linux/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/linux)
+- **Monitoring guides** → [`opensource_devops/docs/monitoring/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/monitoring)
+- **AI/LLM guides** → [`opensource_devops/docs/ai/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/ai)
+- **Tools & Utilities** → [`opensource_devops/docs/tools/`](https://github.com/j3ffyang/opensource_devops/tree/master/docs/tools)
+- **Configuration files** → [`opensource_devops/conf/`](https://github.com/j3ffyang/opensource_devops/tree/master/conf)
+- **Images & Diagrams** → [`opensource_devops/img/`](https://github.com/j3ffyang/opensource_devops/tree/master/img)
 
-#### Environment and Security
-- [Linux Kernel Tuning](./docs/20201019_linux_kernel.md)
-- [Environment Common Settings for Security, Docker, etc](./docs/20171010_sys_setup.md)
-- [Let's Encrypt](./docs/20170720_letsencrypt.md)
-- [OpenVPN Basic Setup](./docs/20171011_openvpn_details.md)
-- [OpenLDAP, with StartTLS Setup](./docs/20171012_openldap.md)
-- [OpenLDAP integration with OpenVPN](./docs/20171013_openvpn_openldap_int.md)
-- [Secure phpLDAPadmin with Apache2](./docs/20171126_secure_phpldapadm_by_apache2.md)
-- [Nginx Forward & Load-Balancing](./docs/20200303_nginx_lb.md)
-- [hans icmp/ ping tunneling](./docs/20171114_icmp_tunnel.md)
-- [PiVPN setup](./docs/20180912_pivpn.md)
-- [Post-install of Linode](./docs/20190120_linode_postinst.md)
-- [WireGuard](./docs/20200207_wireguard.md)
-- [Xray with VLess](./docs/20210507_xray_vless.md)
-- [OpenSSL with Kubernetes](./docs/20211115_openssl.md)
+## Why Merge?
 
-#### Database
-- [MongoDB Backup Cronjob on Kubernetes](./docs/20211116_mongodb_practice.md)
-- [MySQL Galera cluster in Docker](./docs/20180417_mysql_galera_cluster.md)
-- [MySQL, MariaDB in Galera with etcd](./docs/20180531_testcase_maria_mysql.md)
-- [MySQL cluster stress test](./docs/20180615_mysql_perf_stress.md)
+The `container` repository contained a personal knowledge base of 70+ technical guides. The `opensource_devops` repository provides a polished, bilingual handbook structure. Combining them creates a comprehensive DevOps resource with:
 
-#### Analytics
-- [Gluster Filesystem](./docs/20171118_gfs.md)
-- [Mongo cluster](./docs/20170829_mongo_cluster_in_docker.md)
-- [Redis cluster](./docs/20180428_redis_cluster.md)
-- [Redis cluster by Sentinel](./docs/20180626_redis_sentinel.md)
+- ✅ Conceptual handbook (en/ and zh/)
+- ✅ 70+ practical technical guides (docs/)
+- ✅ Ready-to-use config files (conf/)
+- ✅ Architecture diagrams and screenshots (img/)
+- ✅ Better organization and discoverability
 
-#### Fun
-- [How to Install Steam on Debian Stretch](./docs/20190113_install_steam_debian_stretch.md)
+## Accessing Content
+
+👉 **Go to:** [j3ffyang/opensource_devops](https://github.com/j3ffyang/opensource_devops)
+
+All documentation is now centralized, better organized, and easier to navigate.
+
+---
+
+*Repository archived on 2026-04-27. This repo is no longer maintained.*
